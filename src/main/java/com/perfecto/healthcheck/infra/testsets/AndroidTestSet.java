@@ -10,6 +10,7 @@ public class AndroidTestSet extends AbstractTestSet {
         super(driver, device, UUID);
     }
     public static String language = HealthcheckProps.getDefaultLanguage();
+    public static String unlock = HealthcheckProps.getUnlockStatus();
     @Override
     public DeviceStatus runTests() {
         TestsRunner tr = new TestsRunner(device);
@@ -31,7 +32,9 @@ public class AndroidTestSet extends AbstractTestSet {
         );
 
         tr.registerTest(()-> Keyboard.setToDefaultKeyboardAndroid(driver),"Set to default keyboard Android");
-        tr.registerTest(()-> Unlock.setDeviceUnlock(driver),"Set device unlock");
+        if(!unlock.isEmpty()) {
+            tr.registerTest(() -> Unlock.setDeviceUnlock(driver), "Set device unlock");
+        }
         if(!language.isEmpty()) {
             tr.registerTest(()-> DefaultLanguage.setToDefaultLanguage(driver,language), "Set default language Android");
         }

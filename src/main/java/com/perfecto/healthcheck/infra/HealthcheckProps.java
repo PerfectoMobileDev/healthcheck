@@ -22,8 +22,9 @@ public class HealthcheckProps {
     private static Logger logger = LogManager.getLogger("Automation Ready Logger");
     private static String chrome_Acount_Name = System.getProperty("chromeAcountName");
     private static String default_Language = System.getProperty("defaultLanguage");
+    private static String Unlock_status = System.getProperty("unlockStatus");
     private static String chrome_Acount_Pass = System.getProperty("chromeAcountPass");
-
+    private static String deviceId = System.getProperty("deviceId");
     private static final String UUID = java.util.UUID.randomUUID().toString();
 
     static {
@@ -109,5 +110,13 @@ public class HealthcheckProps {
 
     public static String getDefaultLanguage() {
         return default_Language;
+    }
+
+    public static String getUnlockStatus() {
+        return Unlock_status;
+    }
+
+    public static String getDeviceId() {
+        return deviceId;
     }
 }

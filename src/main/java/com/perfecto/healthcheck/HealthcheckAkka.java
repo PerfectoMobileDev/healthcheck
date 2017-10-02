@@ -14,9 +14,6 @@ public class HealthcheckAkka {
     public static void main(String[] args) {
         Controller.McmData mcmData = new Controller.McmData(HealthcheckProps.getPerfectoHost(),HealthcheckProps.getPerfectoUser(),HealthcheckProps.getPerfectoPassword());
         controller.tell(mcmData,ActorRef.noSender());
-
-
-        controller.tell(new Controller.TestSingleDevice(mcmData,"ZX1G222MZB"),ActorRef.noSender());
     }
 
 

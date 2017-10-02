@@ -44,7 +44,15 @@ public class HealthcheckProps {
         if (WIFI_NAME == null || WIFI_NAME.trim().isEmpty()) {
             WIFI_NAME = "";
         }
-
+        if (deviceId == null || deviceId.trim().isEmpty()) {
+            deviceId = "";
+        }
+        if (default_Language == null || default_Language.trim().isEmpty()) {
+            default_Language = "";
+        }
+        if (Unlock_status == null || Unlock_status.trim().isEmpty()) {
+            Unlock_status = "";
+        }
     }
 
     public static String getUUID() {

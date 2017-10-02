@@ -1,8 +1,6 @@
 package com.perfecto.healthcheck.actors;
 
 import akka.actor.AbstractLoggingActor;
-import akka.actor.Props;
-import com.perfecto.healthcheck.HealthcheckAkka;
 import com.perfecto.healthcheck.infra.Device;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -16,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DeviceProvider extends AbstractLoggingActor {
 
@@ -24,14 +23,27 @@ public class DeviceProvider extends AbstractLoggingActor {
         return receiveBuilder()
                 .match(Controller.McmData.class, dr -> {
                     log().info("Retrieving devices for MCM " + dr.getMcm());
-                    Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getUser(),dr.getPassword());
+                    Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getUser(),dr.getPassword(),"");
                     if (devices.isPresent()){
-                           sender().tell(new DeviceList(devices.get()),self());
+                        sender().tell(new DeviceList(devices.get()),self());
                     } else {
                         sender().tell(new Controller.NoDevices(dr),self());
                     }
                 })
+
+                .match(GetSingleDevice.class, msg ->{
+                    log().info("Retrieving device "+ msg.getDeviceId()+ "from MCM" + msg.getMcmData().getMcm());
+
+                    Optional<List<Device>> devices = extractDevices(msg.getMcmData().getMcm(),msg.getMcmData().getUser(),msg.getMcmData().getPassword(),msg.getDeviceId());
+                    if (devices.isPresent()){
+                        sender().tell(new DeviceList(devices.get()),self());
+                    } else {
+                        sender().tell(new Controller.NoDevices(msg.getMcmData()),self());
+                    }
+
+                })
                 .build();
+
     }
 
 
@@ -65,7 +77,7 @@ public class DeviceProvider extends AbstractLoggingActor {
         }
     }
 
-    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmUser, String mcmPassword) {
+    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmUser, String mcmPassword, String deviceId) {
         List<Device> listDevices = new ArrayList<Device>();
 
         //settings identifier
@@ -92,13 +104,16 @@ public class DeviceProvider extends AbstractLoggingActor {
                 String os = null;
                 String osVersion = null;
                 String model = null;
+
                 for (int data = 0; data < handsetData.getLength(); data++) {
 
 
                     Node d = handsetData.item(data);
                     if (d.getNodeName().equals("deviceId")) {
                         id = d.getTextContent();
+
                     }
+
                     if (d.getNodeName().equals("os")) {
                         os = d.getTextContent();
                     }
@@ -110,20 +125,18 @@ public class DeviceProvider extends AbstractLoggingActor {
                     }
 
                 }
+
                 if (os.equals("iOS")) {
-                    if (!id.equalsIgnoreCase("3E4D8EE918C7232A0ACDD5B0BE8716D850202398")) {
-                        Device d = new Device("ios", iosApp, id, osVersion, model,mcmUrl,mcmUser,mcmPassword);
-                        System.out.println(d);
-                        listDevices.add(d);
-                    }
+                    Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
+                    System.out.println(d);
+                    listDevices.add(d);
                 } else if ((os.equals("Android"))) {
-                    Device d = new Device("Android", AndroidApp, id, osVersion, model,mcmUrl,mcmUser,mcmPassword);
+                    Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
                     System.out.println(d);
                     listDevices.add(d);
                 } else {
                     // does not support ios, wp and BB
                 }
-
             }
 
         } catch (Exception e) {
@@ -131,7 +144,20 @@ public class DeviceProvider extends AbstractLoggingActor {
             e.printStackTrace();
             return Optional.empty();
         }
-        return Optional.of(listDevices);
+        if (!deviceId.trim().isEmpty()){
+            List<Device> filteredDevices = listDevices
+                    .stream()
+                    .filter(d->d.getDeviceID().equalsIgnoreCase(deviceId))
+                    .collect(Collectors.toList());
+            if (filteredDevices.size()==0){
+                return  Optional.empty();
+            } else {
+                return Optional.of(filteredDevices);
+            }
+
+            } else {
+            return Optional.of(listDevices);
+        }
     }
 
     public InputStream getData(String url) {

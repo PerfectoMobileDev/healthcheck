@@ -437,7 +437,7 @@ public class Utils {
 			startApp("identifier", "com.apple.Preferences", driver);
 
 			try{
-				driver.findElementByXPath("//UIATableCell[@label=\"General\"]").click();
+				driver.findElementByXPath("//UIATableCell[@label=\"General\"]|//XCUIElementTypeCell[@label=\"General\"]").click();
 			}catch (NoSuchElementException e){
 				URL url = new URL("https://s3-eu-west-1.amazonaws.com/perfecto-beat-regression/beatMedia/Images/GeneralSettingsiOS.png");
 				uploadMedia(host, username, password, url, "PRIVATE:GeneralSettingsiOS.png");

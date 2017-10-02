@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'scala'
 apply plugin: 'maven'
 
 group = 'com.perfecto'
@@ -17,17 +16,6 @@ repositories {
      maven {
        url "http://repository-perfectomobile.forge.cloudbees.com/public"
      }
-}
-
-sourceSets {
-    main {
-        scala {
-            srcDirs = ['src/main/scala', 'src/main/java']
-        }
-        java {
-            srcDirs = []
-        }
-    }
 }
 
 tasks.withType(JavaExec) {

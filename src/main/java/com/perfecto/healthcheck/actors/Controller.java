@@ -2,19 +2,12 @@ package com.perfecto.healthcheck.actors;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
 import akka.actor.Props;
 import com.perfecto.healthcheck.HealthcheckAkka;
-import com.perfecto.healthcheck.SystemShutdown;
 import com.perfecto.healthcheck.infra.DeviceDriver;
 import com.perfecto.healthcheck.infra.HealthcheckProps;
-import scala.concurrent.Await;
-import scala.concurrent.duration.Duration;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import scala.concurrent.*;
-import static scala.compat.java8.JFunction.*;
 public class Controller extends AbstractLoggingActor {
 
 
@@ -58,15 +51,15 @@ public class Controller extends AbstractLoggingActor {
                 })
                 .match(NoDevices.class, msg-> {
                     log().error("No devices were retrieved by DeviceProvider from MCM " + msg.getMcmData().mcm +", exiting....");
-                    SystemShutdown.shutDown(HealthcheckAkka.system,1);
+                    System.exit(1);
                 })
                 .match(NoDrivers.class, msg-> {
                     log().error("No drivers were retrieved by Driver Creator, exiting....");
-                    SystemShutdown.shutDown(HealthcheckAkka.system,1);
+                    System.exit(1);
                 })
                 .match(TestRunnerTimeout.class, msg-> {
                     log().info("Timeout on test runner, exiting");
-                    SystemShutdown.shutDown(HealthcheckAkka.system,1);
+                    System.exit(1);
                 })
                 .build();
     }

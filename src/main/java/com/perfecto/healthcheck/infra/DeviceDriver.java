@@ -1,16 +1,16 @@
 package com.perfecto.healthcheck.infra;
 
 
-import org.openqa.selenium.remote.RemoteWebDriver;
+import io.appium.java_client.AppiumDriver;
 
 /**
  * Created by tall on 7/18/2017.
  */
 public class DeviceDriver {
     private Device device;
-    private RemoteWebDriver driver;
+    private AppiumDriver driver;
 
-    public DeviceDriver(Device device, RemoteWebDriver driver) {
+    public DeviceDriver(Device device, AppiumDriver driver) {
         this.device = device;
         this.driver = driver;
     }
@@ -19,7 +19,7 @@ public class DeviceDriver {
         return device;
     }
 
-    public RemoteWebDriver getDriver() {
+    public AppiumDriver getDriver() {
         return driver;
     }
 }

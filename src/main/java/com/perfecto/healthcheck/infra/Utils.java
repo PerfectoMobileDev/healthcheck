@@ -1,10 +1,13 @@
 package com.perfecto.healthcheck.infra;
 
 
-import com.thoughtworks.xstream.XStream;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
-import org.openqa.selenium.remote.*;
+import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DriverCommand;
+import org.openqa.selenium.remote.RemoteExecuteMethod;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -15,7 +18,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class Utils {
 
 	public static String REPORT_LIB = "target";
-	public static String SCREENSHOTS_LIB = "target";
+//	public static String SCREENSHOTS_LIB = "target";
 	private static final String UTF_8 = "UTF-8";
 	private static final String HTTPS = "https://";
 	private static final String MEDIA_REPOSITORY = "/services/repositories/media/";
@@ -33,20 +35,6 @@ public class Utils {
 	 static String username = HealthcheckProps.getPerfectoUser();
 	 static String password = HealthcheckProps.getPerfectoPassword();
 
-	public static String getScreenShot(RemoteWebDriver driver, String name, String deviceID )
-	{
-		String screenShotName = SCREENSHOTS_LIB+name+"_"+deviceID+".png";
-		driver   = (RemoteWebDriver) new Augmenter().augment( driver );
-		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-
-		try {
-			FileUtils.copyFile(scrFile, new File(screenShotName));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return screenShotName;
-	}
 
 	public static void startApp(String property,String name, RemoteWebDriver d )
 	{
@@ -65,39 +53,9 @@ public class Utils {
 		d.executeScript("mobile:application:close", params);
 	}
 
-	public static void setLocation(String address,RemoteWebDriver d )
-	{
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("address", address);
-		d.executeScript("mobile:location:set", params);
-	}
 
 
-	public static void setLocationCoordinates(String latlong,RemoteWebDriver d )
-	{
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("coordinates", latlong);
-		d.executeScript("mobile:location:set", params);
-	}
-
-	public static void pressKey(String key,RemoteWebDriver d )
-	{
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("keySequence", key);
-		d.executeScript("mobile:presskey:", params);
-	}
-
-
-	public static void longtouch(String key,RemoteWebDriver d )
-	{
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("location", key);  // 145,449
-		params.put("duration", key);
-		d.executeScript("mobile:touch:tap", params);
-	}
-
-
-	public static void switchToContext(RemoteWebDriver driver, String context) {
+	public static void switchToContext(AppiumDriver driver, String context) {
 		RemoteExecuteMethod executeMethod = new RemoteExecuteMethod(driver);
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("name", context);
@@ -112,12 +70,13 @@ public class Utils {
 		d.executeScript("mobile:touch:swipe", params);
 
 	}
-	public static void waitForVisible(RemoteWebDriver driver, final By by, String string, int waitTime) {
+	public static void waitForVisible(AppiumDriver driver, final By by, String string,String value, int waitTime) {
 		int timeoutInSeconds = 0;
 		WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 		for (int attempt = 0; attempt < waitTime; attempt++) {
 			try {
-				driver.findElement(by).getAttribute("value").equalsIgnoreCase(string);
+//				driver.findElement(by).getAttribute("value").equalsIgnoreCase(string);
+				driver.findElement(by).getAttribute(value).equalsIgnoreCase(string);
 				break;
 			} catch (Exception e) {
 				driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
@@ -126,15 +85,8 @@ public class Utils {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(by));
 	}
 
-	public static void rotateDevice (String stat,WebDriver d )
-	{
-		// operation - next or reset
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("operation", stat);
-		((RemoteWebDriver) d).executeScript("mobile:handset:rotate", params);
-	}
 
-	public static void home(RemoteWebDriver driver){
+	public static void home(AppiumDriver driver){
 		Map<String,String> params1 = new HashMap<String,String>();
 		params1.clear();
 		params1.put("keySequence", "HOME");
@@ -142,60 +94,7 @@ public class Utils {
 
 	}
 
-	public static void downloadReport(RemoteWebDriver driver, String type, String fileName) throws IOException {
-		try {
-			String command = "mobile:report:download";
-			Map<String, Object> params = new HashMap<>();
-			params.put("type", "html");
-			String report = (String)driver.executeScript(command, params);
-			File reportFile = new File(getReprtName(fileName, true) );
-			BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(reportFile));
-			byte[] reportBytes = OutputType.BYTES.convertFromBase64Png(report);
-			output.write(reportBytes); output.close();
-		} catch (Exception ex) {
-			System.out.println("Got exception " + ex); }
-	}
-
-	public static String getReprtName(String repID,boolean withPath) {
-		if (withPath)
-		{
-			return REPORT_LIB+"/rep_"+repID+".html";
-		}
-		else
-		{
-			return  "/rep_"+repID+".html";
-		}
-
-	}
-	public static void pointOfInterest(RemoteWebDriver d ,String poiName, String poiStatus) {
-		String command;
-		Map<String,Object> params = new HashMap<String,Object>();
-		command = "mobile:status:event";
-		params.put("description", poiName);
-		params.put("status", poiStatus);
-		Object result = d.executeScript(command, params);
-	}
-	public static long timerGet(RemoteWebDriver d,String timerType) {
-		String command = "mobile:timer:info";
-		Map<String,String> params = new HashMap<String,String>();
-		params.put("type", timerType);
-		long result = (long)d.executeScript(command, params);
-		return result;
-	}
-	public static void timerReport(RemoteWebDriver d,long timerResult, int threashold, String description, String name) {
-		String command;
-		Map<String,Object> params = new HashMap<String,Object>();
-		command = "mobile:status:timer";
-		params.put("result", timerResult);
-		params.put("threshold", threashold);
-		params.put("description", description);
-		//params.put("status", status);
-		params.put("name", name);
-        Object result = d.executeScript(command, params);
-
-
-	}
-	public static boolean isElementPresent(By by, RemoteWebDriver driver){
+	public static boolean isElementPresent(By by, AppiumDriver driver){
 		try{
 			driver.findElement(by);
 			return true;
@@ -204,7 +103,7 @@ public class Utils {
 			return false;
 		}
 	}
-	public static void visualWithScroll(RemoteWebDriver driver, String string,String match, String threshold){
+	public static void visualWithScroll(AppiumDriver driver, String string,String match, String threshold){
 		try{
 		switchToContext(driver, "VISUAL");
 		Map<String, Object> params1 = new HashMap<>();
@@ -289,18 +188,6 @@ public class Utils {
 		}
 	}
 
-	private static byte[] readFile(File path) throws FileNotFoundException, IOException {
-		int length = (int)path.length();
-		byte[] content = new byte[length];
-		InputStream inStream = new FileInputStream(path);
-		try {
-			inStream.read(content);
-		}
-		finally {
-			inStream.close();
-		}
-		return content;
-	}
 	private static void handleError(HttpURLConnection connection) throws IOException {
 		String msg = "Failed to upload media.";
 		InputStream errorStream = connection.getErrorStream();
@@ -326,60 +213,6 @@ public class Utils {
 		throw new RuntimeException(msg);
 	}
 
-	// =============================== private methods / xml helper  =========================================
-
-    public static String writeToXml (List<Device> list) throws IOException{
-           XStream xstream = new XStream();
-           String xml = null;
-           try {
-   			xml = xstream.toXML(list);
-         File newTextFile = new File("target/t.xml");
-         FileWriter fw = new FileWriter(newTextFile);
-         fw.write(xml);
-         fw.close();
-
-          }
-           catch (IOException iox) {
-
-          }
-           System.out.println("file created");
-           return xml;
-    }
-
-    public static String[][] readFromXml() throws IOException{
-           XStream xstream = new XStream();
-           String xml = null;
-           BufferedReader br = new BufferedReader(new FileReader("target/t.xml"));
-           try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
-                while (line != null) {
-                    sb.append(line);
-                    sb.append(System.lineSeparator());
-                    line = br.readLine();
-                }
-   		     xml = sb.toString();
-           }
-           catch (IOException e) {
-                  e.printStackTrace();
-           }
-            finally {
-                br.close();
-           }
-
-           List<Device> DevicesList = (List<Device>)xstream.fromXML(xml);
-           String[][] tabArray = null;
-           tabArray=new String[DevicesList.size()][5];
-           for (int i = 0; i < DevicesList.size(); i++) {
-        	   tabArray[i][0] = DevicesList.get(i).getPlatform();
-               tabArray[i][1] = DevicesList.get(i).getApp();
-               tabArray[i][2] = DevicesList.get(i).getDeviceID();
-               tabArray[i][3] = DevicesList.get(i).getmodel();
-               tabArray[i][4] = DevicesList.get(i).getOsVersion();
-           }
-
-         return tabArray;
-    }
 	public static void visualOnWeb(RemoteWebDriver driver, String string) throws Exception{
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -397,45 +230,17 @@ public class Utils {
 		}
 	}
 
-    public static String[][] readFromXmlForWeb() throws IOException{
-        XStream xstream = new XStream();
-        String xml = null;
-        BufferedReader br = new BufferedReader(new FileReader("target/t.xml"));
-        try {
-             StringBuilder sb = new StringBuilder();
-             String line = br.readLine();
-             while (line != null) {
-                 sb.append(line);
-                 sb.append(System.lineSeparator());
-                 line = br.readLine();
-             }
-		     xml = sb.toString();
-        }
-        catch (IOException e) {
-               e.printStackTrace();
-        }
-         finally {
-             br.close();
-        }
-
-        List<Device> DevicesList = (List<Device>)xstream.fromXML(xml);
-        String[][] tabArray = null;
-        tabArray=new String[DevicesList.size()][4];
-        for (int i = 0; i < DevicesList.size(); i++) {
-     	   tabArray[i][0] = DevicesList.get(i).getPlatform();
-     	   tabArray[i][1] = DevicesList.get(i).getDeviceID();
-			tabArray[i][2] = DevicesList.get(i).getmodel();
-			tabArray[i][3] = DevicesList.get(i).getOsVersion();
-         }
-
-      return tabArray;
- }
-	public static void openGeneralSettingsiOS(RemoteWebDriver driver)throws Exception{
+	public static void openGeneralSettingsiOS(AppiumDriver driver)throws Exception{
 		try {
-			startApp("identifier", "com.apple.Preferences", driver);
-			stoptApp("identifier", "com.apple.Preferences", driver);
-			startApp("identifier", "com.apple.Preferences", driver);
-
+//			startApp("identifier", "com.apple.Preferences", driver);
+//			stoptApp("identifier", "com.apple.Preferences", driver);
+//			startApp("identifier", "com.apple.Preferences", driver);
+//			driver.launchApp();
+//			sleep(10000);
+//			driver.closeApp();
+//			sleep(5000);
+//			driver.launchApp();
+				openSettingsiOS(driver);
 			try{
 				driver.findElementByXPath("//UIATableCell[@label=\"General\"]|//XCUIElementTypeCell[@label=\"General\"]").click();
 			}catch (NoSuchElementException e){
@@ -463,14 +268,20 @@ public class Utils {
 
 
 
-	public static void openSettingsiOS(RemoteWebDriver driver)throws Exception{
+	public static void openSettingsiOS(AppiumDriver driver)throws Exception{
 		try {
-			HashMap<String, Object> params1 = new HashMap<>();
-			params1.put("identifier", "com.apple.Preferences");
-			driver.executeScript("mobile:application:open", params1);
-			driver.executeScript("mobile:application:close", params1);
-			driver.executeScript("mobile:application:open", params1);
-			params1.clear();
+//			HashMap<String, Object> params1 = new HashMap<>();
+//			params1.put("identifier", "com.apple.Preferences");
+////			driver.executeScript("mobile:application:open", params1);
+//			driver.executeScript("mobile:application:close", params1);
+//			driver.executeScript("mobile:application:open", params1);
+//			params1.clear();
+			driver.launchApp();
+			sleep(5000);
+			driver.closeApp();
+			sleep(5000);
+			driver.launchApp();
+//			sleep(5000);
 		}catch (Throwable t) {
 			t.printStackTrace();
 			ExceptionAnalyzer.analyzeException(t,"Open and settings failed");
@@ -484,10 +295,10 @@ public class Utils {
 			} catch (InterruptedException e) {
 			}
 		}
-		public static void scrolliPadTable(RemoteWebDriver driver, String text){
+		public static void scrolliPadTable(AppiumDriver driver, String text,WebElement tbl1){
             try{
-                switchToContext(driver,"NATIVE");
-                WebElement tbl1 = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
+//                switchToContext(driver,"NATIVE");
+//                WebElement tbl1 = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
                 HashMap<String, Object> params1 = new HashMap<>();
                 params1.put("direction", "down");
                 params1.put("element",((RemoteWebElement) tbl1).getId());
@@ -502,21 +313,46 @@ public class Utils {
 		    }
 		}
 
-	public static void scrollTo(RemoteWebDriver driver, String parameter, String text){
+	public static void scrollTo(AppiumDriver driver,String text){
 	try{
+		switchToContext(driver,"NATIVE");
+		WebElement tbl1 = driver.findElementByXPath("//XCUIElementTypeTable|//UIATableView");
 		HashMap<String, Object> params1 = new HashMap<>();
 		params1.put("direction", "down");
-		params1.put(parameter, text);
+		params1.put("element",((RemoteWebElement) tbl1).getId());
+		params1.put("text", params1.containsValue(text));
+//		params1.put("predicateString", "value == '" + text + "'");
 		driver.executeScript("mobile: scroll", params1);
+//		driver.executeScript("mobile: swipe", params1);
 		params1.clear();
 	}catch (Throwable t) {
 		t.printStackTrace();
-		ExceptionAnalyzer.analyzeException(t,"visual on iPad  "+text+" failed");
+		ExceptionAnalyzer.analyzeException(t,"failed to scroll");
 		//rethrow exception if not critical device exception
 		throw t;
 	}
 	}
-	 public static void scrollToText(RemoteWebDriver driver, String parameter,String text) {
+	public static void scroll(AppiumDriver driver,String text){
+		try{
+			switchToContext(driver,"NATIVE");
+			WebElement tbl1 = driver.findElementByXPath("//XCUIElementTypeTable|//UIATableView");
+			HashMap<String, Object> params1 = new HashMap<>();
+			params1.put("direction", "down");
+			params1.put("element",((RemoteWebElement) tbl1).getId());
+//			params1.put("text", params1.containsValue(text));
+//		params1.put("predicateString", "value == '" + text + "'");
+			driver.executeScript("mobile: scroll", params1);
+//		driver.executeScript("mobile: swipe", params1);
+			params1.clear();
+		}catch (Throwable t) {
+			t.printStackTrace();
+			ExceptionAnalyzer.analyzeException(t,"failed to scroll");
+			//rethrow exception if not critical device exception
+			throw t;
+		}
+	}
+
+	public static void scrollToText(AppiumDriver driver, String parameter,String text) {
 		 try {
 			 switchToContext(driver,"VISUAL");
 			 HashMap<String, Object> params1 = new HashMap<>();
@@ -524,7 +360,8 @@ public class Utils {
 			 params1.put("source", "camera");
 			 params1.put("scrolling", "scroll");
 			 params1.put("next", "SWIPE_UP");
-			 params1.put("duration","5");
+			 params1.put("maxscroll", "11");
+			 params1.put("duration","60");
 			 driver.executeScript("mobile:text:find", params1);
 			 params1.clear();
 		 }catch (Throwable t) {
@@ -532,9 +369,8 @@ public class Utils {
 			 ExceptionAnalyzer.analyzeException(t,"visual on "+text+" failed");
 			 //rethrow exception if not critical device exception
 			 throw t;}
-
-	 }
-	public static void selectText(RemoteWebDriver driver, String property,String text,String offset)throws Exception{
+	}
+	public static void selectText(AppiumDriver driver, String property,String text,String offset)throws Exception{
 		try {
 			switchToContext(driver, "VISUAL");
 			HashMap<String, Object> params1 = new HashMap<>();
@@ -550,21 +386,35 @@ public class Utils {
 			//rethrow exception if not critical device exception
 			throw t;}
 	}
-	public static void retryClick(RemoteWebDriver driver,String xpath)throws Exception{
+	public static void retryClick(AppiumDriver driver,String xpath)throws Exception {
 		driver.findElementByXPath(xpath).click();
-		try{
+		try {
 			driver.findElementByXPath(xpath).click();
-		}catch(NoSuchElementException e){
+		} catch (NoSuchElementException e) {
 
 			System.out.println("element Click failed");
 			ExceptionAnalyzer.analyzeException(e, " element Click failed");
 
 		}
-
-
 	}
+//		public static void retryScroll(AppiumDriver driver,String text)throws Exception{
+//			scrollTo(driver, text);
+//			try {
+//				scrollTo(driver, text);
+//			}catch(Exception e){
+//				System.out.println("text was not found on screen");
+//				ExceptionAnalyzer.analyzeException(e, " text was not found on screen");
+//			}
+//
+//			}
 
-	public static String handsetInfo(RemoteWebDriver driver,String key,String value){
+
+
+
+
+
+
+	public static String handsetInfo(AppiumDriver driver,String key,String value){
 
 		HashMap<String, Object> params1= new HashMap<>();
 		params1.put(key, value);

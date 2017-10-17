@@ -4,14 +4,15 @@ import com.perfecto.healthcheck.infra.ExceptionAnalyzer;
 import com.perfecto.healthcheck.infra.SpecialMessageException;
 import com.perfecto.healthcheck.infra.Utils;
 import com.perfecto.healthcheck.infra.tests.TestClass;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.Assert;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,12 +21,13 @@ import java.util.concurrent.TimeUnit;
 public class Unlock extends TestClass {
     HashMap<String, Object> params1;
 
-    public static void setDeviceUnlock(RemoteWebDriver driver)throws Exception{
+    public static void setDeviceUnlock(AppiumDriver driver)throws Exception{
         System.out.print("set unlock");
         try {
-            HashMap<String, Object> params1 = new HashMap<>();
-            params1.put("name", "com.android.settings");
-            driver.executeScript("mobile:application:open", params1);
+            driver.launchApp();
+            By settings = By.xpath("//*[@text=\"Settings\"]");
+            Utils.waitForVisible(driver,settings,"Settings","text",30);
+            Map<String, Object> params1 = new HashMap<>();
             params1.clear();
             params1.put("property", "model");
             String cap1 = (String) driver.executeScript("mobile:handset:info", params1);
@@ -85,7 +87,7 @@ public class Unlock extends TestClass {
 
     }
 
-    public static void setUnlockiOS(RemoteWebDriver driver) throws Exception{
+    public static void setUnlockiOS(AppiumDriver driver) throws Exception{
         System.out.println("set device to unlock -never");
         driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
         try {

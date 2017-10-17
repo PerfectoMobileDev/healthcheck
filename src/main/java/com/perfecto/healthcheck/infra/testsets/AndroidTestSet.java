@@ -2,11 +2,11 @@ package com.perfecto.healthcheck.infra.testsets;
 
 import com.perfecto.healthcheck.infra.*;
 import com.perfecto.healthcheck.infra.tests.external.*;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import io.appium.java_client.AppiumDriver;
 import org.testng.Assert;
 
 public class AndroidTestSet extends AbstractTestSet {
-    public AndroidTestSet(RemoteWebDriver driver, Device device,String UUID) {
+    public AndroidTestSet(AppiumDriver driver, Device device, String UUID) {
         super(driver, device, UUID);
     }
     public static String language = HealthcheckProps.getDefaultLanguage();
@@ -32,7 +32,7 @@ public class AndroidTestSet extends AbstractTestSet {
         );
 
         tr.registerTest(()-> Keyboard.setToDefaultKeyboardAndroid(driver),"Set to default keyboard Android");
-        if(!unlock.isEmpty()) {
+        if(unlock.isEmpty()) {
             tr.registerTest(() -> Unlock.setDeviceUnlock(driver), "Set device unlock");
         }
         if(!language.isEmpty()) {

@@ -1,12 +1,12 @@
 package com.perfecto.healthcheck.actors;
 
 import akka.actor.AbstractLoggingActor;
-import com.perfecto.healthcheck.HealthcheckAkka;
 import com.perfecto.healthcheck.infra.DeviceDriver;
-import com.perfecto.healthcheck.infra.HealthcheckProps;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.URL;
 import java.util.List;
@@ -30,12 +30,31 @@ public class DriverCreator extends AbstractLoggingActor {
                                                             capabilities.setCapability("deviceName", device.getDeviceID());
                                                             capabilities.setCapability("platformName", device.getPlatform());
                                                             capabilities.setCapability("browserName", "MobileOS");
+                                                            capabilities.setCapability("bundleId", "com.apple.Preferences");
+                                                            capabilities.setCapability("appPackage", "com.android.settings");
+//                                                            capabilities.setCapability("fullReset", "false");
                                                             String host = device.getMcm();
-                                                            RemoteWebDriver driver = null;
-                                                            try {
-                                                                driver = new RemoteWebDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities);
-                                                            } catch (Throwable t) {
-                                                                t.printStackTrace();
+//                                                            RemoteWebDriver driver = null;
+//                                                            try {
+//                                                                driver = new RemoteWebDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities);
+//                                                            } catch (Throwable t) {
+//                                                                t.printStackTrace();
+//                                                            }
+                                                           AppiumDriver driver = null;
+                                                           String  os =device.getPlatform();
+                                                            if(os.equalsIgnoreCase("iOS")){
+                                                                try {
+                                                                    driver = new IOSDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities) ;
+                                                                } catch (Throwable t) {
+                                                                    t.printStackTrace();
+                                                                }
+                                                            }
+                                                            else{
+                                                                try{
+                                                                    driver = new AndroidDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities);
+                                                                } catch (Throwable t) {
+                                                                    t.printStackTrace();
+                                                                }
                                                             }
                                                             return new DeviceDriver(device,driver);
                                                         })

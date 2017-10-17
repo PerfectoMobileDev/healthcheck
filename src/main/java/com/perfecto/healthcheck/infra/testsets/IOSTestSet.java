@@ -2,11 +2,11 @@ package com.perfecto.healthcheck.infra.testsets;
 
 import com.perfecto.healthcheck.infra.*;
 import com.perfecto.healthcheck.infra.tests.external.*;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import io.appium.java_client.AppiumDriver;
 import org.testng.Assert;
 
 public class IOSTestSet extends AbstractTestSet{
-    public IOSTestSet(RemoteWebDriver driver, Device device,String UUID) {
+    public IOSTestSet(AppiumDriver driver, Device device, String UUID) {
         super(driver, device, UUID);
     }
     public static String language = HealthcheckProps.getDefaultLanguage();
@@ -14,6 +14,7 @@ public class IOSTestSet extends AbstractTestSet{
     @Override
     public DeviceStatus runTests() {
         TestsRunner tr = new TestsRunner(device);
+
         tr.registerTest(()-> DefaultLanguage.setTodefaultLanguageiOS(driver,"English"),"Set English as default language IOS");
         tr.registerTest(()-> SetWifi.setDeviceWifiSettingsiOS(driver),"Get WiFi settings IOS");
 

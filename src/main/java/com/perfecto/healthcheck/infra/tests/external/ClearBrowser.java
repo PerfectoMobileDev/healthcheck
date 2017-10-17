@@ -1,11 +1,14 @@
 package com.perfecto.healthcheck.infra.tests.external;
 
-import com.perfecto.healthcheck.infra.*;
+import com.perfecto.healthcheck.infra.ExceptionAnalyzer;
+import com.perfecto.healthcheck.infra.HealthcheckProps;
+import com.perfecto.healthcheck.infra.SpecialMessageException;
+import com.perfecto.healthcheck.infra.Utils;
 import com.perfecto.healthcheck.infra.tests.TestClass;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -16,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 public class ClearBrowser extends TestClass{
 
         static By clear = By.xpath("//UIATableCell[@label=\"Clear History and Website Data\"]|//XCUIElementTypeCell[@label=\"Clear History and Website Data\"]");
-        static By acceptBtn = By.xpath("//*[@resource-id=\"com.android.chrome:id/positive_button\"]");
-        public static void clearBrowseriOS(RemoteWebDriver driver) throws Exception {
+//        static By acceptBtn = By.xpath("//*[@resource-id=\"com.android.chrome:id/positive_button\"]");
+        public static void clearBrowseriOS(AppiumDriver driver) throws Exception {
 
             System.out.println("clean browser");
             driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
@@ -26,8 +29,18 @@ public class ClearBrowser extends TestClass{
                 Utils.openSettingsiOS(driver);
                 String cap1 = Utils.handsetInfo(driver, "property", "model");
                 if (cap1.contains("iPhone")) {
+                    Utils.scrollTo(driver,"Safari");
+//                    Utils.scrollToText(driver, "content", "Safari");
+//                    Utils.switchToContext(driver, "NATIVE");
+//                    Utils.scrollTo(driver);
+//                    try {
+//                            driver.findElementByXPath("//*[@value=\"Safari\"]").isDisplayed();
+//                    }catch (NoSuchElementException e){
+//                            Utils.scrollTo(driver);
+//                            driver.findElementByXPath("//*[@value=\"Safari\"]").isDisplayed();
+//
+//                    }
 
-                    Utils.scrollToText(driver, "content", "Safari");
                     Utils.switchToContext(driver, "NATIVE");
                     Utils.retryClick(driver,"//*[@value=\"Safari\"]");
                     Utils.scrollToText(driver, "content", "Clear history");
@@ -35,24 +48,24 @@ public class ClearBrowser extends TestClass{
                     WebElement clearHistory = driver.findElement(clear);
                     if (clearHistory.isEnabled()) {
                         clearHistory.click();
-                        if(clearHistory.isEnabled()){
-                            clearHistory.click();
-                        }
-                        driver.findElementByXPath("//*[@label=\"Clear History and Data\"]").click();
+//                        if(clearHistory.isEnabled()){
+//                            clearHistory.click();
+//                        }
+                        driver.findElementByXPath("//*[contains(@label,\"Clear History and Data\")]").click();
                         throw new SpecialMessageException("clear history and data");
 
                     }
                 } else {
                     //		this section clears safari for iPads
                     Utils.switchToContext(driver, "NATIVE");
-//                WebElement tbl = driver.findElementByXPath("//UIATableView[1]");
-                    Utils.scrolliPadTable(driver, "Safari");
+                    WebElement tbl = driver.findElementByXPath("//UIATableView[1]|//XCUIElementTypeTable/XCUIElementTypeSearchField");
+                    Utils.scrolliPadTable(driver, "Safari",tbl);
                     WebElement safari = driver.findElementByXPath("//UIATableView[1]//*[@value=\"Safari\"]|//XCUIElementTypeCell[@label=\"Safari\"]");
                     safari.click();
                     Boolean safariRight = driver.findElementByXPath("//UIANavigationBar[2]|//XCUIElementTypeOther[3]/XCUIElementTypeNavigationBar[1]").getAttribute("name").contains("Safari");
                     if (safariRight == true) {
-//                    WebElement tbl1 = driver.findElementByXPath("//UIATableView[2]");
-                        Utils.scrolliPadTable(driver, "Clear History and Website Data");
+                    WebElement tbl1 = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
+                        Utils.scrolliPadTable(driver, "Clear History and Website Data",tbl1);
                         WebElement clearHistory = driver.findElement(clear);
                         if (clearHistory.isEnabled()) {
                             clearHistory.click();
@@ -69,17 +82,17 @@ public class ClearBrowser extends TestClass{
 
         }
 
-    public static void clearBrowserAndroid(RemoteWebDriver driver) throws Exception {
+    public static void clearBrowserAndroid(AppiumDriver driver) throws Exception {
         System.out.println("clean the browser");
         try {
             //Clean the browser history and cache
             Utils.home(driver);
             Utils.switchToContext(driver, "WEBVIEW");
-            driver.get("google.com");
+            driver.get("www.google.com");
             HashMap<String, Object> params1 = new HashMap<>();
             driver.executeScript("mobile:browser:clean", params1);
             //Setting google chrome for the first time as default browser
-            driver.get("google.com");
+            driver.get("www.google.com");
             Utils.switchToContext(driver, "NATIVE");
             try{
 //                if more than one browser available on the device

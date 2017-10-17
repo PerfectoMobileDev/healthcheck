@@ -53,6 +53,9 @@ public class HealthcheckProps {
         if (Unlock_status == null || Unlock_status.trim().isEmpty()) {
             Unlock_status = "";
         }
+        if (chrome_Acount_Name == null || chrome_Acount_Name.trim().isEmpty()) {
+            chrome_Acount_Name = "";
+        }
     }
 
     public static String getUUID() {

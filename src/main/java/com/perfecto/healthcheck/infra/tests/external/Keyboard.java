@@ -4,8 +4,8 @@ import com.perfecto.healthcheck.infra.ExceptionAnalyzer;
 import com.perfecto.healthcheck.infra.SpecialMessageException;
 import com.perfecto.healthcheck.infra.Utils;
 import com.perfecto.healthcheck.infra.tests.TestClass;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public class Keyboard extends TestClass{
 
 
 
-    public static boolean getDefaultKeyBoardAndroid(RemoteWebDriver driver) throws Exception{
+    public static boolean getDefaultKeyBoardAndroid(AppiumDriver driver) throws Exception{
         System.out.println("getting default keyboard and setting keyboard");
         HashMap<String, Object> params1 = new HashMap<>();
         String Keyboard = null;
@@ -53,7 +53,7 @@ public class Keyboard extends TestClass{
     }
 
 
-    public static void setToDefaultKeyboardAndroid(RemoteWebDriver driver) throws Exception{
+    public static void setToDefaultKeyboardAndroid(AppiumDriver driver) throws Exception{
         System.out.print("set PerfectoKeyboard");
         try {
             if (getDefaultKeyBoardAndroid(driver)) {
@@ -69,7 +69,7 @@ public class Keyboard extends TestClass{
             throw t;
         }
     }
-    public static void DefaultKeyBoardiOS(RemoteWebDriver driver) throws Exception{
+    public static void DefaultKeyBoardiOS(AppiumDriver driver) throws Exception{
         System.out.println("Getting default keyboard and setting keyboard");
         HashMap<String, Object> params1 = new HashMap<>();
         String Keyboard = null;
@@ -81,17 +81,19 @@ public class Keyboard extends TestClass{
                 Utils.scrollToText(driver,"content","General");
                 Utils.switchToContext(driver, "NATIVE");
                 driver.findElementByXPath("//*[@value=\"General\"]").click();
-                Utils.scrollTo(driver,"element", "//*[@value=\"Keyboard\"]");
-//                driver.findElementByXPath("//*[@value=\"Keyboard\"]").click();
-                Utils.retryClick(driver,"//*[@value=\"Keyboard\"]");
-//                driver.findElementByXPath("//UIATableCell/*[@label=\"Keyboards\"]").click();
-                Utils.retryClick(driver,"//UIATableCell/*[@label=\"Keyboards\"]|//XCUIElementTypeStaticText[@value=\"Keyboards\"]");
+                Utils.scrollTo(driver,"Keyboard");
+//                params1.put("element","//XCUIElementTypeTable");
+                driver.findElementByXPath("//*[@value=\"Keyboard\"]").click();
+//                Utils.retryClick(driver,"//*[@value=\"Keyboard\"]");
+                driver.findElementByXPath("//UIATableCell/*[@label=\"Keyboards\"]|//XCUIElementTypeTable/XCUIElementTypeCell[@label=\"Keyboards\"]").click();
+//                Utils.retryClick(driver,"//UIATableCell/*[@label=\"Keyboards\"]|//XCUIElementTypeStaticText[@value=\"Keyboards\"]");
                 List<WebElement> elements = driver.findElementsByXPath("//UIATableCell/UIAStaticText|//XCUIElementTypeTable/XCUIElementTypeCell");
                 for (WebElement ele : elements) {
                     if (ele.getText().contains("English")) {
 //                        Keyboard = ele.getText().toString();
                         Assert.assertTrue(ele.getText().contains("English"));
-                        Utils.stoptApp("identifier", "com.apple.Preferences",driver);
+//                        Utils.stoptApp("identifier", "com.apple.Preferences",driver);
+                        driver.closeApp();
                         return;
 
                     } else {
@@ -105,9 +107,10 @@ public class Keyboard extends TestClass{
             } else {
 //				if iPad os 8
                 Utils.switchToContext(driver, "NATIVE");
-                driver.findElementByXPath("//UIATableView[1]/UIATableCell[@name=\"General\"]|//XCUIElementTypeCell[@label=\"General\"]/XCUIElementTypeOther[1]").click();
+                driver.findElementByXPath("//UIATableView[1]/UIATableCell[@name=\"General\"]|//XCUIElementTypeCell[@label=\"General\"]").click();
                 driver.findElementByXPath("//UIANavigationBar[2]|//XCUIElementTypeOther[3]/XCUIElementTypeNavigationBar").getText().contains("General");
-                Utils.scrolliPadTable(driver,"Keyboard");
+                WebElement tbl = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
+                Utils.scrolliPadTable(driver,"Keyboard",tbl);
                 driver.findElementByXPath("//UIATableView[2]/UIATableCell[@label=\"Keyboard\"]|//XCUIElementTypeCell[@label=\"Keyboard\"]").click();
                 driver.findElementByXPath("//UIATableView[2]/UIATableCell[@label=\"Keyboards\"]|//XCUIElementTypeStaticText[@value=\"Keyboards\"]").click();
                 List<WebElement> elements = driver.findElementsByXPath("//UIATableView[2]/UIATableCell/UIAStaticText");
@@ -127,7 +130,9 @@ public class Keyboard extends TestClass{
             }
 
         }
-            Utils.stoptApp("identifier", "com.apple.Preferences",driver);
+//
+//      Utils.stoptApp("identifier", "com.apple.Preferences",driver);
+            driver.closeApp();
         } catch (Throwable t) {
             t.printStackTrace();
             ExceptionAnalyzer.analyzeException(t,"Error setting default keyboard IOS with message " + t.getMessage());
@@ -137,7 +142,7 @@ public class Keyboard extends TestClass{
     }
 
 
-    public static boolean setPerfectoKeyboard(RemoteWebDriver driver){
+    public static boolean setPerfectoKeyboard(AppiumDriver driver){
         System.out.print("set perfecto keyboard");
         try {
             HashMap<String, Object> params1 = new HashMap<>();
@@ -184,7 +189,8 @@ public class Keyboard extends TestClass{
                     driver.findElementByXPath("//*[@text='Perfecto Mobile']").click();
                 }
             }
-            Utils.stoptApp("identifier", "com.android.settings",driver);
+//            Utils.stoptApp("identifier", "com.android.settings",driver);
+            driver.closeApp();
 
         }catch(Exception t) {
             t.printStackTrace();

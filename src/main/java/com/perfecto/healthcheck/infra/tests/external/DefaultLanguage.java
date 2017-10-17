@@ -4,8 +4,9 @@ import com.perfecto.healthcheck.infra.ExceptionAnalyzer;
 import com.perfecto.healthcheck.infra.SpecialMessageException;
 import com.perfecto.healthcheck.infra.Utils;
 import com.perfecto.healthcheck.infra.tests.TestClass;
+import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,7 @@ public class DefaultLanguage extends TestClass{
     static HashMap<String, Object> params1;
     private static boolean errorFlag=false;
 //    public static String language = HealthcheckProps.getDefaultLanguage();
-    protected static String getDefaultLanguage(RemoteWebDriver driver) {
+    protected static String getDefaultLanguage(AppiumDriver driver) {
         String language = null;
         HashMap<String, Object> params1 = new HashMap<>();
         params1.put("package", "com.android.settings");
@@ -26,19 +27,20 @@ public class DefaultLanguage extends TestClass{
         driver.executeScript("mobile:activity:open", params1);
         params1.clear();
         Utils.switchToContext(driver, "NATIVE");
-        WebElement lang = driver.findElementByXPath("//*[contains(@text,\"Language\")]/following-sibling::*[@resource-id=\"android:id/summary\"]");
+        WebElement lang = driver.findElementByXPath("//*[@resource-id=\"android:id/list\"]/android.widget.LinearLayout[1]//*[@resource-id=\"android:id/title\"]/following-sibling::*[@resource-id=\"android:id/summary\"]|//*[@resource-id=\"com.android.settings:id/list\"]/android.widget.LinearLayout[1]//*[@resource-id=\"android:id/title\"]/following-sibling::*[@resource-id=\"android:id/summary\"]");
+        //*[matches(@resource-id,"^.*?android.*:id/list")]/android.widget.LinearLayout[1]//*[@resource-id="android:id/title"]/following-sibling::*[@resource-id="android:id/summary"]
         language = lang.getText();
         return language;
     }
-
-    public static void setToDefaultLanguage(RemoteWebDriver driver,String language) throws Exception{
+    public static void setToDefaultLanguage(AppiumDriver driver, String language) throws Exception{
         System.out.print("set english default language");
         try {
             if (getDefaultLanguage(driver).contains(language)) {
                 Utils.home(driver);
+                Utils.sleep(3000);
 
             } else {
-               driver.findElementByXPath("//*[contains(@text,\"Language\")]/following-sibling::*[@resource-id=\"android:id/summary\"]").click();
+               driver.findElementByXPath("//*[@resource-id=\"android:id/list\"]/android.widget.LinearLayout[1]|//*[@resource-id=\"com.android.settings:id/list\"]/android.widget.LinearLayout[1]").click();
                 setDefaultLanguage(driver,language);
                 throw new SpecialMessageException("Language was set to "+language);
             }
@@ -50,7 +52,7 @@ public class DefaultLanguage extends TestClass{
 
 
 
-    public static void setDefaultLanguage(RemoteWebDriver driver,String language) throws Exception{
+    public static void setDefaultLanguage(AppiumDriver driver, String language) throws Exception{
         try {
         HashMap<String, Object> params1 = new HashMap<>();
         Utils.switchToContext(driver, "NATIVE");
@@ -58,12 +60,39 @@ public class DefaultLanguage extends TestClass{
 
         if (cap1.contains("7")) {
             driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/add_language\"]").click();
-            driver.findElementByXPath("//*[@resource-id=\"android:id/locale_search_menu\"]").click();
-            driver.findElementByXPath("//*[@resource-id=\"android:id/search_src_text\"]").sendKeys(language);
-            driver.findElementByXPath("//*[@content-desc="+language+"]").click();
+            String deviceCap = Utils.handsetInfo(driver,"property","model");
+            if(deviceCap.contains("nexus")) {
+                driver.findElementByXPath("//*[@resource-id=\"android:id/locale_search_menu\"]").click();
+                driver.findElementByXPath("//*[@resource-id=\"android:id/search_src_text\"]").sendKeys(language);
+                driver.findElementByXPath("//*[@content-desc='" + language + "']").click();
+            }else{
+                driver.findElementByXPath("//*[contains(@text,'"+language+"')]").click();
+            }
+//
             try {
                 driver.findElementByXPath("//android.widget.TextView[@clickable=\"true\"][1]");
             }catch(Throwable t) {
+                ExceptionAnalyzer.analyzeException(t, "no region choise parameter for selected language");
+                throw t;
+            }
+            try{
+//                makes sure the default language is set to language and deletes the default on nexus devices
+                driver.findElementByXPath("//*[contains(@resource-id,\":id/action_bar\")]//android.widget.LinearLayout/*[contains(@class,\"Button\")]").click();
+                driver.findElementByXPath("//*[@class=\"android.widget.ListView\"]/android.widget.LinearLayout[1]").click();
+                driver.findElementByXPath("//*[contains(@content-desc,'1')]/android.widget.CheckBox").click();
+                try {
+
+                    driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/action_bar\"]//*[@class=\"android.widget.LinearLayout\"]/android.widget.TextView[@clickable=\"true\"]").click();
+                }catch (NoSuchElementException t) {
+//                    ExceptionAnalyzer.analyzeException(t,"this element does not exist on this device");
+//                    throw t;
+                    driver.findElementByXPath("//android.widget.Button").click();
+                }
+
+                driver.findElementByXPath("//*[@resource-id=\"android:id/button1\"]").click();
+                Utils.home(driver);
+
+            } catch(Throwable t) {
                 ExceptionAnalyzer.analyzeException(t, "no region choise parameter for selected language");
                 throw t;
             }
@@ -71,7 +100,8 @@ public class DefaultLanguage extends TestClass{
             Utils.switchToContext(driver, "VISUAL");
             Utils.visualWithScroll(driver, language,"equal","100");
             Utils.switchToContext(driver, "NATIVE");
-            driver.findElementByXPath("//*[contains(@text,"+language+"]").click();
+            driver.findElementByXPath("//*[contains(@text,'"+language+"')]").click();
+//            driver.findElementByXPath("//*[contains(@text,'"+language+"')]").click();
             Utils.home(driver);
         }
         } catch (Throwable t) {
@@ -79,9 +109,9 @@ public class DefaultLanguage extends TestClass{
             throw t;
         }
     }
-    public static void setTodefaultLanguageiOS(RemoteWebDriver driver,String language)throws Exception{
+    public static void setTodefaultLanguageiOS(AppiumDriver driver, String language)throws Exception{
         System.out.print("set "+language+" default language");
-
+        driver.closeApp();
         try {
             if (getDefaultLanguageiOS(driver).contains(language)){
                 Utils.home(driver);
@@ -98,7 +128,7 @@ public class DefaultLanguage extends TestClass{
         }
 
     }
-    public static String getDefaultLanguageiOS(RemoteWebDriver driver) throws Exception {
+    public static String getDefaultLanguageiOS(AppiumDriver driver) throws Exception {
 
         System.out.print("get english default language");
         driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
@@ -131,7 +161,9 @@ public class DefaultLanguage extends TestClass{
                 break;
             default: //iPad
                 Utils.openGeneralSettingsiOS(driver);
-                Utils.scrolliPadTable(driver, "iTunes");
+                Utils.switchToContext(driver, "NATIVE");
+                WebElement tbl = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
+                Utils.scrolliPadTable(driver, "iTunes",tbl);
                 OSVersion = Utils.handsetInfo(driver, "property", "osVersion");
                 i = OSVersion.contains("9.");
                 if (i == true) {
@@ -155,7 +187,7 @@ public class DefaultLanguage extends TestClass{
 
 
 
-    public static void  setDefaultLanguageiOS(RemoteWebDriver driver,String language) throws Exception {
+    public static void  setDefaultLanguageiOS(AppiumDriver driver, String language) throws Exception {
     try{
 //        boolean errorFlag = false;
         System.out.print("set english default language");

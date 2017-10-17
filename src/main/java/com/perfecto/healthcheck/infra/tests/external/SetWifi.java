@@ -3,6 +3,7 @@ package com.perfecto.healthcheck.infra.tests.external;
 import com.perfecto.healthcheck.infra.ExceptionAnalyzer;
 import com.perfecto.healthcheck.infra.SpecialMessageException;
 import com.perfecto.healthcheck.infra.Utils;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -28,7 +29,7 @@ public class SetWifi {
         params1.clear();
 
     }
-    public static void setDeviceWifiSettingsAndroid(RemoteWebDriver driver) throws Exception {
+    public static void setDeviceWifiSettingsAndroid(AppiumDriver driver) throws Exception {
         System.out.println("Turning the wifi on");
 
         try {
@@ -45,7 +46,7 @@ public class SetWifi {
             throw t;
         }
     }
-    public static void setDeviceWifiSettingsiOS(RemoteWebDriver driver) throws Exception {
+    public static void setDeviceWifiSettingsiOS(AppiumDriver driver) throws Exception {
         System.out.println("Turning the wifi on");
 
         try {
@@ -63,7 +64,7 @@ public class SetWifi {
         }
     }
 
-    public static void EnablewifiiOS(RemoteWebDriver driver) throws Exception {
+    public static void EnablewifiiOS(AppiumDriver driver) throws Exception {
 
         boolean errorFlag = false;
         driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);

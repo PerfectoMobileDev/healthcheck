@@ -71,7 +71,9 @@ public class ClearBrowser extends TestClass{
                         if (clearHistory.isEnabled()) {
                             clearHistory.click();
                             driver.findElementByXPath("//*[@label=\"Clear\"]").click();
+                            driver.closeApp();
                             throw new SpecialMessageException("clear history and data");
+
                         }
                     }
                 }

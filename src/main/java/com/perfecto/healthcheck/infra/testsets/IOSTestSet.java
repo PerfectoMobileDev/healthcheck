@@ -3,6 +3,7 @@ package com.perfecto.healthcheck.infra.testsets;
 import com.perfecto.healthcheck.infra.*;
 import com.perfecto.healthcheck.infra.tests.external.*;
 import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.By;
 import org.testng.Assert;
 
 public class IOSTestSet extends AbstractTestSet{
@@ -25,6 +26,8 @@ public class IOSTestSet extends AbstractTestSet{
                 {
                     Utils.switchToContext(driver, "WEBVIEW");
                     this.driver.get("google.com");
+                    By images = By.xpath("//*[text()=\"Images\"]");
+                    Utils.waitForVisible(driver,images,"images","text",30);
                     Utils.switchToContext(driver, "VISUAL");
                     Utils.visualOnWeb(driver,"Images");
                     Utils.switchToContext(driver, "WEBVIEW");

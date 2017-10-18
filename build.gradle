@@ -68,7 +68,7 @@ dependencies {
     }
     task cradleErrorRetriever(type: JavaExec) {
         classpath sourceSets.main.runtimeClasspath
-        main = "com.perfecto.automationready.MCMRestAPICradleErrorRetriever"
+        main = "com.perfecto.healthcheck.infra.testsets.MCMRestAPICradleErrorRetriever"
     }
 
 task generateStats(type:JavaExec){

@@ -40,8 +40,9 @@ public class ClearBrowser extends TestClass{
 //                            driver.findElementByXPath("//*[@value=\"Safari\"]").isDisplayed();
 //
 //                    }
-
                     Utils.switchToContext(driver, "NATIVE");
+                    By safari = By.xpath("//*[@value=\"Safari\"]");
+                    Utils.waitForVisible(driver,safari,"safari","text",30);
                     Utils.retryClick(driver,"//*[@value=\"Safari\"]");
                     Utils.scrollToText(driver, "content", "Clear history");
                     Utils.switchToContext(driver, "NATIVE");

@@ -10,7 +10,7 @@ public class IOSTestSet extends AbstractTestSet{
         super(driver, device, UUID);
     }
     public static String language = HealthcheckProps.getDefaultLanguage();
-    public static String unlock = HealthcheckProps.getUnlockStatus();
+    public static Boolean unlock = HealthcheckProps.isUnlock();
     @Override
     public DeviceStatus runTests() {
         TestsRunner tr = new TestsRunner(device);
@@ -35,7 +35,7 @@ public class IOSTestSet extends AbstractTestSet{
 
         tr.registerTest(()-> WebInspector.SetWebInspectorOn(driver),"Set web inspector on");
         tr.registerTest(()-> Keyboard.DefaultKeyBoardiOS(driver),"Default keyboard IOS");
-        if(!unlock.isEmpty()) {
+        if(unlock) {
             tr.registerTest(() -> Unlock.setUnlockiOS(driver), "Set unlock IOS");
         }
         if(!language.isEmpty()) {

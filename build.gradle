@@ -30,7 +30,8 @@ def reportiumVersion = '1.1.17'
 dependencies {
     compile("com.perfecto.reporting-sdk:reportium-java:$reportiumVersion")
     compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
-    compile group: 'io.appium', name: 'java-client', version:'2.2.0'
+//    compile group: 'io.appium', name: 'java-client', version:'2.2.0'
+    compile group: 'io.appium', name: 'java-client', version:'3.4.1'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version:'1.1'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version:'2.53.1'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version:'2.53.1'

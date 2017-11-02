@@ -29,21 +29,14 @@ public class ClearBrowser extends TestClass{
                 Utils.openSettingsiOS(driver);
                 String cap1 = Utils.handsetInfo(driver, "property", "model");
                 if (cap1.contains("iPhone")) {
-                    Utils.scrollTo(driver,"Safari");
-//                    Utils.scrollToText(driver, "content", "Safari");
-//                    Utils.switchToContext(driver, "NATIVE");
-//                    Utils.scrollTo(driver);
-//                    try {
-//                            driver.findElementByXPath("//*[@value=\"Safari\"]").isDisplayed();
-//                    }catch (NoSuchElementException e){
-//                            Utils.scrollTo(driver);
-//                            driver.findElementByXPath("//*[@value=\"Safari\"]").isDisplayed();
-//
-//                    }
                     Utils.switchToContext(driver, "NATIVE");
                     By safari = By.xpath("//*[@value=\"Safari\"]");
-                    Utils.waitForVisible(driver,safari,"safari","text",30);
-                    Utils.retryClick(driver,"//*[@value=\"Safari\"]");
+                    do {
+                        Utils.swipe("50%,80%", "50%,20%", driver, "5");
+                    }while (!driver.findElement(safari).isDisplayed());
+
+//                    Utils.retryClick(driver,"//*[@value=\"Safari\"]");
+                    driver.findElement(safari).click();
                     Utils.scrollToText(driver, "content", "Clear history");
                     Utils.switchToContext(driver, "NATIVE");
                     WebElement clearHistory = driver.findElement(clear);

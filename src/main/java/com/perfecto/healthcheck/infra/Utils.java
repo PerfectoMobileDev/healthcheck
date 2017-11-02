@@ -61,12 +61,12 @@ public class Utils {
 		params.put("name", context);
 		executeMethod.execute(DriverCommand.SWITCH_TO_CONTEXT, params);
 	}
-	public static void swipe(String start,String end,RemoteWebDriver d )
+	public static void swipe(String start,String end,RemoteWebDriver d,String duration)
 	{
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("start", start);  //50%,50%
 		params.put("end", end);  //50%,50%
-
+		params.put("duration", duration);
 		d.executeScript("mobile:touch:swipe", params);
 
 	}

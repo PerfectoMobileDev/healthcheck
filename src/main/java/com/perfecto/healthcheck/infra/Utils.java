@@ -72,10 +72,15 @@ public class Utils {
 	}
 	public static void scroll(RemoteWebDriver d)
 	{
+		try{
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("direction", "down");
 		d.executeScript("mobile:scroll", params);
-
+		}catch (Throwable t) {
+			t.printStackTrace();
+			ExceptionAnalyzer.analyzeException(t,"failed to scroll");
+			throw t;
+		}
 	}
 	public static void waitForVisible(AppiumDriver driver, final By by, String string,String value, int waitTime) {
 		int timeoutInSeconds = 0;
@@ -339,25 +344,25 @@ public class Utils {
 		throw t;
 	}
 	}
-	public static void scroll(AppiumDriver driver,String text){
-		try{
-			switchToContext(driver,"NATIVE");
-			WebElement tbl1 = driver.findElementByXPath("//XCUIElementTypeTable|//UIATableView");
-			HashMap<String, Object> params1 = new HashMap<>();
-			params1.put("direction", "down");
-			params1.put("element",((RemoteWebElement) tbl1).getId());
-//			params1.put("text", params1.containsValue(text));
-//		params1.put("predicateString", "value == '" + text + "'");
-			driver.executeScript("mobile: scroll", params1);
-//		driver.executeScript("mobile: swipe", params1);
-			params1.clear();
-		}catch (Throwable t) {
-			t.printStackTrace();
-			ExceptionAnalyzer.analyzeException(t,"failed to scroll");
-			//rethrow exception if not critical device exception
-			throw t;
-		}
-	}
+//	public static void scroll(AppiumDriver driver,String text){
+//		try{
+//			switchToContext(driver,"NATIVE");
+//			WebElement tbl1 = driver.findElementByXPath("//XCUIElementTypeTable|//UIATableView");
+//			HashMap<String, Object> params1 = new HashMap<>();
+//			params1.put("direction", "down");
+//			params1.put("element",((RemoteWebElement) tbl1).getId());
+////			params1.put("text", params1.containsValue(text));
+////		params1.put("predicateString", "value == '" + text + "'");
+//			driver.executeScript("mobile: scroll", params1);
+////		driver.executeScript("mobile: swipe", params1);
+//			params1.clear();
+//		}catch (Throwable t) {
+//			t.printStackTrace();
+//			ExceptionAnalyzer.analyzeException(t,"failed to scroll");
+//			//rethrow exception if not critical device exception
+//			throw t;
+//		}
+//	}
 
 	public static void scrollToText(AppiumDriver driver, String parameter,String text) {
 		 try {

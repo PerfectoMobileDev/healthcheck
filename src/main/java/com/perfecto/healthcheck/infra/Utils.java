@@ -70,6 +70,13 @@ public class Utils {
 		d.executeScript("mobile:touch:swipe", params);
 
 	}
+	public static void scroll(RemoteWebDriver d)
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("direction", "down");
+		d.executeScript("mobile:scroll", params);
+
+	}
 	public static void waitForVisible(AppiumDriver driver, final By by, String string,String value, int waitTime) {
 		int timeoutInSeconds = 0;
 		WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);

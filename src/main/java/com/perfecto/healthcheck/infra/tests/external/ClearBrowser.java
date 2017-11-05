@@ -32,7 +32,8 @@ public class ClearBrowser extends TestClass{
                     Utils.switchToContext(driver, "NATIVE");
                     By safari = By.xpath("//*[@value=\"Safari\"]");
                     do {
-                        Utils.swipe("50%,80%", "50%,20%", driver, "5");
+//                        Utils.swipe("50%,80%", "50%,20%", driver, "5");
+                        Utils.scroll(driver);
                     }while (!driver.findElement(safari).isDisplayed());
 
 //                    Utils.retryClick(driver,"//*[@value=\"Safari\"]");

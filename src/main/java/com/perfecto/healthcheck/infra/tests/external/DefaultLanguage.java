@@ -9,7 +9,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -111,7 +110,7 @@ public class DefaultLanguage extends TestClass{
     }
     public static void setTodefaultLanguageiOS(AppiumDriver driver, String language)throws Exception{
         System.out.print("set "+language+" default language");
-        driver.closeApp();
+//        driver.closeApp();
         try {
             if (getDefaultLanguageiOS(driver).contains(language)){
                 Utils.home(driver);
@@ -131,7 +130,7 @@ public class DefaultLanguage extends TestClass{
     public static String getDefaultLanguageiOS(AppiumDriver driver) throws Exception {
 
         System.out.print("get english default language");
-        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+//        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
         Utils.switchToContext(driver, "NATIVE");
         String model = Utils.handsetInfo(driver, "property", "model");
         String[] model1 = model.split("-");
@@ -157,6 +156,8 @@ public class DefaultLanguage extends TestClass{
                     Utils.selectText(driver,"content","itunes","20%");
                 }
                 Utils.switchToContext(driver, "NATIVE");
+                Utils.sleep(3000);
+                Utils.isElementLoaded(driver,driver.findElementByXPath("//UIATableCell[1]|//XCUIElementTypeCell[1]"),20);
                 language = driver.findElementByXPath("//UIATableCell[1]|//XCUIElementTypeCell[1]").getAttribute("value");
                 break;
             default: //iPad
@@ -191,7 +192,7 @@ public class DefaultLanguage extends TestClass{
     try{
 //        boolean errorFlag = false;
         System.out.print("set english default language");
-        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+//        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
         HashMap<String, Object> params1 = null;
         Utils.switchToContext(driver, "NATIVE");
         String model = Utils.handsetInfo(driver,"property", "model");
@@ -210,6 +211,7 @@ public class DefaultLanguage extends TestClass{
                     Utils.selectText(driver,"content","itunes","10%");
                     Utils.switchToContext(driver, "NATIVE");
 //                    click on first cell in table to enter the languages select table
+                    Utils.isElementLoaded(driver, driver.findElementByXPath("//UIATableCell[1]"),10);
                     driver.findElementByXPath("//UIATableCell[1]").click();
                     Utils.scrollToText(driver,"content", language);
                     Utils.switchToContext(driver, "NATIVE");
@@ -228,6 +230,7 @@ public class DefaultLanguage extends TestClass{
                     Utils.selectText(driver,"content","itunes","20%");
 //                    click on first cell in table to enter the languages select table
                     Utils.switchToContext(driver, "NATIVE");
+                    Utils.isElementLoaded(driver,driver.findElementByXPath("//UIATableCell[1]|//XCUIElementTypeCell[1]"),20);
                     Utils.retryClick(driver,"//UIATableCell[1]|//XCUIElementTypeCell[1]");
 //                    driver.findElementByXPath("//UIATableCell[1]").click();
                     driver.findElementByXPath("(//UIATableCell/UIAStaticText[contains(@label, \"English\")])[1]|//XCUIElementTypeTable/XCUIElementTypeCell[1]/XCUIElementTypeStaticText[contains(@name,"+language+")][1]").click();

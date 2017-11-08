@@ -10,7 +10,6 @@ import org.testng.Assert;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tall on 2/2/2017.
@@ -73,14 +72,16 @@ public class Keyboard extends TestClass{
         System.out.println("Getting default keyboard and setting keyboard");
         HashMap<String, Object> params1 = new HashMap<>();
         String Keyboard = null;
-        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+//        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
         try {
             Utils.openSettingsiOS(driver);
             String cap = Utils.handsetInfo(driver,"property", "model");
             if (cap.contains("iPhone")) {
-                Utils.scrollToText(driver,"content","General");
+//                Utils.scrollToText(driver,"content","General");
+
                 Utils.switchToContext(driver, "NATIVE");
                 driver.findElementByXPath("//*[@value=\"General\"]").click();
+                Utils.isElementLoaded(driver,driver.findElementByXPath("//*[@value=\"About\"]"),10);
                 Utils.scrollTo(driver,"Keyboard");
 //                params1.put("element","//XCUIElementTypeTable");
                 driver.findElementByXPath("//*[@value=\"Keyboard\"]").click();

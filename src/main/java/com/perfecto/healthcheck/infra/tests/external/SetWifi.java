@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tall on 9/11/2017.
@@ -67,7 +66,7 @@ public class SetWifi {
     public static void EnablewifiiOS(AppiumDriver driver) throws Exception {
 
         boolean errorFlag = false;
-        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+//        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
         System.out.println("Turning the wifi on");
         try {
             Utils.openSettingsiOS(driver);

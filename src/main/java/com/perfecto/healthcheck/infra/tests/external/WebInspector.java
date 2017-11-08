@@ -20,13 +20,15 @@ public class WebInspector extends TestClass {
             Utils.openSettingsiOS(driver);
             String cap1 = Utils.handsetInfo(driver,"property", "model");
             if (cap1.contains("iPhone")) {
-
-                Utils.scrollToText(driver,"content", "Safari");
-                Utils.switchToContext(driver ,"NATIVE");
+                Utils.switchToContext(driver, "NATIVE");
                 By safari = By.xpath("//*[@value=\"Safari\"]");
-                Utils.waitForVisible(driver,safari,"safari","value",30);
-//                driver.findElementByXPath("//*[@value=\"Safari\"]").click();
-                Utils.retryClick(driver,"//*[@value=\"Safari\"]");
+                do {
+//                        Utils.swipe("50%,80%", "50%,20%", driver, "5");
+                    Utils.scroll(driver);
+                }while (!driver.findElement(safari).isDisplayed());
+
+//                    Utils.retryClick(driver,"//*[@value=\"Safari\"]");
+                driver.findElement(safari).click();
                 Utils.scrollToText(driver,"content", "Advanced");
                 Utils.switchToContext(driver ,"NATIVE");
 //                driver.findElementByXPath("//UIATableCell[@label=\"Advanced\"]").click();

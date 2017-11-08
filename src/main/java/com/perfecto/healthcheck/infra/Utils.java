@@ -409,6 +409,16 @@ public class Utils {
 
 		}
 	}
+	public static boolean isElementLoaded(AppiumDriver driver, WebElement elementName, int timeout){
+		try{
+			WebDriverWait wait = new WebDriverWait(driver, timeout);
+			wait.until(ExpectedConditions.visibilityOf(elementName));
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+
 //		public static void retryScroll(AppiumDriver driver,String text)throws Exception{
 //			scrollTo(driver, text);
 //			try {

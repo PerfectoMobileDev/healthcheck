@@ -11,7 +11,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tall on 2/2/2017.
@@ -23,7 +22,7 @@ public class ClearBrowser extends TestClass{
         public static void clearBrowseriOS(AppiumDriver driver) throws Exception {
 
             System.out.println("clean browser");
-            driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+//            driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
             try {
                 //Clean the browser history and cache
                 Utils.openSettingsiOS(driver);
@@ -47,6 +46,7 @@ public class ClearBrowser extends TestClass{
 //                            clearHistory.click();
 //                        }
                         driver.findElementByXPath("//*[contains(@label,\"Clear History and Data\")]").click();
+                        driver.closeApp();
                         throw new SpecialMessageException("clear history and data");
 
                     }

@@ -13,7 +13,6 @@ import org.testng.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tall on 2/2/2017.
@@ -89,7 +88,7 @@ public class Unlock extends TestClass {
 
     public static void setUnlockiOS(AppiumDriver driver) throws Exception{
         System.out.println("set device to unlock -never");
-        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+//        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
         try {
             Utils.openSettingsiOS(driver);
             Utils.switchToContext(driver,"NATIVE");

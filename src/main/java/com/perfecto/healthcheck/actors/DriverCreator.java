@@ -29,7 +29,7 @@ public class DriverCreator extends AbstractLoggingActor {
                                                             capabilities.setCapability("password", device.getMcmPassword());
                                                             capabilities.setCapability("deviceName", device.getDeviceID());
                                                             capabilities.setCapability("platformName", device.getPlatform());
-                                                            capabilities.setCapability("browserName", "MobileOS");
+                                                            capabilities.setCapability("browserName", "mobileOS");
                                                             capabilities.setCapability("bundleId", "com.apple.Preferences");
                                                             capabilities.setCapability("appPackage", "com.android.settings");
 //                                                            capabilities.setCapability("fullReset", "false");
@@ -47,6 +47,7 @@ public class DriverCreator extends AbstractLoggingActor {
                                                                     driver = new IOSDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities) ;
                                                                 } catch (Throwable t) {
                                                                     t.printStackTrace();
+                                                                    return new DeviceDriver(device,null);
                                                                 }
                                                             }
                                                             else{
@@ -54,6 +55,7 @@ public class DriverCreator extends AbstractLoggingActor {
                                                                     driver = new AndroidDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities);
                                                                 } catch (Throwable t) {
                                                                     t.printStackTrace();
+                                                                    return new DeviceDriver(device,null);
                                                                 }
                                                             }
                                                             return new DeviceDriver(device,driver);
@@ -66,9 +68,9 @@ public class DriverCreator extends AbstractLoggingActor {
                     } else {
                         sender().tell(new OpenedDrivers(deviceDrivers),self());
 //                        if (HealthcheckProps.isRebootAllDevices()){
-//                            HealthcheckAkka.deviceRebooter.tell(new RunDrivers(deviceDrivers),self());
+//                            HealthcheckAkka.deviceRebooter.tell(new TestRunner.RunDrivers(deviceDrivers),self());
 //                        }else {
-//                            HealthcheckAkka.testRunner.tell(new RunDrivers(deviceDrivers),self());
+//                            HealthcheckAkka.testRunner.tell(new TestRunner.RunDrivers(deviceDrivers),self());
 //                        }
 
 

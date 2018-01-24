@@ -244,14 +244,6 @@ public class Utils {
 
 	public static void openGeneralSettingsiOS(AppiumDriver driver)throws Exception{
 		try {
-//			startApp("identifier", "com.apple.Preferences", driver);
-//			stoptApp("identifier", "com.apple.Preferences", driver);
-//			startApp("identifier", "com.apple.Preferences", driver);
-//			driver.launchApp();
-//			sleep(10000);
-//			driver.closeApp();
-//			sleep(5000);
-//			driver.launchApp();
 				openSettingsiOS(driver);
 			try{
 				driver.findElementByXPath("//UIATableCell[@label=\"General\"]|//XCUIElementTypeCell[@label=\"General\"]").click();
@@ -266,8 +258,6 @@ public class Utils {
 				Object result1 = driver.executeScript("mobile:image:select", params1);
 				ExceptionAnalyzer.analyzeException(e, " element Click failed so used visual click");
 			}
-//				startApp("identifier", "com.apple.Preferences", driver);
-//				driver.findElementByXPath("//UIATableCell[@label=\"General\"]").click();
 			switchToContext(driver, "VISUAL");
 			visualOnWeb(driver, "handoff");
 		}catch (Throwable t) {
@@ -282,12 +272,6 @@ public class Utils {
 
 	public static void openSettingsiOS(AppiumDriver driver)throws Exception{
 		try {
-//			HashMap<String, Object> params1 = new HashMap<>();
-//			params1.put("identifier", "com.apple.Preferences");
-////			driver.executeScript("mobile:application:open", params1);
-//			driver.executeScript("mobile:application:close", params1);
-//			driver.executeScript("mobile:application:open", params1);
-//			params1.clear();
 			driver.launchApp();
 			sleep(5000);
 			driver.closeApp();
@@ -309,8 +293,6 @@ public class Utils {
 		}
 		public static void scrolliPadTable(AppiumDriver driver, String text,WebElement tbl1){
             try{
-//                switchToContext(driver,"NATIVE");
-//                WebElement tbl1 = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
                 HashMap<String, Object> params1 = new HashMap<>();
                 params1.put("direction", "down");
                 params1.put("element",((RemoteWebElement) tbl1).getId());
@@ -344,25 +326,21 @@ public class Utils {
 		throw t;
 	}
 	}
-//	public static void scroll(AppiumDriver driver,String text){
-//		try{
-//			switchToContext(driver,"NATIVE");
-//			WebElement tbl1 = driver.findElementByXPath("//XCUIElementTypeTable|//UIATableView");
-//			HashMap<String, Object> params1 = new HashMap<>();
-//			params1.put("direction", "down");
-//			params1.put("element",((RemoteWebElement) tbl1).getId());
-////			params1.put("text", params1.containsValue(text));
-////		params1.put("predicateString", "value == '" + text + "'");
-//			driver.executeScript("mobile: scroll", params1);
-////		driver.executeScript("mobile: swipe", params1);
-//			params1.clear();
-//		}catch (Throwable t) {
-//			t.printStackTrace();
-//			ExceptionAnalyzer.analyzeException(t,"failed to scroll");
-//			//rethrow exception if not critical device exception
-//			throw t;
-//		}
-//	}
+	public static void scrollToAndroid(AppiumDriver driver, String parameter, String text){
+		try{
+
+			HashMap<String, Object> params1 = new HashMap<>();
+			params1.put("direction", "down");
+			params1.put(parameter, text);
+			driver.executeScript("mobile: scroll", params1);
+			params1.clear();
+		}catch (Throwable t) {
+			t.printStackTrace();
+			ExceptionAnalyzer.analyzeException(t,"visual on iPad  "+text+" failed");
+			//rethrow exception if not critical device exception
+			throw t;
+		}
+	}
 
 	public static void scrollToText(AppiumDriver driver, String parameter,String text) {
 		 try {
@@ -418,22 +396,6 @@ public class Utils {
 			return false;
 		}
 	}
-
-//		public static void retryScroll(AppiumDriver driver,String text)throws Exception{
-//			scrollTo(driver, text);
-//			try {
-//				scrollTo(driver, text);
-//			}catch(Exception e){
-//				System.out.println("text was not found on screen");
-//				ExceptionAnalyzer.analyzeException(e, " text was not found on screen");
-//			}
-//
-//			}
-
-
-
-
-
 
 
 	public static String handsetInfo(AppiumDriver driver,String key,String value){

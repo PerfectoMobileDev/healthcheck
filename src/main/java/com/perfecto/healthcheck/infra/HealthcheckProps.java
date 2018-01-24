@@ -17,7 +17,9 @@ public class HealthcheckProps {
     private static String PERFECTO_HOST = System.getProperty("cloudUrl");
     private static String PERFECTO_USER = System.getProperty("username");
     private static String PERFECTO_PASSWORD = System.getProperty("password");
-    private static String WIFI_NAME = System.getProperty("WIFI");
+    private static String WIFI_NAME = System.getProperty("wifi");
+    private static String WIFI_PASSWORD = System.getProperty("np.password");
+    private static String WIFI_IDENTIFY = System.getProperty("np.username");
     private static boolean REBOOT_ALL_DEVICES = Boolean.getBoolean("rebootAllDevices");
     private static Logger logger = LogManager.getLogger("Automation Ready Logger");
     private static String chrome_Acount_Name = System.getProperty("chromeAcountName");
@@ -41,9 +43,23 @@ public class HealthcheckProps {
             PERFECTO_PASSWORD = "";
         }
 
-        if (WIFI_NAME == null || WIFI_NAME.trim().isEmpty()) {
-            WIFI_NAME = "";
+        if (PERFECTO_PASSWORD == null || PERFECTO_PASSWORD.trim().isEmpty()) {
+//            PERFECTO_PASSWORD = "w!SV885";
+//            PERFECTO_PASSWORD = "Dr12345!";
+            PERFECTO_PASSWORD = "";
         }
+
+        if (WIFI_PASSWORD == null || WIFI_PASSWORD.trim().isEmpty()) {
+            WIFI_PASSWORD = "0UTS9P"; //branchtest wifi password for Perfecto
+        }
+
+        if (WIFI_IDENTIFY == null || WIFI_IDENTIFY.trim().isEmpty()) {
+            WIFI_IDENTIFY = "branchtest";
+        }
+        if (WIFI_NAME == null || WIFI_NAME.trim().isEmpty()) {
+            WIFI_NAME = "'Perfecto'";
+        }
+
         if (deviceId == null || deviceId.trim().isEmpty()) {
             deviceId = "";
         }
@@ -65,6 +81,8 @@ public class HealthcheckProps {
     public static String getPerfectoUser() { return PERFECTO_USER; }
     public static String getPerfectoHost() { return PERFECTO_HOST; }
     public static String getPerfectoPassword() { return PERFECTO_PASSWORD; }
+    public static String  getWifiPassword() {return WIFI_PASSWORD; }
+    public static String getWifiIdentify() {return WIFI_IDENTIFY;}
     public static String getWifiName() {return WIFI_NAME;}
     public static Logger getLogger() {
         return logger;

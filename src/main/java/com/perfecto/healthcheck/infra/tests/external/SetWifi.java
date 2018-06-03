@@ -13,6 +13,7 @@ import org.testng.Assert;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tall on 9/11/2017.
@@ -90,6 +91,7 @@ public class SetWifi {
             throw t;
         }
     }
+
     public static void setDeviceWifiSettingsAndroid(AppiumDriver driver) throws Exception {
         System.out.println("Turning the wifi on");
 
@@ -107,15 +109,19 @@ public class SetWifi {
             throw t;
         }
     }
+
     public static void setDeviceWifiSettingsiOS(AppiumDriver driver) throws Exception {
+
         System.out.println("Turning the wifi on");
 
         try {
             if (getDeviceNetworkSettings(driver, "wifi").contains("wifi=true")) {
+
                 Utils.home(driver);
 
             }else{
-                EnablewifiiOS(driver);
+                //EnablewifiiOS(driver);
+                EnableWiFiAndJoinToNetworkIOS(driver, HealthcheckProps.getWifiIdentify(),HealthcheckProps.getWifiPassword());
                 throw new SpecialMessageException("wifi was set on device");
             }
         } catch (Exception t) {
@@ -128,7 +134,7 @@ public class SetWifi {
     public static void EnablewifiiOS(AppiumDriver driver) throws Exception {
 
         boolean errorFlag = false;
-//        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+
         System.out.println("Turning the wifi on");
         try {
             Utils.openSettingsiOS(driver);
@@ -165,31 +171,32 @@ public class SetWifi {
             throw new RuntimeException("There were errors running EnableWifiiOS function");
         }
     }
+
     public static void checkWifiSettingsios(AppiumDriver driver) throws Exception {
         Utils.openSettingsiOS(driver);
         String wifiName = driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").getAttribute("value");
         if (!wifiName.equalsIgnoreCase(wifi)) {
-            EnablewifiiOS(driver, HealthcheckProps.getWifiIdentify(),HealthcheckProps.getWifiPassword());
+            EnableWiFiAndJoinToNetworkIOS(driver, HealthcheckProps.getWifiIdentify(),HealthcheckProps.getWifiPassword());
             throw new SpecialMessageException("wifi "+wifi+" was set on device");
         }
     }
 
-    public static void EnablewifiiOS(AppiumDriver driver , String username, String password) throws Exception {
+    public static void EnableWiFiAndJoinToNetworkIOS(AppiumDriver driver , String username, String password) throws Exception {
 
         boolean errorFlag = false;
 
-        System.out.println("Turning the wifi on");
+        System.out.println("Turning the WI-FI ON");
         try {
             Utils.openSettingsiOS(driver);
             String cap1 = Utils.handsetInfo(driver,"property", "model");
-            //        iPhones
+            // for iPhones
             if (cap1.contains("iPhone")) {
                 Utils.switchToContext(driver, "NATIVE_APP");
                 String wifi = driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").getAttribute("value");
                 if (wifi.equalsIgnoreCase("Off")) {
                     driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").click();
                     driver.findElementByXPath("//UIASwitch").click();
-                    driver.findElementByXPath("//*[@label=\"Back\"]").click();
+                    tryToClickOnElementByXPATH(driver,"//*[@label=\"Back\"]");
                     throw new SpecialMessageException("switch wifi on");
                 }
                 if(!(HealthcheckProps.getWifiName()==null) || !HealthcheckProps.getWifiName().isEmpty()){
@@ -280,7 +287,7 @@ public class SetWifi {
             throw new RuntimeException("There were errors running EnableWifiiOS function");
         }
     }
-    public static void SetPerfectoWifiiPhone(AppiumDriver driver, String username, String password){
+    public static void SetPerfectoWifiiPhone(AppiumDriver driver, String username, String password) throws Exception {
 //        boolean errorFlag = false;
         HashMap<String, Object> params1 = new HashMap<>();
         String wifiSet = driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").getAttribute("value");
@@ -295,11 +302,11 @@ public class SetWifi {
             params1.clear();
             Utils.scrollTo(driver,"//*[@label="+wifi+"]");
             driver.findElementByXPath("//*[@label="+wifi+"]").click();
-            driver.findElementByXPath("//*[@label=\"Username\"]/UIATextField").sendKeys(username);
+            tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]/UIATextField", username);
             driver.findElementByXPath("//*[@label=\"Password\"]/UIASecureTextField").sendKeys(password);
             driver.findElementByXPath("//*[@label=\"Join\"]").click();
-            driver.findElementByXPath("//*[@label=\"Trust\"]").click();
-            driver.findElementByXPath("//*[@label=\"Back\"]").click();
+            tryToClickOnElementByXPATH(driver,"//*[@label=\"Trust\"]");
+            tryToClickOnElementByXPATH(driver,"//*[@label=\"Back\"]");
             try {
                 By wifiName= By.xpath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText");
                 Utils.waitForVisible(driver, wifiName,wifi,"value", 20);
@@ -340,4 +347,26 @@ public class SetWifi {
             ExceptionAnalyzer.analyzeException(t, "failed to set "+wifi+" wifi on iPad");
         }
     }
+
+
+    public static void tryToClickOnElementByXPATH(AppiumDriver driver, String xPath)throws Exception {
+
+        try {
+           driver.findElementByXPath(xPath);
+        } catch (Exception t) {
+            System.out.println("Failed to click on element with XPATH: " + xPath);
+            ExceptionAnalyzer.analyzeException(t, "Failed to click on element with XPATH: " + xPath);
+        }
+    }
+
+    public static void tryToEnterTextToElementByXPATH(AppiumDriver driver, String xPath, String text)throws Exception {
+
+        try {
+            driver.findElementByXPath(xPath).sendKeys(text);
+        } catch (Exception t) {
+            System.out.println("Failed to enter text to element with XPATH: " + xPath);
+            ExceptionAnalyzer.analyzeException(t, "Failed to enter text to element with XPATH: " + xPath);
+        }
+    }
+
 }

@@ -10,6 +10,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class DriverCreator extends AbstractLoggingActor {
@@ -45,6 +46,7 @@ public class DriverCreator extends AbstractLoggingActor {
                                                             if(os.equalsIgnoreCase("iOS")){
                                                                 try {
                                                                     driver = new IOSDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities) ;
+                                                                    driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
                                                                 } catch (Throwable t) {
                                                                     t.printStackTrace();
                                                                     return new DeviceDriver(device,null);

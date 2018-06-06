@@ -215,6 +215,7 @@ public class SetWifi {
         HashMap<String, Object> params1 = new HashMap<>();
 
         driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
+        Utils.sleep(3000);
         //forgetCurrentNetwork(driver);
 
         try {
@@ -251,6 +252,7 @@ public class SetWifi {
         Utils.openSettingsiOS(driver);
 
         driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
+        Utils.sleep(3000);
         //forgetCurrentNetwork(driver);
 
         try {

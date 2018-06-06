@@ -274,13 +274,13 @@ public class Utils {
 		try {
 			driver.launchApp();
 			sleep(5000);
-			driver.closeApp();
+			/*driver.closeApp();
 			sleep(5000);
 			driver.launchApp();
-//			sleep(5000);
+//			sleep(5000);*/
 		}catch (Throwable t) {
 			t.printStackTrace();
-			ExceptionAnalyzer.analyzeException(t,"Open and settings failed");
+			ExceptionAnalyzer.analyzeException(t,"Failed to open settings screen");
 			//rethrow exception if not critical device exception
 			throw t;}
 	}

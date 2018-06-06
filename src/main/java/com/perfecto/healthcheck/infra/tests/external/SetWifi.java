@@ -148,49 +148,38 @@ public class SetWifi {
                 t.printStackTrace();
                 ExceptionAnalyzer.analyzeException(t, "Error enabling WiFi for ios device");
                 throw t;
+        } finally {
+            currentWIFI = getCurentWiFiName(driver);
+            if (currentWIFI.equalsIgnoreCase(wifi)) System.out.println("CONNECTED TO PERFECTO WI-FI");
+            else System.out.println("NOT CONNECTED TO PERFECTO WI-FI");
         }
 
     }
 
+    public static void enableWIFI(AppiumDriver driver)throws Exception {
 
-    public static void EnablewifiiOS(AppiumDriver driver) throws Exception {
-
-        boolean errorFlag = false;
-
-        System.out.println("Turning the wifi on");
         try {
             Utils.openSettingsiOS(driver);
-            String cap1 = Utils.handsetInfo(driver,"property", "model");
-            //        iPhones
-            if (cap1.contains("iPhone")) {
-                Utils.switchToContext(driver, "NATIVE_APP");
-                String wifiValue = driver.findElement(wifiPhone).getAttribute("value");
-                if (wifiValue.equalsIgnoreCase("Off")) {
-                    driver.findElement(wifiPhone).click();
-                    driver.findElementByXPath("//UIASwitch|//XCUIElementTypeSwitch").click();
-                    driver.findElementByXPath("//*[contains(@label,\"Settings\")]").click();
-                    String wifiSet = driver.findElement(wifiPhone).getAttribute("value");
-                    throw new SpecialMessageException("switch wifi "+wifiSet+" on iPhone");
-                }
+            String model = Utils.handsetInfo(driver, "property", "model");
 
+            Utils.switchToContext(driver, "NATIVE_APP");
+            driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").click();
+
+            // for iPhones
+            if (model.contains("iPhone")) {
+
+                driver.findElementByXPath("//UIASwitch").click();
+                Utils.sleep(5000);
+                tryToClickOnElementByXPATH(driver, "//XCUIElementTypeButton[@label='Settings']");
+                //throw new SpecialMessageException("switch wifi on");
             } else {
-                //            for ipad
-                Utils.switchToContext(driver, "NATIVE");
-                String wifiName = driver.findElementByXPath("//UIATableView[1]//*[@label=\"Wi-Fi\" ]/following-sibling::UIAStaticText|//XCUIElementTypeStaticText[@label=\"Wi-Fi\"]//following-sibling::XCUIElementTypeStaticText").getAttribute("text");
-                if (wifiName.equalsIgnoreCase("Off")) {
-                    driver.findElementByXPath("//UIATableView[1]//*[@label=\"Wi-Fi\" ]/following-sibling::UIAStaticText|//XCUIElementTypeStaticText[@label=\"Wi-Fi\"]//following-sibling::XCUIElementTypeStaticText").click();
-                    driver.findElementByXPath("//UIASwitch[@label=\"Wi-Fi\"]|//XCUIElementTypeSwitch[contains(@label,\"Wi-Fi\")]").click();
-                    String wifiSet = driver.findElementByXPath("//UIATableView[1]//*[@label=\"Wi-Fi\" ]/following-sibling::UIAStaticText|//XCUIElementTypeStaticText[@label=\"Wi-Fi\"]//following-sibling::XCUIElementTypeStaticText").getAttribute("text");
-                    throw new SpecialMessageException("switch wifi "+wifiSet+" on iPad");
-                }
+                driver.findElementByXPath("//UIASwitch[@label=\"Wi-Fi\"]").click();
+                Utils.sleep(5000);
+
             }
-        } catch (Throwable t) {
-            t.printStackTrace();
-            ExceptionAnalyzer.analyzeException(t,"Error enabling WIFI for IOS device");
-            throw t;
-        }
-        if (errorFlag){
-            throw new RuntimeException("There were errors running EnableWifiiOS function");
+        } catch (Exception t) {
+            System.out.println("Failed to enable WIFI");
+            //ExceptionAnalyzer.analyzeException(t, "Failed to click on element with XPATH: " + xPath);
         }
     }
 
@@ -203,6 +192,91 @@ public class SetWifi {
         return currentWiFiName;
 
     }
+
+    public static void SetPerfectoWifiiPhone(AppiumDriver driver, String username, String password) throws Exception {
+
+        Utils.openSettingsiOS(driver);
+
+        HashMap<String, Object> params1 = new HashMap<>();
+
+        driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
+        forgetCurrentNetwork(driver);
+
+        try {
+            params1.clear();
+            Utils.scrollTo(driver,"//*[@label='"+wifi+"']");
+            driver.findElementByXPath("//*[@label='"+wifi+"']").click();
+            tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
+            driver.findElementByXPath("//*[@label=\"Password\"]").sendKeys(password);
+            driver.findElementByXPath("//*[@label=\"Join\"]").click();
+            tryToClickOnElementByXPATH(driver,"//*[@label=\"Trust\"]");
+            tryToClickOnElementByXPATH(driver,"//*[@label=\"Back\"]");
+        } catch (Exception t) {
+            System.out.println("Failed to set "+wifi+" Wifi on iPhone!");
+            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifi+" wifi on iPhone");
+        }
+
+    }
+
+    public static void SetPerfectoWifiiPad(AppiumDriver driver, String username, String password)throws Exception {
+
+        Utils.openSettingsiOS(driver);
+
+        driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
+        forgetCurrentNetwork(driver);
+
+        try {
+            WebElement rightTBL = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
+            Utils.scrolliPadTable(driver, wifi, rightTBL);
+
+            rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifi + "']")).click();
+            //driver.findElementByXPath("//UIATableCell[@label=\"Username\"]/UIATextField").sendKeys(username);
+            driver.findElementByXPath("//*[@value=\"Username\"]").click();
+            driver.findElementByXPath("//*[@value=\"Username\"]").sendKeys(username);
+            driver.findElementByXPath("//*[@value=\"Password\"]").click();
+            driver.findElementByXPath("//*[@value=\"Password\"]").sendKeys(password);
+            //driver.getKeyboard().sendKeys(password);
+            driver.findElementByXPath("//*[@label=\"Join\"]").click();
+            driver.findElementByXPath("//*[@label=\"Accept\" or @label=\"Trust\"]").click();
+
+        } catch (Exception t) {
+            System.out.println("Failed to set "+wifi+" Wifi on iPad!");
+            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifi+" wifi on iPad");
+        }
+    }
+
+    private static void forgetCurrentNetwork(AppiumDriver driver) throws Exception {
+        try {
+            driver.findElementByXPath("//UIATableCell[2]/UIAButton").click();
+            driver.findElementByXPath("//*[@value=\"Forget This Network\"]").click();
+            driver.findElementByXPath("//*[@label=\"Forget\"]").click();
+            driver.findElementByXPath("//*[@label=\"Back\"]").click();
+        } catch (Exception t) {
+            System.out.println("Failed to execute Forget Network action");
+
+        }
+    }
+
+    public static void tryToClickOnElementByXPATH(AppiumDriver driver, String xPath)throws Exception {
+
+        try {
+           driver.findElementByXPath(xPath).click();
+        } catch (Exception t) {
+            System.out.println("Failed to click on element with XPATH: " + xPath);
+            //ExceptionAnalyzer.analyzeException(t, "Failed to click on element with XPATH: " + xPath);
+        }
+    }
+
+    public static void tryToEnterTextToElementByXPATH(AppiumDriver driver, String xPath, String text)throws Exception {
+
+        try {
+            driver.findElementByXPath(xPath).sendKeys(text);
+        } catch (Exception t) {
+            System.out.println("Failed to enter text to element with XPATH: " + xPath);
+            ExceptionAnalyzer.analyzeException(t, "Failed to enter text to element with XPATH: " + xPath);
+        }
+    }
+
 
     public static void EnableWiFiAndJoinToNetworkIOS(AppiumDriver driver , String username, String password) throws Exception {
 
@@ -303,106 +377,44 @@ public class SetWifi {
             throw new RuntimeException("There were errors running EnableWifiiOS function");
         }
     }
+    public static void EnablewifiiOS(AppiumDriver driver) throws Exception {
 
-    public static void SetPerfectoWifiiPhone(AppiumDriver driver, String username, String password) throws Exception {
+        boolean errorFlag = false;
 
-        Utils.openSettingsiOS(driver);
-
-        HashMap<String, Object> params1 = new HashMap<>();
-
-        driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
-        forgetCurrentNetwork(driver);
-        params1.clear();
-        Utils.scrollTo(driver,"//*[@label='"+wifi+"']");
-        driver.findElementByXPath("//*[@label='"+wifi+"']").click();
-        tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
-        driver.findElementByXPath("//*[@label=\"Password\"]").sendKeys(password);
-        driver.findElementByXPath("//*[@label=\"Join\"]").click();
-        tryToClickOnElementByXPATH(driver,"//*[@label=\"Trust\"]");
-        tryToClickOnElementByXPATH(driver,"//*[@label=\"Back\"]");
-
-    }
-
-    private static void forgetCurrentNetwork(AppiumDriver driver) throws Exception {
-        try {
-            driver.findElementByXPath("//UIATableCell[2]/UIAButton").click();
-            driver.findElementByXPath("//*[@value=\"Forget This Network\"]").click();
-            driver.findElementByXPath("//*[@label=\"Forget\"]").click();
-            driver.findElementByXPath("//*[@label=\"Back\"]").click();
-        } catch (Exception t) {
-            System.out.println("Failed to execute Forget Network action");
-
-        }
-    }
-
-    public static void SetPerfectoWifiiPad(AppiumDriver driver, String username, String password)throws Exception {
-
-        Utils.openSettingsiOS(driver);
-
-        driver.findElementByXPath("//UIATableCell/*[@label=" + wifi + "]").click();
-        forgetCurrentNetwork(driver);
-
-        try {
-            WebElement tbl1 = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
-            Utils.scrolliPadTable(driver, wifi,tbl1);
-
-            try {
-                driver.findElementByXPath("//UIATableCell[@label=\"Username\"]/UIATextField");
-
-            } catch (Exception e) {
-                driver.findElementByXPath("//UIATableCell/*[@label=" + wifi + "]").click();
-
-            }
-
-            driver.findElementByXPath("//UIATableCell[@label=\"Username\"]/UIATextField").sendKeys(username);
-            driver.findElementByXPath("//*[@value=\"Password\"]").click();
-            driver.getKeyboard().sendKeys(password);
-            driver.findElementByXPath("//*[@label=\"Join\"]").click();
-            driver.findElementByXPath("//*[@label=\"Accept\" or @label=\"Trust\"]").click();
-
-        } catch (Exception t) {
-            System.out.println("failed to set "+wifi+" Wifi on iPad!");
-            ExceptionAnalyzer.analyzeException(t, "failed to set "+wifi+" wifi on iPad");
-        }
-    }
-
-    public static void enableWIFI(AppiumDriver driver)throws Exception {
-
+        System.out.println("Turning the wifi on");
         try {
             Utils.openSettingsiOS(driver);
-            String cap1 = Utils.handsetInfo(driver, "property", "model");
-            // for iPhones
+            String cap1 = Utils.handsetInfo(driver,"property", "model");
+            //        iPhones
             if (cap1.contains("iPhone")) {
                 Utils.switchToContext(driver, "NATIVE_APP");
-                driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").click();
-                driver.findElementByXPath("//UIASwitch").click();
-                Utils.sleep(5000);
-                tryToClickOnElementByXPATH(driver, "//XCUIElementTypeButton[@label='Settings']");
-                //throw new SpecialMessageException("switch wifi on");
+                String wifiValue = driver.findElement(wifiPhone).getAttribute("value");
+                if (wifiValue.equalsIgnoreCase("Off")) {
+                    driver.findElement(wifiPhone).click();
+                    driver.findElementByXPath("//UIASwitch|//XCUIElementTypeSwitch").click();
+                    driver.findElementByXPath("//*[contains(@label,\"Settings\")]").click();
+                    String wifiSet = driver.findElement(wifiPhone).getAttribute("value");
+                    throw new SpecialMessageException("switch wifi "+wifiSet+" on iPhone");
+                }
+
+            } else {
+                //            for ipad
+                Utils.switchToContext(driver, "NATIVE");
+                String wifiName = driver.findElementByXPath("//UIATableView[1]//*[@label=\"Wi-Fi\" ]/following-sibling::UIAStaticText|//XCUIElementTypeStaticText[@label=\"Wi-Fi\"]//following-sibling::XCUIElementTypeStaticText").getAttribute("text");
+                if (wifiName.equalsIgnoreCase("Off")) {
+                    driver.findElementByXPath("//UIATableView[1]//*[@label=\"Wi-Fi\" ]/following-sibling::UIAStaticText|//XCUIElementTypeStaticText[@label=\"Wi-Fi\"]//following-sibling::XCUIElementTypeStaticText").click();
+                    driver.findElementByXPath("//UIASwitch[@label=\"Wi-Fi\"]|//XCUIElementTypeSwitch[contains(@label,\"Wi-Fi\")]").click();
+                    String wifiSet = driver.findElementByXPath("//UIATableView[1]//*[@label=\"Wi-Fi\" ]/following-sibling::UIAStaticText|//XCUIElementTypeStaticText[@label=\"Wi-Fi\"]//following-sibling::XCUIElementTypeStaticText").getAttribute("text");
+                    throw new SpecialMessageException("switch wifi "+wifiSet+" on iPad");
+                }
             }
-        } catch (Exception t) {
-            System.out.println("Failed to enable WIFI");
-            //ExceptionAnalyzer.analyzeException(t, "Failed to click on element with XPATH: " + xPath);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            ExceptionAnalyzer.analyzeException(t,"Error enabling WIFI for IOS device");
+            throw t;
         }
-    }
-
-    public static void tryToClickOnElementByXPATH(AppiumDriver driver, String xPath)throws Exception {
-
-        try {
-           driver.findElementByXPath(xPath).click();
-        } catch (Exception t) {
-            System.out.println("Failed to click on element with XPATH: " + xPath);
-            //ExceptionAnalyzer.analyzeException(t, "Failed to click on element with XPATH: " + xPath);
-        }
-    }
-
-    public static void tryToEnterTextToElementByXPATH(AppiumDriver driver, String xPath, String text)throws Exception {
-
-        try {
-            driver.findElementByXPath(xPath).sendKeys(text);
-        } catch (Exception t) {
-            System.out.println("Failed to enter text to element with XPATH: " + xPath);
-            ExceptionAnalyzer.analyzeException(t, "Failed to enter text to element with XPATH: " + xPath);
+        if (errorFlag){
+            throw new RuntimeException("There were errors running EnableWifiiOS function");
         }
     }
 

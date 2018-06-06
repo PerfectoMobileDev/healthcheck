@@ -15,13 +15,18 @@ public class AndroidTestSet extends AbstractTestSet {
     String password = HealthcheckProps.getWifiPassword();
     @Override
     public DeviceStatus runTests() {
+
         TestsRunner tr = new TestsRunner(device);
-        tr.registerTest(()-> DefaultLanguage.setToDefaultLanguage(driver,"English"), "Set English as default language Android");
+
+        //tr.registerTest(()-> DefaultLanguage.setToDefaultLanguage(driver,"English"), "Set English as default language Android");
+
         tr.registerTest(()-> SetWifi.setDeviceWifiSettingsAndroid(driver),"Set device WiFi settings Android");
+
         if (!wifi.isEmpty()){
             tr.registerTest(()-> SetWifi.defineWifiAndroid(driver, wifi, password, username),"define wifi on Android");
         }
-        tr.registerTest(()-> Checkvirtualization.checkVirtualizationEnabled(driver),"Check virtualization enabled");
+
+        /*tr.registerTest(()-> Checkvirtualization.checkVirtualizationEnabled(driver),"Check virtualization enabled");
         tr.registerTest(()-> ClearBrowser.clearBrowserAndroid(driver),"Clear browser Android");
         tr.registerTest(()-> {
                     Utils.switchToContext(driver, "WEBVIEW");
@@ -42,7 +47,7 @@ public class AndroidTestSet extends AbstractTestSet {
         }
         if(!language.isEmpty()) {
             tr.registerTest(()-> DefaultLanguage.setToDefaultLanguage(driver,language), "Set default language Android");
-        }
+        }*/
         return processResult(tr);
     }
 }

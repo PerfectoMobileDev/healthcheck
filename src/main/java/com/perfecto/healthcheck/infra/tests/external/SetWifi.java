@@ -130,7 +130,6 @@ public class SetWifi {
         try {
 
             if (isWiFiON && currentWIFI.equalsIgnoreCase(wifi)) {
-                Utils.home(driver);
 
                 return;
 

@@ -155,12 +155,12 @@ public class SetWifi {
             Utils.home(driver);
 
             boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifi);
-            if (isWifiValidAfter) {
+           /* if (isWifiValidAfter) {
                 System.out.println("CONNECTED TO PERFECTO WI-FI: ");
             }
             else {
                 System.out.println("NOT CONNECTED TO PERFECTO WI-FI");
-            }
+            }*/
             WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore,isWifiValidAfter);
             throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
         }

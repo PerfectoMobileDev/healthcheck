@@ -54,7 +54,7 @@ public class HealthcheckProps {
         }
 
         if (WIFI_IDENTIFY == null || WIFI_IDENTIFY.trim().isEmpty()) {
-            WIFI_IDENTIFY = "branchtest";
+            WIFI_IDENTIFY = getPerfectoHost().split("\\.")[0];
         }
         if (WIFI_NAME == null || WIFI_NAME.trim().isEmpty()) {
             WIFI_NAME = "Perfecto";

@@ -69,13 +69,13 @@ public class Controller extends AbstractLoggingActor {
                             }
 
                         }
-                        log().info("Devices with VALID WIFI BEFORE: " + beforeWifiOnCounter + ", devices with VALID WIFI AFTER: " + afterWifiOnCounter);
+                        System.out.println("Devices with VALID WIFI BEFORE: " + beforeWifiOnCounter + ", devices with VALID WIFI AFTER: " + afterWifiOnCounter);
                         if (disconnectedDeviceIds.size() > 0)
                         {
-                            log().info("Following devices are still DISCONNECTED FROM VALID WIFI:");
+                            System.out.println("Following devices are still DISCONNECTED FROM VALID WIFI:");
                             disconnectedDeviceIds.forEach(
                                     id->
-                                            log().info(id)
+                                            System.out.println(id)
                             );
                         }
                         deviceFinalizer.tell(new DeviceFinalizer.FinalizeDevices(msg.getDeviceDriverList()),self());

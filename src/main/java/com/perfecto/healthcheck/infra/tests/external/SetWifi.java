@@ -156,7 +156,7 @@ public class SetWifi {
 
             boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifi);
             if (isWifiValidAfter) {
-                System.out.println("CONNECTED TO PERFECTO WI-FI");
+                System.out.println("CONNECTED TO PERFECTO WI-FI: ");
             }
             else {
                 System.out.println("NOT CONNECTED TO PERFECTO WI-FI");
@@ -275,14 +275,6 @@ public class SetWifi {
 
             }
 
-
-            /*rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifi + "']")).click();
-            //driver.findElementByXPath("//UIATableCell[@label=\"Username\"]/UIATextField").sendKeys(username);
-            driver.findElementByXPath("//*[@value=\"Username\"]").click();
-            driver.findElementByXPath("//*[@value=\"Username\"]").sendKeys(username);
-            driver.findElementByXPath("//*[@value=\"Password\"]").click();
-            driver.findElementByXPath("//*[@value=\"Password\"]").sendKeys(password);*/
-            //driver.getKeyboard().sendKeys(password);
             tryToClickOnElementByXPATH(driver,"//*[@label=\"Join\"]");
             tryToClickOnElementByXPATH(driver,"//*[@label=\"Accept\" or @label=\"Trust\"]");
 

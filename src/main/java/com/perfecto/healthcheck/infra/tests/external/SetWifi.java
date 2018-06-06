@@ -150,7 +150,11 @@ public class SetWifi {
                 ExceptionAnalyzer.analyzeException(t, "Error enabling WiFi for ios device");
                 throw t;
         } finally {
+
             currentWIFI = getCurentWiFiName(driver);
+
+            Utils.home(driver);
+
             boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifi);
             if (isWifiValidAfter) {
                 System.out.println("CONNECTED TO PERFECTO WI-FI");

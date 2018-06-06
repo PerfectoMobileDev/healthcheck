@@ -1,18 +1,14 @@
 package com.perfecto.healthcheck.infra.tests.external;
 
-import com.perfecto.healthcheck.infra.ExceptionAnalyzer;
-import com.perfecto.healthcheck.infra.HealthcheckProps;
-import com.perfecto.healthcheck.infra.SpecialMessageException;
-import com.perfecto.healthcheck.infra.Utils;
+import com.perfecto.healthcheck.infra.*;
 import io.appium.java_client.AppiumDriver;
+import org.apache.xpath.SourceTree;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -117,9 +113,11 @@ public class SetWifi {
 
     public static void setDeviceWifiSettingsiOS(AppiumDriver driver) throws Exception {
 
-        System.out.println("Turning the wifi on");
+        Boolean isWiFiValidBefore = false;
 
         String model = Utils.handsetInfo(driver,"property", "model");
+
+        Boolean isPMD = Utils.isDeviceUsingXCUITest(driver);
 
         String currentWIFI = "undefined";
 
@@ -127,21 +125,24 @@ public class SetWifi {
 
         if (isWiFiON) currentWIFI = getCurentWiFiName(driver);
 
+        if (isWiFiON && currentWIFI.equalsIgnoreCase(wifi)) isWiFiValidBefore = true;
+
         try {
 
             if (isWiFiON && currentWIFI.equalsIgnoreCase(wifi)) {
                 Utils.home(driver);
+
                 return;
 
             } else if (isWiFiON && !currentWIFI.equalsIgnoreCase(wifi)) {
-                if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
-                else SetPerfectoWifiiPad(driver, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
+                if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
+                else SetPerfectoWifiiPad(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
             } else if (!isWiFiON) {
-                enableWIFI(driver);
+                enableWIFI(driver, isPMD);
                 currentWIFI = getCurentWiFiName(driver);
                 if (!currentWIFI.equalsIgnoreCase(wifi)) {
-                    if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
-                    else SetPerfectoWifiiPad(driver, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
+                    if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
+                    else SetPerfectoWifiiPad(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
                 }
             }
         } catch(Exception t){
@@ -150,13 +151,20 @@ public class SetWifi {
                 throw t;
         } finally {
             currentWIFI = getCurentWiFiName(driver);
-            if (currentWIFI.equalsIgnoreCase(wifi)) System.out.println("CONNECTED TO PERFECTO WI-FI");
-            else System.out.println("NOT CONNECTED TO PERFECTO WI-FI");
+            boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifi);
+            if (isWifiValidAfter) {
+                System.out.println("CONNECTED TO PERFECTO WI-FI");
+            }
+            else {
+                System.out.println("NOT CONNECTED TO PERFECTO WI-FI");
+            }
+            WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore,isWifiValidAfter);
+            throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
         }
 
     }
 
-    public static void enableWIFI(AppiumDriver driver)throws Exception {
+    public static void enableWIFI(AppiumDriver driver, Boolean isPMD)throws Exception {
 
         try {
             Utils.openSettingsiOS(driver);
@@ -170,7 +178,8 @@ public class SetWifi {
 
                 driver.findElementByXPath("//UIASwitch").click();
                 Utils.sleep(5000);
-                tryToClickOnElementByXPATH(driver, "//XCUIElementTypeButton[@label='Settings']");
+                if (isPMD) tryToClickOnElementByXPATH(driver, "//XCUIElementTypeButton[@label='Settings']");
+                else tryToClickOnElementByXPATH(driver, "//*[@label='Settings']");
                 //throw new SpecialMessageException("switch wifi on");
             } else {
                 driver.findElementByXPath("//UIASwitch[@label=\"Wi-Fi\"]").click();
@@ -193,24 +202,37 @@ public class SetWifi {
 
     }
 
-    public static void SetPerfectoWifiiPhone(AppiumDriver driver, String username, String password) throws Exception {
+    public static void SetPerfectoWifiiPhone(AppiumDriver driver, Boolean isPMD, String username, String password) throws Exception {
 
         Utils.openSettingsiOS(driver);
 
         HashMap<String, Object> params1 = new HashMap<>();
 
         driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
-        forgetCurrentNetwork(driver);
+        //forgetCurrentNetwork(driver);
 
         try {
             params1.clear();
             Utils.scrollTo(driver,"//*[@label='"+wifi+"']");
+            Utils.sleep(5000);
+
             driver.findElementByXPath("//*[@label='"+wifi+"']").click();
-            tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
-            driver.findElementByXPath("//*[@label=\"Password\"]").sendKeys(password);
-            driver.findElementByXPath("//*[@label=\"Join\"]").click();
+
+            if (isPMD) {
+                tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
+                tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
+            } else {
+                tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
+                driver.getKeyboard().sendKeys(username);
+                tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
+                driver.getKeyboard().sendKeys(password);
+
+            }
+
+            tryToClickOnElementByXPATH(driver,"//*[@label=\"Join\"]");
             tryToClickOnElementByXPATH(driver,"//*[@label=\"Trust\"]");
             tryToClickOnElementByXPATH(driver,"//*[@label=\"Back\"]");
+
         } catch (Exception t) {
             System.out.println("Failed to set "+wifi+" Wifi on iPhone!");
             ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifi+" wifi on iPhone");
@@ -218,26 +240,48 @@ public class SetWifi {
 
     }
 
-    public static void SetPerfectoWifiiPad(AppiumDriver driver, String username, String password)throws Exception {
+    public static void SetPerfectoWifiiPad(AppiumDriver driver, Boolean isPMD, String username, String password)throws Exception {
 
         Utils.openSettingsiOS(driver);
 
         driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
-        forgetCurrentNetwork(driver);
+        //forgetCurrentNetwork(driver);
 
         try {
             WebElement rightTBL = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
             Utils.scrolliPadTable(driver, wifi, rightTBL);
+            Utils.sleep(5000);
 
-            rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifi + "']")).click();
+
+            if (isPMD) {
+                rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifi + "']")).click();
+                tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
+                tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
+                tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
+                tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
+            } else {
+                rightTBL.findElement(By.xpath("//UIATableCell//UIAStaticText[@label='" + wifi + "']/following-sibling::UIAButton")).click();
+
+                tryToClickOnElementByXPATH(driver, "//*[@label=\"Join Network\"]");
+
+                tryToClickOnElementByXPATH(driver, "//UIATableCell//UIATextField[@label=\"Username\"]");
+                tryToEnterTextByKeyboard(driver, username);
+
+                tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
+                tryToEnterTextByKeyboard(driver, password);
+
+            }
+
+
+            /*rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifi + "']")).click();
             //driver.findElementByXPath("//UIATableCell[@label=\"Username\"]/UIATextField").sendKeys(username);
             driver.findElementByXPath("//*[@value=\"Username\"]").click();
             driver.findElementByXPath("//*[@value=\"Username\"]").sendKeys(username);
             driver.findElementByXPath("//*[@value=\"Password\"]").click();
-            driver.findElementByXPath("//*[@value=\"Password\"]").sendKeys(password);
+            driver.findElementByXPath("//*[@value=\"Password\"]").sendKeys(password);*/
             //driver.getKeyboard().sendKeys(password);
-            driver.findElementByXPath("//*[@label=\"Join\"]").click();
-            driver.findElementByXPath("//*[@label=\"Accept\" or @label=\"Trust\"]").click();
+            tryToClickOnElementByXPATH(driver,"//*[@label=\"Join\"]");
+            tryToClickOnElementByXPATH(driver,"//*[@label=\"Accept\" or @label=\"Trust\"]");
 
         } catch (Exception t) {
             System.out.println("Failed to set "+wifi+" Wifi on iPad!");
@@ -277,8 +321,20 @@ public class SetWifi {
         }
     }
 
+    public static void tryToEnterTextByKeyboard(AppiumDriver driver, String text)throws Exception {
 
-    public static void EnableWiFiAndJoinToNetworkIOS(AppiumDriver driver , String username, String password) throws Exception {
+        try {
+            //driver.findElementByXPath(xPath).clear();
+            driver.getKeyboard().sendKeys(text);
+
+        } catch (Exception t) {
+            System.out.println("Failed to enter text to element by keyboard");
+            ExceptionAnalyzer.analyzeException(t, "Failed to enter text to element by keyboard");
+        }
+    }
+
+
+    /*public static void EnableWiFiAndJoinToNetworkIOS(AppiumDriver driver , String username, String password) throws Exception {
 
         boolean errorFlag = false;
 
@@ -298,7 +354,7 @@ public class SetWifi {
                     //throw new SpecialMessageException("switch wifi on");
                 }
                 if(!(HealthcheckProps.getWifiName()==null) || !HealthcheckProps.getWifiName().isEmpty()){
-                    SetPerfectoWifiiPhone(driver, username, password);
+                    SetPerfectoWifiiPhone(driver username, password);
                     throw new SpecialMessageException("define wifi name");
                 }
 
@@ -416,6 +472,6 @@ public class SetWifi {
         if (errorFlag){
             throw new RuntimeException("There were errors running EnableWifiiOS function");
         }
-    }
+    }*/
 
 }

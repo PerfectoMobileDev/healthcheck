@@ -26,7 +26,7 @@ public class TestRunner extends AbstractLoggingActor {
                 .match(RunDrivers.class, dr-> {
                     List<DeviceDriver> deviceDrivers = dr.getDeviceDrivers();
                     //running the tests
-                    List<DeviceStatus> deviceStatuses =
+                    List<DeviceStatus> deviceStatusList =
                             deviceDrivers
                                     .stream()
                                     .parallel()
@@ -74,7 +74,7 @@ public class TestRunner extends AbstractLoggingActor {
                                     )
                                     .filter(Objects::nonNull)
                                     .collect(Collectors.toList());
-                   sender().tell(new Controller.DriversAfterRun(dr.getDeviceDrivers()),self());
+                   sender().tell(new Controller.PostRunDeviceData(dr.getDeviceDrivers(),deviceStatusList),self());
                 })
         .build();
     }

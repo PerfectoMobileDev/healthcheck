@@ -15,18 +15,35 @@ public class DeviceStatus {
 
     private Device device;
 
+    private List<AbstractDeviceMetadata> metadataList = new ArrayList<>();
 
-    public DeviceStatus(boolean isError, boolean isCritical, String problemDescription, List<String> errorMessages,List<String> specialMessages,Device device) {
+
+    public DeviceStatus(boolean isError, boolean isCritical, String problemDescription, List<String> errorMessages,List<String> specialMessages,Device device, List<AbstractDeviceMetadata> metadataList) {
         this.isError = isError;
         this.isCritical = isCritical;
         this.problemDescription = problemDescription;
         this.errorMessages = errorMessages;
         this.specialMessages = specialMessages;
         this.device=device;
+        this.metadataList = metadataList;
     }
 
+    public DeviceStatus(boolean isError, boolean isCritical, String problemDescription, List<String> errorMessages, List<String> specialMessages, Device device) {
+        this.isError = isError;
+        this.isCritical = isCritical;
+        this.problemDescription = problemDescription;
+        this.errorMessages = errorMessages;
+        this.specialMessages = specialMessages;
+        this.device = device;
+    }
 
+    public List<AbstractDeviceMetadata> getMetadataList() {
+        return metadataList;
+    }
 
+    public void setMetadataList(List<AbstractDeviceMetadata> metadataList) {
+        this.metadataList = metadataList;
+    }
 
     public ArrayList<String> getErrorMessages() {
         return (ArrayList<String>) errorMessages;

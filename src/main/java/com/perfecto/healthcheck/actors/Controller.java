@@ -4,9 +4,9 @@ import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import com.perfecto.healthcheck.HealthcheckAkka;
-import com.perfecto.healthcheck.infra.DeviceDriver;
-import com.perfecto.healthcheck.infra.HealthcheckProps;
+import com.perfecto.healthcheck.infra.*;
 
+import java.util.ArrayList;
 import java.util.List;
 public class Controller extends AbstractLoggingActor {
 
@@ -42,8 +42,45 @@ public class Controller extends AbstractLoggingActor {
                 .match(DriversAfterReboot.class, msg->
                     testRunner.tell(new TestRunner.RunDrivers(msg.getDeviceDriverList()),self())
                 )
-                .match(DriversAfterRun.class,msg->
-                    deviceFinalizer.tell(new DeviceFinalizer.FinalizeDevices(msg.getDeviceDriverList()),self())
+                .match(PostRunDeviceData.class, msg->
+                    {
+                        int beforeWifiOnCounter = 0;
+                        int afterWifiOnCounter = 0;
+                        List<String> disconnectedDeviceIds = new ArrayList<>();
+
+                        for (DeviceStatus status:msg.getDeviceStatusList()){
+                            List<AbstractDeviceMetadata> metadataList = status.getMetadataList();
+                            for (AbstractDeviceMetadata metadata:metadataList){
+                                if (metadata instanceof WifiDeviceMetadata)
+                                {
+                                    WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
+                                    if (wifiMetadata.isWifiSwitchedOnBefore())
+                                    {
+                                        beforeWifiOnCounter +=1;
+                                    }
+
+                                    if (wifiMetadata.isWifiSwitchedOnAfter())
+                                    {
+                                        afterWifiOnCounter +=1;
+                                    } else {
+                                        disconnectedDeviceIds.add(status.getDeviceId());
+                                    }
+                                }
+                            }
+
+                        }
+                        log().info("Devices with VALID WIFI BEFORE: " + beforeWifiOnCounter + ", devices with VALID WIFI AFTER: " + afterWifiOnCounter);
+                        if (disconnectedDeviceIds.size() > 0)
+                        {
+                            log().info("Following devices are still DISCONNECTED FROM VALID WIFI:");
+                            disconnectedDeviceIds.forEach(
+                                    id->
+                                            log().info(id)
+                            );
+                        }
+                        deviceFinalizer.tell(new DeviceFinalizer.FinalizeDevices(msg.getDeviceDriverList()),self());
+                    }
+
                 )
                 .match(FinishedTests.class, msg-> {
                     log().info("Finished, exiting");
@@ -84,15 +121,21 @@ public class Controller extends AbstractLoggingActor {
         }
     }
 
-    public static class DriversAfterRun{
+    public static class PostRunDeviceData {
         List<DeviceDriver> deviceDriverList;
+        List<DeviceStatus> deviceStatusList;
 
-        public DriversAfterRun(List<DeviceDriver> deviceDriverList) {
+        public PostRunDeviceData(List<DeviceDriver> deviceDriverList, List<DeviceStatus> deviceStatusList) {
             this.deviceDriverList = deviceDriverList;
+            this.deviceStatusList = deviceStatusList;
         }
 
         public List<DeviceDriver> getDeviceDriverList() {
             return deviceDriverList;
+        }
+
+        public List<DeviceStatus> getDeviceStatusList() {
+            return deviceStatusList;
         }
     }
 

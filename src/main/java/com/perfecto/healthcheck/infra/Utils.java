@@ -2,6 +2,7 @@ package com.perfecto.healthcheck.infra;
 
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DriverCommand;
@@ -102,6 +103,14 @@ public class Utils {
 		Map<String,String> params1 = new HashMap<String,String>();
 		params1.clear();
 		params1.put("keySequence", "HOME");
+		driver.executeScript("mobile:presskey", params1);
+
+	}
+
+	public static void pressNext(AppiumDriver driver){
+		Map<String,String> params1 = new HashMap<String,String>();
+		params1.clear();
+		params1.put("keySequence", "NEXT");
 		driver.executeScript("mobile:presskey", params1);
 
 	}
@@ -405,6 +414,35 @@ public class Utils {
 		String cap1 = (String) driver.executeScript("mobile:handset:info", params1);
 		params1.clear();
 		return cap1;
+	}
+
+	public static boolean isDeviceUsingXCUITest(AppiumDriver driver) {
+
+		boolean isPMD = false;
+
+		HashMap<String, Object> params1 = new HashMap<>();
+		params1.put("property", "osVersion");
+		String osVersion = (String) driver.executeScript("mobile:handset:info", params1);
+
+		params1.clear();
+		params1.put("property", "distributor");
+		String distributor = (String) driver.executeScript("mobile:handset:info", params1);
+
+
+		int temVer;
+		try {
+			String[] spl = distributor.toLowerCase().split("MacCam");
+			temVer = Integer.parseInt(spl[1]);
+		} catch (Exception e) {
+			temVer = -1;
+		}
+		if ((osVersion != null && Integer.parseInt(osVersion.split("\\.")[0]) >= 11) || distributor.toLowerCase().contains("pmd")) {
+			isPMD = true;
+		}
+		System.out.println(osVersion + " " + distributor);
+
+
+		return isPMD;
 	}
 
 }

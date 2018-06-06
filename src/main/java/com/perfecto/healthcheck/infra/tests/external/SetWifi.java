@@ -174,7 +174,10 @@ public class SetWifi {
             String model = Utils.handsetInfo(driver, "property", "model");
 
             Utils.switchToContext(driver, "NATIVE_APP");
-            driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").click();
+
+            //driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").click();
+            driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
+            Utils.sleep(3000);
 
             // for iPhones
             if (model.contains("iPhone")) {

@@ -283,9 +283,9 @@ public class SetWifi {
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
             } else {
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
-                driver.getKeyboard().sendKeys(username);
+                tryToEnterTextByKeyboard(driver, username);
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
-                driver.getKeyboard().sendKeys(password);
+                tryToEnterTextByKeyboard(driver, password);
 
             }
 

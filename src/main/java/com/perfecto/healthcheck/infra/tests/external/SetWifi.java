@@ -87,7 +87,7 @@ public class SetWifi {
             try {
                 driver.findElementByXPath("//*[@text=\"Please select\"]").click();
                 driver.findElementByXPath("//*[@text=\"Do not validate\"]").click();
-             catch (Exception e) {
+            } catch (Exception e) {
                 }
 
             driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(username);

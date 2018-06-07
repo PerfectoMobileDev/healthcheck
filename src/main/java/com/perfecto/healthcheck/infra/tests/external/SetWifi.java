@@ -57,9 +57,10 @@ public class SetWifi {
            }
            catch (Exception e) {
             }
-            if (isConnected)
+            if (isConnected) {
                 isWiFiValidAfter = isConnected;
-                return ;
+                return;
+            }
 
             if (driver.findElementByXPath(wifiname).isDisplayed()) {
                     driver.findElementByXPath("//*[@text=\"" + wifi + "\"]").click();
@@ -93,6 +94,7 @@ public class SetWifi {
                 throw t;
             }
 
+            try {
             driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(username);
             params1.clear();
             params1.put("mode", "off");
@@ -102,6 +104,21 @@ public class SetWifi {
             driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/password\"]").sendKeys(password);
             driver.findElementByXPath("//android.widget.Button[@text=\"CONNECT\"]|//android.widget.Button[@text=\"connect\"]").click();
             Thread.sleep(2000);
+            catch (Exception e){
+                }
+
+                try {
+                    // isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").isDisplayed();
+                    isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifi);
+                    isWiFiValidBefore = isConnected;
+                }
+                catch (Exception e) {
+                }
+                if (isConnected) {
+                    isWiFiValidAfter = isConnected;
+                    return;
+                }
+
             params1.clear();
             params1.put("package", "com.android.settings");
             params1.put("activity", ".wifi.WifiSettings");

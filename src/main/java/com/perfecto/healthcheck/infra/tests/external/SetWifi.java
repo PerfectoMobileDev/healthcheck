@@ -135,9 +135,9 @@ public class SetWifi {
             }
 
         }catch (Exception t) {
-            t.printStackTrace();
+
             ExceptionAnalyzer.analyzeException(t,"failed to define wifiName on device");
-            throw t;
+
         } finally {
 
 

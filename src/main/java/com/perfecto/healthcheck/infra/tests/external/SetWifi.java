@@ -141,8 +141,8 @@ public class SetWifi {
         } finally {
 
 
-            WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore, isWiFiValidAfter);
-            throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
+            WifiDeviceMetadata metadata1 = new WifiDeviceMetadata(isWiFiValidBefore, isWiFiValidAfter);
+            throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata1)));
         }
     }
 

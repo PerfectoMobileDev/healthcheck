@@ -55,6 +55,7 @@ public class DriverCreator extends AbstractLoggingActor {
                                                             else{
                                                                 try{
                                                                     driver = new AndroidDriver(new URL("https://" + host + "/nexperience/perfectomobile/wd/hub"), capabilities);
+                                                                    driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
                                                                 } catch (Throwable t) {
                                                                     t.printStackTrace();
                                                                     return new DeviceDriver(device,null);

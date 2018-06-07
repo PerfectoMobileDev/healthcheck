@@ -69,9 +69,12 @@ public class Controller extends AbstractLoggingActor {
                             }
 
                         }
+                        System.out.println("***********************RESULT STATISTICS*****************************");
+                        System.out.println("TOTAL DEVICES TO RUN ON: " + msg.getDeviceStatusList().size());
                         System.out.println("CONNECTED TO VALID WIFI ON START TOTAL: " + beforeWifiOnCounter);
                         System.out.println("CONNECTED TO VALID WIFI ON END TOTAL: " + afterWifiOnCounter);
                         System.out.println("TOTAL NUMBER OF FIXED DEVICES: " + (afterWifiOnCounter - beforeWifiOnCounter));
+
                         if (disconnectedDeviceIds.size() > 0)
                         {
                             System.out.println("DISCONNECTED FROM VALID WIFI IDs:");
@@ -80,6 +83,9 @@ public class Controller extends AbstractLoggingActor {
                                             System.out.println(id)
                             );
                         }
+
+                        System.out.println("*********************************************************************");
+
                         deviceFinalizer.tell(new DeviceFinalizer.FinalizeDevices(msg.getDeviceDriverList()),self());
                     }
 

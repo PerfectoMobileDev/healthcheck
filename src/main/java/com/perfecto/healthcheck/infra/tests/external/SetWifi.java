@@ -42,49 +42,78 @@ public class SetWifi {
             params1.put("activity", ".wifi.WifiSettings");
             driver.executeScript("mobile:activity:open", params1);
             Utils.switchToContext((AppiumDriver) driver, "NATIVE");
-            //        first set the new wifi Perefcto
-           String wifiname = "//*[@text=" + wifi + "]";
-           if (driver.findElementByXPath(wifiname).isDisplayed()) {
-               try {
-                   if (driver.findElementByXPath(wifiname + "/following-sibling::android.widget.TextView").isDisplayed()) {
-                       boolean connctstatus = driver.findElementByXPath("//*[@text=" + wifi + "]/following-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase("connected");
-                       Assert.assertTrue(true, "connectStatus " + connctstatus);
-                       return;
-                   }
-               }catch (Exception e){
-                  driver.findElementByXPath("//*[@text=" + wifi + "]").click();
-               }
-           }else{
-               Utils.scrollToAndroid(driver,"element", wifiname);
-               try {
-                   if (driver.findElementByXPath(wifiname + "/following-sibling::android.widget.TextView").isDisplayed()) {
-                       boolean connctstatus = driver.findElementByXPath("//*[@text=" + wifi + "]/following-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase("connected");
-                       Assert.assertTrue(true, "connectStatus " + connctstatus);
-                       return;
-                   }
-               }catch (Exception e){
-                   driver.findElementByXPath("//*[@text=" + wifi + "]").click();
-               }
+            //first set the new wifi Perefcto
+           String wifiname = "//*[@text=\"" + wifi + "\"]";
+            boolean isConnected = false;
+           try {
+               // isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").isDisplayed();
+               isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase("Perfecto");
            }
-                driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(username);
-                params1.clear();
-                params1.put("mode", "off");
-                driver.executeScript("mobile:keyboard:display", params1);
-                Thread.sleep(2000);
-                driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/password\"]").click();
-                driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/password\"]").sendKeys(password);
-                driver.findElementByXPath("//android.widget.Button[@text=\"CONNECT\"]|//android.widget.Button[@text=\"connect\"]").click();
-                params1.clear();
-                params1.put("package", "com.android.settings");
-                params1.put("activity", ".wifi.WifiSettings");
-                driver.executeScript("mobile:activity:open", params1);
-                Utils.switchToContext(driver, "NATIVE");
-                String wificonnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text");
+           catch (Exception e) {
+            }
+            if (isConnected)
+                return ;
+
+            if (driver.findElementByXPath(wifiname).isDisplayed()) {
                 try {
-                    Assert.assertEquals(wificonnected.toLowerCase().trim(), wifiName.toLowerCase());
-                } catch (Exception t) {
-                    ExceptionAnalyzer.analyzeException(t,"connected wifi is not the wifi defined");
+                    if (driver.findElementByXPath(wifiname + "/following-sibling::android.widget.TextView").isDisplayed()) {
+                        boolean connctstatus = driver.findElementByXPath("//*[@text=\"" + wifi + "\"]/following-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase("connected");
+                        Assert.assertTrue(true, "connectStatus " + connctstatus);
+                        return;
+                    }
+                } catch (Exception e) {
+                    driver.findElementByXPath("//*[@text=\"" + wifi + "\"]").click();
                 }
+            } else {
+                Utils.scrollToAndroid(driver, "element", wifiname);
+                try {
+                    if (driver.findElementByXPath(wifiname + "/following-sibling::android.widget.TextView").isDisplayed()) {
+                        boolean connctstatus = driver.findElementByXPath("//*[@text=\"" + wifi + "\"]/following-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase("connected");
+                        Assert.assertTrue(true, "connectStatus " + connctstatus);
+                        return;
+                    }
+                } catch (Exception e) {
+                    driver.findElementByXPath("//*[@text=\"" + wifi + "\"]").click();
+                }
+            }
+            Thread.sleep(10000);
+            isConnected = false;
+            try {
+                isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").isDisplayed();
+                if (isConnected )
+                    return;
+            }
+            catch (Exception e){
+            }
+            try {
+                driver.findElementByXPath("//*[@text=\"Please select\"]").click();
+                driver.findElementByXPath("//*[@text=\"Do not validate\"]").click();
+            } catch (Exception t) {
+                t.printStackTrace();
+                ExceptionAnalyzer.analyzeException(t, "There is no CA certidicate");
+                throw t;
+            }
+
+            driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(username);
+            params1.clear();
+            params1.put("mode", "off");
+            driver.executeScript("mobile:keyboard:display", params1);
+            Thread.sleep(2000);
+            driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/password\"]").click();
+            driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/password\"]").sendKeys(password);
+            driver.findElementByXPath("//android.widget.Button[@text=\"CONNECT\"]|//android.widget.Button[@text=\"connect\"]").click();
+            Thread.sleep(2000);
+            params1.clear();
+            params1.put("package", "com.android.settings");
+            params1.put("activity", ".wifi.WifiSettings");
+            driver.executeScript("mobile:activity:open", params1);
+            Utils.switchToContext(driver, "NATIVE");
+            String wificonnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text");
+            try {
+                Assert.assertEquals(wificonnected.toLowerCase().trim(), wifiName.toLowerCase());
+            } catch (Exception t) {
+                ExceptionAnalyzer.analyzeException(t, "connected wifi is not the wifi defined");
+            }
 
         }catch (Exception t) {
             t.printStackTrace();

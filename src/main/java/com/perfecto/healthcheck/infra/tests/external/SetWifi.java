@@ -36,6 +36,10 @@ public class SetWifi {
     }
 
     public static void defineWifiAndroid(AppiumDriver driver, String wifiName, String password, String username) throws Exception {
+
+        boolean isWiFiValidBefore = false;
+        boolean isWiFiValidAfter = false;
+
         try {
             Map<String, Object> params1 = new HashMap<>();
             params1.put("package", "com.android.settings");
@@ -45,25 +49,20 @@ public class SetWifi {
             //first set the new wifi Perefcto
            String wifiname = "//*[@text=\"" + wifi + "\"]";
             boolean isConnected = false;
+
            try {
                // isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").isDisplayed();
-               isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase("Perfecto");
+               isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifi);
+               isWiFiValidBefore = isConnected;
            }
            catch (Exception e) {
             }
             if (isConnected)
+                isWiFiValidAfter = isConnected;
                 return ;
 
             if (driver.findElementByXPath(wifiname).isDisplayed()) {
-                try {
-                    if (driver.findElementByXPath(wifiname + "/following-sibling::android.widget.TextView").isDisplayed()) {
-                        boolean connctstatus = driver.findElementByXPath("//*[@text=\"" + wifi + "\"]/following-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase("connected");
-                        Assert.assertTrue(true, "connectStatus " + connctstatus);
-                        return;
-                    }
-                } catch (Exception e) {
                     driver.findElementByXPath("//*[@text=\"" + wifi + "\"]").click();
-                }
             } else {
                 Utils.scrollToAndroid(driver, "element", wifiname);
                 try {
@@ -119,6 +118,11 @@ public class SetWifi {
             t.printStackTrace();
             ExceptionAnalyzer.analyzeException(t,"failed to define wifiName on device");
             throw t;
+        } finally {
+
+
+            WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore,isWifiValidAfter);
+            throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
         }
     }
 

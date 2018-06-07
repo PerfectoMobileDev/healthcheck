@@ -87,11 +87,8 @@ public class SetWifi {
             try {
                 driver.findElementByXPath("//*[@text=\"Please select\"]").click();
                 driver.findElementByXPath("//*[@text=\"Do not validate\"]").click();
-            } catch (Exception t) {
-                t.printStackTrace();
-                ExceptionAnalyzer.analyzeException(t, "There is no CA certidicate");
-                throw t;
-            }
+             catch (Exception e) {
+                }
 
             driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(username);
             params1.clear();
@@ -108,6 +105,7 @@ public class SetWifi {
             driver.executeScript("mobile:activity:open", params1);
             Utils.switchToContext(driver, "NATIVE");
             String wificonnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text");
+            if (wificonnected.toLowerCase().trim().equalsIgnoreCase(wifiName.toLowerCase())) isWiFiValidAfter=true;
             try {
                 Assert.assertEquals(wificonnected.toLowerCase().trim(), wifiName.toLowerCase());
             } catch (Exception t) {

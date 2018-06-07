@@ -57,10 +57,10 @@ public class SetWifi {
            }
            catch (Exception e) {
             }
-            if (isConnected)
+            if (isConnected) {
                 isWiFiValidAfter = isConnected;
-                return ;
-
+                return;
+            }
             if (driver.findElementByXPath(wifiname).isDisplayed()) {
                     driver.findElementByXPath("//*[@text=\"" + wifi + "\"]").click();
             } else {
@@ -121,7 +121,7 @@ public class SetWifi {
         } finally {
 
 
-            WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore,isWifiValidAfter);
+            WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore, isWiFiValidAfter);
             throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
         }
     }

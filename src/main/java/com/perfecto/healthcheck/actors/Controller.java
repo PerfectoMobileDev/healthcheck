@@ -169,11 +169,19 @@ public class Controller extends AbstractLoggingActor {
         private String mcm;
         private String user;
         private String password;
+        private final String wifiName;
+        private final String wifiIdentity;
+        private final String wifiPassword;
 
-        public McmData(String mcm, String user, String password) {
+        public McmData(String mcm, String user, String password,String wifiName,String wifiIdentity,String wifiPassword) {
             this.mcm = mcm;
             this.user = user;
             this.password = password;
+            this.wifiName = wifiName;
+            this.wifiIdentity = wifiIdentity;
+            this.wifiPassword = wifiPassword;
+
+
         }
 
         public String getMcm() {
@@ -186,6 +194,18 @@ public class Controller extends AbstractLoggingActor {
 
         public String getPassword() {
             return password;
+        }
+
+        public String getWifiName() {
+            return wifiName;
+        }
+
+        public String getWifiIdentity() {
+            return wifiIdentity;
+        }
+
+        public String getWifiPassword() {
+            return wifiPassword;
         }
     }
 

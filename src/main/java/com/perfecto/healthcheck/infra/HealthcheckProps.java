@@ -31,33 +31,9 @@ public class HealthcheckProps {
 
     static {
         setAmountOfThreads(40);
-        if (PERFECTO_HOST == null || PERFECTO_HOST.trim().isEmpty()) {
-            PERFECTO_HOST = "";
-        }
-
-        if (PERFECTO_USER == null || PERFECTO_USER.trim().isEmpty()) {
-            PERFECTO_USER = "";
-        }
-
-        if (PERFECTO_PASSWORD == null || PERFECTO_PASSWORD.trim().isEmpty()) {
-            PERFECTO_PASSWORD = "";
-        }
-
-        if (PERFECTO_PASSWORD == null || PERFECTO_PASSWORD.trim().isEmpty()) {
-//            PERFECTO_PASSWORD = "w!SV885";
-//            PERFECTO_PASSWORD = "Dr12345!";
-            PERFECTO_PASSWORD = "";
-        }
 
         if (WIFI_PASSWORD == null || WIFI_PASSWORD.trim().isEmpty()) {
             WIFI_PASSWORD = "0UTS9P"; //branchtest wifi password for Perfecto
-        }
-
-        if (WIFI_IDENTIFY == null || WIFI_IDENTIFY.trim().isEmpty()) {
-            WIFI_IDENTIFY = getPerfectoHost().split("\\.")[0];
-        }
-        if (WIFI_NAME == null || WIFI_NAME.trim().isEmpty()) {
-            WIFI_NAME = "Perfecto";
         }
 
         if (deviceId == null || deviceId.trim().isEmpty()) {
@@ -78,12 +54,6 @@ public class HealthcheckProps {
         return UUID;
     }
 
-    public static String getPerfectoUser() { return PERFECTO_USER; }
-    public static String getPerfectoHost() { return PERFECTO_HOST; }
-    public static String getPerfectoPassword() { return PERFECTO_PASSWORD; }
-    public static String  getWifiPassword() {return WIFI_PASSWORD; }
-    public static String getWifiIdentify() {return WIFI_IDENTIFY;}
-    public static String getWifiName() {return WIFI_NAME;}
     public static Logger getLogger() {
         return logger;
     }
@@ -92,10 +62,10 @@ public class HealthcheckProps {
         return REBOOT_ALL_DEVICES;
     }
 
-    public static String getMCMVersion(){
+    public static String getMCMVersion(String mcmUrl,String user,String password){
         String url = null;
         try {
-            url = "https://" + getPerfectoHost() + "/services/cradles/?operation=list&user=" + URLEncoder.encode(getPerfectoUser(),java.nio.charset.StandardCharsets.UTF_8.toString()) + "&password=" + URLEncoder.encode(getPerfectoPassword(),java.nio.charset.StandardCharsets.UTF_8.toString());
+            url = "https://" + mcmUrl + "/services/cradles/?operation=list&user=" + URLEncoder.encode(user,java.nio.charset.StandardCharsets.UTF_8.toString()) + "&password=" + URLEncoder.encode(password,java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -106,28 +76,11 @@ public class HealthcheckProps {
             return "Undefined MCM version";
         }
     }
-    public static Optional<Integer> getNumberConnectedDevices(){
-        String url = null;
-        try {
-            url = "https://" + getPerfectoHost() + "/services/handsets/?operation=list&user=" + URLEncoder.encode(getPerfectoUser(),java.nio.charset.StandardCharsets.UTF_8.toString()) + "&password=" + URLEncoder.encode(getPerfectoPassword(),java.nio.charset.StandardCharsets.UTF_8.toString())+"&status=connected";
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        try {
-            String resultXML = Unirest.get(url).asString().getBody();
-            Integer numberItems= Integer.valueOf(XML.toJSONObject(resultXML).getJSONObject("handsets").get("items").toString());
-            return Optional.of(numberItems);
-        } catch (Throwable t) {
-            return Optional.empty();
-        }
-    }
 
     public static void setAmountOfThreads(int threads){
         logger.info("Setting parallel threads to " + threads);
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", String.valueOf(threads));
     }
-
-
 
 
     public static String getChromeAcountName() {

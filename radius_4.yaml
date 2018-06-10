@@ -1,0 +1,1274 @@
+---
+Datacenter:
+  BOS:
+  - name: census
+    password: 9oLfj3x
+    vlan: 275
+  - name: qapm
+    password: 0M7712
+    vlan: 417
+  - name: devcloud
+    password: CXDERD
+    vlan: 289
+  - name: sap
+    password: RT9VAJ
+    vlan: 277
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 270
+  - name: citibanamex
+    password: as5Jks
+    vlan: 243
+  - name: citimobilemonitoring
+    password: Y7jI4F3
+    vlan: 444
+  - name: ally
+    password: NS9WUN
+    vlan: 248
+  - name: pepper
+    password: JeT6W2p9
+    vlan: 425
+  - name: ultramobile
+    password: 1VII62
+    vlan: 39
+  - name: pnc
+    password: JFISX5
+    vlan: 25
+  - name: nielsen
+    password: R5IS0B
+    vlan: 61
+  - name: msces
+    password: 2PEPD6
+    vlan: 295
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: testing
+    password: 6PGGTP
+    vlan: 69
+  - name: northerntrust
+    password: ljdd8K
+    vlan: 215
+  - name: dsg
+    password: 6MK252
+    vlan: 77
+  - name: hcsc
+    password: EAMTX2
+    vlan: 34
+  - name: aeo
+    password: al80ons
+    vlan: 290
+  - name: test-directv
+    password: CZKXZ2
+    vlan: 287
+  - name: fordtest
+    password: WMR04C
+    vlan: 78
+  - name: ets-db
+    password: YBd8x0
+    vlan: 92
+  - name: frb
+    password: J74ioP8
+    vlan: 412
+  - name: honeywell
+    password: IE5WC6
+    vlan: 237
+  - name: fifththird
+    password: DhI4w93Q
+    vlan: 443
+  - name: verizon-ga
+    password: NOHEVB
+    vlan: 232
+  - name: morganstanley
+    password: BGFVTT
+    vlan: 28
+  - name: fda
+    password: IFXC33
+    vlan: 212
+  - name: web-demo
+    password: 2TMOMI
+    vlan: 235
+  - name: tda
+    password: 6DC5E7
+    vlan: 24
+  - name: forddirect
+    password: 38KS12
+    vlan: 416
+  - name: intuitive
+    password: dk47klas2
+    vlan: 423
+  - name: web-demo2
+    password: OHCJDZ
+    vlan: 94
+  - name: statefarm
+    password: B7057N
+    vlan: 19
+  - name: ford
+    password: MI37I8
+    vlan: 231
+  - name: allstate
+    password: M0R4J6
+    vlan: 234
+  - name: usaa
+    password: NZ0H6G
+    vlan: 46
+  - name: ps
+    password: 8JF8QX
+    vlan: 296
+  - name: nab
+    password: JVUXZ7
+    vlan: 273
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 100
+  - name: rai
+    password: IFU23H
+    vlan: 233
+  - name: preproduction
+    password: 3K31PS
+    vlan: 89
+  - name: safeway
+    password: CUUP0K
+    vlan: 222
+  - name: ups
+    password: ESD3XL
+    vlan: 76
+  - name: atc
+    password: 55mUi9
+    vlan: 433
+  - name: pge
+    password: PP6IPD
+    vlan: 67
+  - name: test-mastercard
+    password: 7EG2alB
+    vlan: 18
+  - name: metlife
+    password: QIWV8F
+    vlan: 47
+  - name: cigna
+    password: S05P83
+    vlan: 31
+  - name: perfectosso
+    password: FVS5M8
+    vlan: 224
+  - name: wellsfargodssg
+    password: 2JP73V
+    vlan: 252
+  - name: vzw-video
+    password: 3XXBN4
+    vlan: 223
+  - name: pioneer
+    password: EOS445
+    vlan: 220
+  - name: ibm-cn
+    password: 49XTV9
+    vlan: 258
+  - name: citi
+    password: 4hDy7f
+    vlan: 36
+  - name: kp
+    password: 52ENAP
+    vlan: 79
+  - name: tmna
+    password: g9eCf3x
+    vlan: 266
+  - name: scouter
+    password: 0YI3WR
+    vlan: 279
+  - name: afs
+    password: GRCRHV
+    vlan: 23
+  - name: bayer
+    password: EOSJHU
+    vlan: 225
+  - name: medtroniccrhf
+    password: KE05Ydw2
+    vlan: 426
+  - name: fmglobal
+    password: E0MLSB
+    vlan: 256
+  - name: deutschebank
+    password: GBS8Q0
+    vlan: 276
+  - name: hcp
+    password: 05MXE2
+    vlan: 250
+  - name: avon
+    password: 0V72B5
+    vlan: 251
+  - name: anthem
+    password: 2ZIHZ6
+    vlan: 253
+  - name: extendedstay
+    password: tno944
+    vlan: 268
+  - name: aig
+    password: IFU1K8
+    vlan: 88
+  - name: citicfc
+    password: 4HT3Y3
+    vlan: 21
+  - name: humana
+    password: 9IIBBQ
+    vlan: 293
+  - name: accenture
+    password: 1178BA
+    vlan: 90
+  - name: h2h-philips
+    password: ORTNYD
+    vlan: 292
+  - name: att-mobility
+    password: d38JSAl
+    vlan: 298
+  - name: ca
+    password: M8AS4E
+    vlan: 40
+  - name: ubs
+    password: 4dk392x
+    vlan: 41
+  - name: allinahealth
+    password: UFb5Q6Op
+    vlan: 420
+  - name: medtronic
+    password: QMI3XV
+    vlan: 265
+  - name: newyorklife
+    password: LKS3d9j
+    vlan: 85
+  - name: starwood
+    password: DM1L91
+    vlan: 30
+  - name: citipoc
+    password: h7JC19x
+    vlan: 213
+  - name: partners
+    password: QKRCZE
+    vlan: 53
+  - name: universal
+    password: 7RENF8
+    vlan: 42
+  - name: gm
+    password: gJ2fx89
+    vlan: 37
+  - name: reporting-dev
+    password: IKR7D6
+    vlan: 272
+  - name: bcbsm-mobile
+    password: 6MK6KV
+    vlan: 236
+  - name: inner-active
+    password: YGYNH7
+    vlan: 271
+  - name: noctest
+    password: 9t6ge6V
+    vlan: 11
+  - name: wellsfargowholesale
+    password: DNYNDN
+    vlan: 55
+  - name: jhancock
+    password: 89ud2k
+    vlan: 226
+  - name: nfcu
+    password: opjio0ji
+    vlan: 43
+  - name: citighrt
+    password: UYA9NL
+    vlan: 246
+  - name: tdacc
+    password: VNQTH2
+    vlan: 257
+  - name: kpmonitoring
+    password: 2N6O1Y
+    vlan: 38
+  - name: accenturecoe
+    password: R9MX40
+    vlan: 33
+  - name: optum
+    password: 3DL8M4
+    vlan: 15
+  - name: gwbto
+    password: U0JRBL
+    vlan: 264
+  - name: linux-perfecto
+    password: 2VBO93
+    vlan: 20
+  - name: charter
+    password: GEi72pW2
+    vlan: 421
+  - name: vzw-siot
+    password: VZasd29
+    vlan: 86
+  - name: siriusxm
+    password: JSkd83z
+    vlan: 56
+  - name: web-staging
+    password: GRC828
+    vlan: 72
+  - name: ultimate
+    password: BBCZDU
+    vlan: 294
+  - name: gmfinancial
+    password: WNQ3FP
+    vlan: 255
+  - name: toyota
+    password: UHTU68
+    vlan: 84
+  - name: vzw
+    password: 3QWBN4
+    vlan: 26
+  - name: wyn
+    password: 6VHLWE
+    vlan: 259
+  - name: performance
+    password: PG265W
+    vlan: 51
+  - name: wf
+    password: YQU1TW
+    vlan: 214
+  - name: jeppesen
+    password: F5PL1J
+    vlan: 91
+  - name: CitiCardsIUT
+    password: IFU1K6
+    vlan: 267
+  - name: sprint
+    password: J68YFJ
+    vlan: 274
+  - name: paychex
+    password: C8KHFZ
+    vlan: 57
+  - name: hnb
+    password: SRDP0M
+    vlan: 75
+  - name: centene
+    password: 6GE9i8w
+    vlan: 415
+  - name: libertymutual
+    password: GX2KKT
+    vlan: 14
+  - name: security
+    password: JEK921
+    vlan: 82
+  - name: visa
+    password: MZ99PM
+    vlan: 247
+  - name: vanguard
+    password: IFU1YY
+    vlan: 83
+  - name: vzw-gizmo
+    password: 4YeUSi7w
+    vlan: 66
+  - name: rbs
+    password: HCQ7SF
+    vlan: 71
+  - name: comcast
+    password: WPAT1N
+    vlan: 32
+  - name: linux-stg
+    password: RSMC8U
+    vlan: 281
+  - name: qatestlab
+    password: B1V4SA
+    vlan: 219
+  - name: keybank
+    password: T1GRI5
+    vlan: 211
+  - name: usaa-poc
+    password: QU2W0H
+    vlan: 278
+  - name: rbc-us
+    password: 4W57RE
+    vlan: 241
+  - name: reporting-staging
+    password: E2AKQO
+    vlan: 74
+  - name: system-tests
+    password: Ydsf8S
+    vlan: 52
+  - name: ebay
+    password: E19RDC
+    vlan: 45
+  - name: roomstogo
+    password: HgY6J8r
+    vlan: 419
+  - name: demo
+    password: 5tK20b
+    vlan: 29
+  - name: citrix
+    password: 7VSQY4
+    vlan: 65
+  - name: branchtest
+    password: 0UTS9P
+    vlan: 228
+  - name: lfg
+    password: 7VN1HY
+    vlan: 93
+  - name: citizens
+    password: 1M77OT
+    vlan: 286
+  - name: jcpenney
+    password: RLHKD8
+    vlan: 244
+  - name: ulta
+    password: WSPRPB
+    vlan: 16
+  - name: bofa
+    password: VZRTWZ
+    vlan: 35
+  - name: ibm-ca
+    password: 8APV1K
+    vlan: 239
+  - name: kohls
+    password: 8HATVQ
+    vlan: 62
+  - name: prudential
+    password: WV7BFZ
+    vlan: 17
+  - name: kroger
+    password: F39JDAl
+    vlan: 217
+  - name: bmo
+    password: YBLJV6
+    vlan: 70
+  - name: nespresso
+    password: 9f46g9D
+    vlan: 13
+  - name: bbt
+    password: 4F7AUB
+    vlan: 22
+  - name: wfmonitor
+    password: 9RK7PD
+    vlan: 221
+  - name: awarex
+    password: 7kKS02
+    vlan: 87
+  - name: amica
+    password: 55OGNK
+    vlan: 260
+  - name: allegis
+    password: N9M6Q3
+    vlan: 262
+  - name: beta
+    password: IN0GD1
+    vlan: 95
+  - name: bcbsnc
+    password: FXN7Y7
+    vlan: 50
+  - name: umtb
+    password: HudW63i2
+    vlan: 424
+  - name: medtronicem
+    password: Y8067Y
+    vlan: 269
+  - name: webster
+    password: UU11L7
+    vlan: 285
+  - name: dexmedia
+    password: GPE2IO
+    vlan: 283
+  - name: nycsca
+    password: EPW7DY
+    vlan: 68
+  - name: panera
+    password: 38KSvz
+    vlan: 413
+  - name: gett-us
+    password: js2s0KKA
+    vlan: 422
+  - name: devry
+    password: AOJC3N
+    vlan: 282
+  - name: adp
+    password: 3DL8MS
+    vlan: 54
+  - name: bofa-staging
+    password: 121WE
+    vlan: 411
+  - name: directv
+    password: YBTXYF
+    vlan: 229
+  - name: ibmgbs
+    password: T6X6VO
+    vlan: 80
+  - name: privatecloud
+    password: KSIS80
+    vlan: 240
+  - name: citrix-hosting
+    password: 73JdsP
+    vlan: 63
+  - name: visionit
+    password: YYSW23
+    vlan: 216
+  - name: msdev
+    password: F9M3F7
+    vlan: 291
+  - name: cademo
+    password: H6O8ZK
+    vlan: 49
+  - name: bsci
+    password: FXNI3P
+    vlan: 261
+  - name: espn
+    password: CHIJ0S
+    vlan: 263
+  - name: ios11
+    password: JK8n1
+    vlan: 414
+  - name: microsoft
+    password: 04EZ86
+    vlan: 58
+  - name: jnjdiabetes
+    password: FGFU0X
+    vlan: 227
+  - name: dtvstreaming
+    password: TP9OS1
+    vlan: 284
+  - name: medtronictest
+    password: sd83K2
+    vlan: 418
+  - name: murphyoil
+    password: bd2Yju
+    vlan: 60
+  - name: ing-aus
+    password: U03OM9
+    vlan: 83
+  - name: bellca
+    password: 7GKO8H
+    vlan: 297
+  BZC:
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 70
+  - name: ford
+    password: MI37I8
+    vlan: 31
+  - name: accenture
+    password: 1178BA
+    vlan: 90
+  CAN:
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 70
+  - name: citimobilemonitoring
+    password: Y7jI4F3
+    vlan: 44
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: manulife-au
+    password: P0tEu5Fx
+    vlan: 12
+  - name: ford-ch
+    password: KA53SV
+    vlan: 13
+  - name: deutschebank
+    password: GBS8Q0
+    vlan: 76
+  - name: accenture
+    password: 1178BA
+    vlan: 90
+  - name: starwood
+    password: DM1L91
+    vlan: 32
+  - name: vzw
+    password: 3QWBN4
+    vlan: 26
+  - name: qatestlab
+    password: B1V4SA
+    vlan: 19
+  - name: demo
+    password: 5tK20b
+    vlan: 29
+  - name: beta
+    password: IN0GD1
+    vlan: 95
+  - name: privatecloud
+    password: KSIS80
+    vlan: 40
+  FRA:
+  - name: citrix-xm
+    password: dld82Ms
+    vlan: 31
+  - name: sap
+    password: RT9VAJ
+    vlan: 19
+  - name: citimobilemonitoring
+    password: Y7jI4F3
+    vlan: 25
+  - name: nielsen
+    password: R5IS0B
+    vlan: 61
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: ndc-testing-factory
+    password: ddf8R2
+    vlan: 30
+  - name: media-saturn
+    password: OD51FA
+    vlan: 13
+  - name: usaa
+    password: NZ0H6G
+    vlan: 16
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 11
+  - name: sanofi
+    password: e7TF420
+    vlan: 35
+  - name: atc
+    password: 55mUi9
+    vlan: 33
+  - name: coba
+    password: FUH7RU
+    vlan: 20
+  - name: cma-cgm
+    password: KSK9l2s
+    vlan: 27
+  - name: deutschebank
+    password: GBS8Q0
+    vlan: 76
+  - name: pkobp
+    password: jwp8R2ns
+    vlan: 50
+  - name: vodafone-tss-de
+    password: skd3Al
+    vlan: 26
+  - name: gm
+    password: gJ2fx89
+    vlan: 37
+  - name: sky
+    password: 66VGHA
+    vlan: 22
+  - name: sky
+    password: 66VGHA
+    vlan: 22
+  - name: lhibm
+    password: u2ld9SA
+    vlan: 23
+  - name: bttv
+    password: dlk2KL1
+    vlan: 38
+  - name: vzw
+    password: 3QWBN4
+    vlan: 21
+  - name: ebay
+    password: E19RDC
+    vlan: 45
+  - name: demo
+    password: 5tK20b
+    vlan: 29
+  - name: adidas
+    password: XW12DC
+    vlan: 44
+  - name: poc-de
+    password: QGNDZL
+    vlan: 15
+  - name: db-pwcc
+    password: djd3KS2
+    vlan: 24
+  - name: beta
+    password: IN0GD1
+    vlan: 17
+  - name: ruv
+    password: YIVSOA
+    vlan: 18
+  - name: ing-mb
+    password: Y4Ro9g2P
+    vlan: 83
+  - name: luebecker
+    password: 47sjiZ2
+    vlan: 71
+  - name: ford-eu
+    password: C73nRy2
+    vlan: 12
+  - name: cobatest
+    password: 4dN84JS3E
+    vlan: 44
+  GDL:
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 70
+  - name: citibanamex
+    password: as5Jks
+    vlan: 43
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: citi
+    password: 4hDy7f
+    vlan: 36
+  - name: demo
+    password: 5tK20b
+    vlan: 29
+  LON:
+  - name: ybsgroup
+    password: JuR4R6Z9
+    vlan: 82
+  - name: sap
+    password: RT9VAJ
+    vlan: 80
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 70
+  - name: citimobilemonitoring
+    password: Y7jI4F3
+    vlan: 54
+  - name: nielsen
+    password: R5IS0B
+    vlan: 61
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: testing
+    password: 6PGGTP
+    vlan: 69
+  - name: lloyds
+    password: O64MQA
+    vlan: 12
+  - name: lloydsuat
+    password: 8hY7ev
+    vlan: 34
+  - name: pingidentity
+    password: 73JE5Y
+    vlan: 81
+  - name: salesforce
+    password: PZWQIY
+    vlan: 30
+  - name: rabobank
+    password: VUE34Z
+    vlan: 32
+  - name: opticiptest
+    password: PIH2CU
+    vlan: 67
+  - name: intuitive
+    password: dk47klas2
+    vlan: 63
+  - name: vodafone-uk
+    password: 5WWSRI
+    vlan: 78
+  - name: usaa
+    password: NZ0H6G
+    vlan: 31
+  - name: hpbch
+    password: 5K0CQG
+    vlan: 48
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 100
+  - name: lloyds-af
+    password: 129XIU
+    vlan: 46
+  - name: elevate
+    password: C3MV2W
+    vlan: 45
+  - name: ikea
+    password: OD51FE
+    vlan: 24
+  - name: choicehotels
+    password: HHFLVD
+    vlan: 46
+  - name: atc
+    password: 55mUi9
+    vlan: 33
+  - name: wellsfargodssg
+    password: 2JP73V
+    vlan: 80
+  - name: citi
+    password: 4hDy7f
+    vlan: 17
+  - name: kp
+    password: 52ENAP
+    vlan: 79
+  - name: slb
+    password: 0ZI2K7
+    vlan: 20
+  - name: laquinta
+    password: KV59OR
+    vlan: 28
+  - name: deutschebank
+    password: GBS8Q0
+    vlan: 76
+  - name: hcp
+    password: 05MXE2
+    vlan: 53
+  - name: avon
+    password: 0V72B5
+    vlan: 50
+  - name: accenture
+    password: 1178BA
+    vlan: 19
+  - name: medtronic
+    password: QMI3XV
+    vlan: 65
+  - name: testing-uk
+    password: L9eC831
+    vlan: 11
+  - name: starwood
+    password: DM1L91
+    vlan: 60
+  - name: partners
+    password: QKRCZE
+    vlan: 25
+  - name: gm
+    password: gJ2fx89
+    vlan: 27
+  - name: kpmonitoring
+    password: 2N6O1Y
+    vlan: 38
+  - name: lg-online
+    password: dlks32lHs
+    vlan: 37
+  - name: linux-perfecto
+    password: 2VBO93
+    vlan: 21
+  - name: jlr
+    password: dlk2KZ1
+    vlan: 14
+  - name: ultimate
+    password: BBCZDU
+    vlan: 94
+  - name: whitbread
+    password: dlk9F3
+    vlan: 35
+  - name: bttv
+    password: dlk2KL1
+    vlan: 38
+  - name: vzw
+    password: 3QWBN4
+    vlan: 26
+  - name: performance
+    password: PG265W
+    vlan: 51
+  - name: libertymutual
+    password: GX2KKT
+    vlan: 28
+  - name: visa
+    password: MZ99PM
+    vlan: 47
+  - name: rbs
+    password: HCQ7SF
+    vlan: 13
+  - name: ebay
+    password: E19RDC
+    vlan: 45
+  - name: demo
+    password: 5tK20b
+    vlan: 29
+  - name: citrix
+    password: 7VSQY4
+    vlan: 65
+  - name: branchtest
+    password: 0UTS9P
+    vlan: 18
+  - name: ee
+    password: FA0FD2
+    vlan: 42
+  - name: gett
+    password: 5GRZ1Q
+    vlan: 48
+  - name: mbna
+    password: ZXHMMD
+    vlan: 77
+  - name: calottery
+    password: HW2WFM
+    vlan: 66
+  - name: tescobank
+    password: G6447F
+    vlan: 15
+  - name: vodafone-uc
+    password: HET07V
+    vlan: 36
+  - name: beta
+    password: IN0GD1
+    vlan: 44
+  - name: etihad
+    password: 5X77I4
+    vlan: 41
+  - name: royallondon
+    password: 1170BAD
+    vlan: 16
+  - name: vodacom-za
+    password: He85IlE
+    vlan: 72
+  - name: microsoft
+    password: 04EZ86
+    vlan: 58
+  - name: ford-eu
+    password: C73nRy2
+    vlan: 22
+  - name: bellca
+    password: 7GKO8H
+    vlan: 97
+  PHX:
+  - name: devcloud
+    password: CXDERD
+    vlan: 71
+  - name: flyfrontier
+    password: HHL545
+    vlan: 17
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 70
+  - name: citimobilemonitoring
+    password: Y7jI4F3
+    vlan: 44
+  - name: ultramobile
+    password: 1VII62
+    vlan: 39
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: testing
+    password: 6PGGTP
+    vlan: 69
+  - name: monsterenergy
+    password: 4Uh3h8
+    vlan: 63
+  - name: test-directv
+    password: CZKXZ2
+    vlan: 87
+  - name: becumonitoring
+    password: HW2334
+    vlan: 76
+  - name: salesforce
+    password: PZWQIY
+    vlan: 30
+  - name: opticiptest
+    password: PIH2CU
+    vlan: 67
+  - name: asurion
+    password: SZMZI6
+    vlan: 42
+  - name: usaa
+    password: NZ0H6G
+    vlan: 83
+  - name: supervalu
+    password: pe41nep33
+    vlan: 37
+  - name: dfw-directv
+    password: R25GVQ
+    vlan: 88
+  - name: hpbch
+    password: 5K0CQG
+    vlan: 48
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 100
+  - name: elevate
+    password: C3MV2W
+    vlan: 45
+  - name: safeway
+    password: CUUP0K
+    vlan: 49
+  - name: choicehotels
+    password: HHFLVD
+    vlan: 46
+  - name: wellsfargodssg
+    password: 2JP73V
+    vlan: 80
+  - name: becu
+    password: MAMTR6
+    vlan: 31
+  - name: iscostco
+    password: 8SB5OA
+    vlan: 27
+  - name: kp
+    password: 52ENAP
+    vlan: 79
+  - name: slb
+    password: 0ZI2K7
+    vlan: 20
+  - name: laquinta
+    password: KV59OR
+    vlan: 28
+  - name: hcp
+    password: 05MXE2
+    vlan: 53
+  - name: starwood
+    password: DM1L91
+    vlan: 32
+  - name: capgroup
+    password: ZJHNHZ
+    vlan: 41
+  - name: gm
+    password: gJ2fx89
+    vlan: 77
+  - name: wellsfargowholesale
+    password: DNYNDN
+    vlan: 55
+  - name: heb
+    password: U95Z97
+    vlan: 90
+  - name: kpmonitoring
+    password: 2N6O1Y
+    vlan: 38
+  - name: abi
+    password: 0M77ON
+    vlan: 16
+  - name: linux-perfecto
+    password: 2VBO93
+    vlan: 21
+  - name: ultimate
+    password: BBCZDU
+    vlan: 94
+  - name: toyota
+    password: UHTU68
+    vlan: 73
+  - name: vzw
+    password: 3QWBN4
+    vlan: 26
+  - name: performance
+    password: PG265W
+    vlan: 51
+  - name: wf
+    password: YQU1TW
+    vlan: 25
+  - name: sprint
+    password: J68YFJ
+    vlan: 74
+  - name: visa
+    password: MZ99PM
+    vlan: 47
+  - name: qatestlab
+    password: B1V4SA
+    vlan: 19
+  - name: citrix
+    password: 7VSQY4
+    vlan: 65
+  - name: branchtest
+    password: 0UTS9P
+    vlan: 18
+  - name: jcpenney
+    password: RLHKD8
+    vlan: 14
+  - name: kroger
+    password: F39JDAl
+    vlan: 86
+  - name: calottery
+    password: HW2WFM
+    vlan: 66
+  - name: wfmonitor
+    password: 9RK7PD
+    vlan: 221
+  - name: directv
+    password: YBTXYF
+    vlan: 13
+  - name: visionit
+    password: YYSW23
+    vlan: 75
+  - name: microsoft
+    password: 04EZ86
+    vlan: 58
+  SGE:
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 11
+  - name: atc
+    password: 55mUi9
+    vlan: 33
+  - name: coba
+    password: FUH7RU
+    vlan: 20
+  - name: testing-uk
+    password: L9eC831
+    vlan: 50
+  - name: vzw
+    password: 3QWBN4
+    vlan: 21
+  - name: ebay
+    password: E19RDC
+    vlan: 45
+  - name: demo
+    password: 5tK20b
+    vlan: 16
+  - name: adidas
+    password: XW12DC
+    vlan: 44
+  - name: ruv
+    password: YIVSOA
+    vlan: 18
+  - name: ford-eu
+    password: C73nRy2
+    vlan: 12
+  SYD:
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 70
+  - name: citimobilemonitoring
+    password: Y7jI4F3
+    vlan: 54
+  - name: nielsen
+    password: R5IS0B
+    vlan: 61
+  - name: vha
+    password: FC4Q1I
+    vlan: 35
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: intuitive
+    password: dk47klas2
+    vlan: 63
+  - name: manulife-au
+    password: P0tEu5Fx
+    vlan: 12
+  - name: nab
+    password: JVUXZ7
+    vlan: 20
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 100
+  - name: h2h-philips
+    password: ORTNYD
+    vlan: 92
+  - name: starwood
+    password: DM1L91
+    vlan: 30
+  - name: ebay
+    password: E19RDC
+    vlan: 45
+  - name: demo
+    password: 5tK20b
+    vlan: 29
+  - name: fulcrumww
+    password: UEg53Dwp
+    vlan: 55
+  - name: singaporeairlines
+    password: as82KJ9a
+    vlan: 44
+  - name: coles
+    password: JVUA11
+    vlan: 21
+  - name: servicensw
+    password: ATMLE4
+    vlan: 28
+  - name: ing-aus
+    password: U03OM9
+    vlan: 83
+  TUF:
+  - name: onboarding
+    password: TC02MG
+    vlan: 15
+  - name: mytestmobilebyopen
+    password: test1234
+    vlan: 12
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 11
+  - name: atc
+    password: 55mUi9
+    vlan: 33
+  - name: gm
+    password: gJ2fx89
+    vlan: 37
+  - name: ford-eu
+    password: C73nRy2
+    vlan: 22
+  YYZ:
+  - name: mastercard
+    password: 5PPUM6
+    vlan: 70
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: aeo
+    password: al80ons
+    vlan: 21
+  - name: ford
+    password: MI37I8
+    vlan: 15
+  - name: ibm-cibc
+    password: 45IHr93
+    vlan: 20
+  - name: ps
+    password: 8JF8QX
+    vlan: 96
+  - name: testing-yyz
+    password: MMQA9B
+    vlan: 30
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 100
+  - name: choicehotels
+    password: HHFLVD
+    vlan: 44
+  - name: tangerinetest
+    password: 95UL67
+    vlan: 14
+  - name: hcp
+    password: 05MXE2
+    vlan: 53
+  - name: cibc-rbss
+    password: U9g3Rd2
+    vlan: 31
+  - name: h2h-philips
+    password: ORTNYD
+    vlan: 92
+  - name: starwood
+    password: DM1L91
+    vlan: 60
+  - name: huskyenergy
+    password: 45IHr93
+    vlan: 61
+  - name: ultimate
+    password: BBCZDU
+    vlan: 94
+  - name: vzw
+    password: 3QWBN4
+    vlan: 26
+  - name: cnrail
+    password: ZIQCL5
+    vlan: 16
+  - name: manulife
+    password: MVCJUZ
+    vlan: 12
+  - name: demo
+    password: 5tK20b
+    vlan: 29
+  - name: bmo-qaed
+    password: JLBM41
+    vlan: 72
+  - name: bmo
+    password: YBLJV6
+    vlan: 71
+  - name: ibmgbs
+    password: T6X6VO
+    vlan: 80
+  - name: rbc-ca
+    password: 2CHM2T
+    vlan: 17
+  - name: bellca
+    password: 7GKO8H
+    vlan: 22
+  ZRH:
+  - name: onboarding
+    password: TC02MG
+    vlan: 59
+  - name: mobilecloud
+    password: 8y4jd9A
+    vlan: 11
+  - name: atc
+    password: 55mUi9
+    vlan: 33
+  - name: citi
+    password: 4hDy7f
+    vlan: 36
+  - name: testing-uk
+    password: L9eC831
+    vlan: 50
+  - name: gm
+    password: gJ2fx89
+    vlan: 37
+  - name: sisal
+    password: eEh6D3
+    vlan: 14
+  - name: nespresso
+    password: 9f46g9D
+    vlan: 13
+  - name: privatecloud
+    password: KSIS80
+    vlan: 40

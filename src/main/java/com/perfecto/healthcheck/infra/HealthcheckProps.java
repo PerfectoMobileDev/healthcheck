@@ -20,7 +20,6 @@ public class HealthcheckProps {
     private static String default_Language = System.getProperty("defaultLanguage");
     private static boolean Unlock_status = Boolean.getBoolean("unlockStatus");
     private static String chrome_Acount_Pass = System.getProperty("chromeAcountPass");
-    private static String deviceId = System.getProperty("deviceId");
     private static final String UUID = java.util.UUID.randomUUID().toString();
 
     //multiline string variable that contains MCM and Wifi credentials in the following format:
@@ -33,9 +32,6 @@ public class HealthcheckProps {
     static {
         setAmountOfThreads(40);
 
-        if (deviceId == null || deviceId.trim().isEmpty()) {
-            deviceId = "";
-        }
         if (default_Language == null || default_Language.trim().isEmpty()) {
             default_Language = "";
         }
@@ -99,7 +95,4 @@ public class HealthcheckProps {
         return Unlock_status;
     }
 
-    public static String getDeviceId() {
-        return deviceId;
-    }
 }

@@ -12,6 +12,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +92,10 @@ public class DeviceProvider extends AbstractLoggingActor {
         DocumentBuilder dBuilder;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
-            String URL = "https://" + mcmUrl + "/services/handsets?operation=list&user=" + mcmUser + "&password=" + mcmPassword + "&status=connected";
+            if (!mcmUrl.toLowerCase().trim().contains(".perfectomobile.com")){
+                mcmUrl+=".perfectomobile.com";
+            }
+            String URL = "https://" + mcmUrl + "/services/handsets?operation=list&user=" + URLEncoder.encode(mcmUser,StandardCharsets.UTF_8.name()) + "&password=" + URLEncoder.encode(mcmPassword,StandardCharsets.UTF_8.name()) + "&status=connected";
             log().info("Sending request to URL " + URL);
             Document doc = dBuilder.parse(getData(URL));
 

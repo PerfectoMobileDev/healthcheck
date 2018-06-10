@@ -2,6 +2,7 @@ package com.perfecto.healthcheck.actors;
 
 import akka.actor.AbstractLoggingActor;
 import com.perfecto.healthcheck.infra.Device;
+import com.perfecto.healthcheck.infra.McmDataCarrier;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class DeviceProvider extends AbstractLoggingActor {
 
+
     @Override
     public Receive createReceive() {
         return receiveBuilder()
@@ -25,7 +27,7 @@ public class DeviceProvider extends AbstractLoggingActor {
                     log().info("Retrieving devices for MCM " + dr.getMcm());
                     Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getUser(),dr.getPassword(),"");
                     if (devices.isPresent()){
-                        sender().tell(new DeviceList(devices.get()),self());
+                        sender().tell(new DeviceList(devices.get(),dr),self());
                     } else {
                         sender().tell(new Controller.NoDevices(dr),self());
                     }
@@ -36,7 +38,7 @@ public class DeviceProvider extends AbstractLoggingActor {
 
                     Optional<List<Device>> devices = extractDevices(msg.getMcmData().getMcm(),msg.getMcmData().getUser(),msg.getMcmData().getPassword(),msg.getDeviceId());
                     if (devices.isPresent()){
-                        sender().tell(new DeviceList(devices.get()),self());
+                        sender().tell(new DeviceList(devices.get(),msg.getMcmData()),self());
                     } else {
                         sender().tell(new Controller.NoDevices(msg.getMcmData()),self());
                     }
@@ -47,10 +49,11 @@ public class DeviceProvider extends AbstractLoggingActor {
     }
 
 
-    public static class DeviceList {
+    public static class DeviceList extends McmDataCarrier {
         private List<Device> devices = new ArrayList<>();
 
-        public DeviceList(List<Device> devices) {
+        public DeviceList(List<Device> devices,Controller.McmData mcmData) {
+            super(mcmData);
             this.devices = devices;
         }
 

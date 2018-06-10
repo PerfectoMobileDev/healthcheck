@@ -1,6 +1,7 @@
 package com.perfecto.healthcheck.infra;
 
 
+import com.perfecto.healthcheck.actors.Controller;
 import io.appium.java_client.AppiumDriver;
 
 /**
@@ -10,10 +11,12 @@ public class DeviceDriver {
     private Device device;
     private AppiumDriver driver;
 
+
     public DeviceDriver(Device device, AppiumDriver driver) {
         this.device = device;
         this.driver = driver;
     }
+
 
     public Device getDevice() {
         return device;

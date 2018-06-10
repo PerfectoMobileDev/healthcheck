@@ -19,19 +19,45 @@ public abstract class AbstractTestSet {
     protected final AppiumDriver driver;
     protected final Device device;
     protected ReportiumClient reportiumClient;
-    protected final String wifi = HealthcheckProps.getWifiName();
     protected String UUID;
     protected Logger logger = HealthcheckProps.getLogger();
 
-    public AbstractTestSet(AppiumDriver driver, Device device, String UUID) {
+    String mcmName;
+    String mcmUser;
+    String mcmPassword;
+
+    String wifiName;
+    private final String wifiUser;
+    String wifiIdentity;
+    String wifiPassword;
+
+
+    public AbstractTestSet(AppiumDriver driver,
+                           Device device,
+                           String UUID,
+                           String mcmName,
+                           String mcmUser,
+                           String mcmPassword,
+                           String wifiIdentity,
+                           String wifiUser,
+                           String wifiPassword)
+    {
         this.driver = driver;
         this.device = device;
         this.UUID = UUID;
+        this.mcmName = mcmName;
+        this.mcmUser = mcmUser;
+        this.mcmPassword = mcmPassword;
+
+        this.wifiName = wifiIdentity;
+        this.wifiUser = wifiUser;
+        this.wifiPassword = wifiPassword;
+
         reportiumClient = new ReportiumClientFactory().createPerfectoReportiumClient(
                 new PerfectoExecutionContext.PerfectoExecutionContextBuilder()
-                        .withProject(new Project("Healthcheck", HealthcheckProps.getMCMVersion()))
+                        .withProject(new Project("Healthcheck", HealthcheckProps.getMCMVersion(mcmName,mcmUser,mcmPassword)))
                         .withWebDriver(driver)
-                        .withContextTags(new String[]{"Healthcheck", "MCM " + HealthcheckProps.getPerfectoHost(), HealthcheckProps.getMCMVersion(), "UUID " + UUID})
+                        .withContextTags(new String[]{"Healthcheck", "MCM " + HealthcheckProps.getMCMVersion(mcmName,mcmUser,mcmPassword), "UUID " + UUID})
                         .build());
         reportiumClient.testStart("Healthcheck for device " + device.getDeviceID(),new TestContext());
         logger.info("Opened Reportium client for device " + device.getDeviceID());

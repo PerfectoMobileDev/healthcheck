@@ -32,10 +32,6 @@ public class Utils {
 	private static final String HTTPS = "https://";
 	private static final String MEDIA_REPOSITORY = "/services/repositories/media/";
 	private static final String UPLOAD_OPERATION = "operation=upload&overwrite=true";
-	 static String host = HealthcheckProps.getPerfectoHost();
-	 static String username = HealthcheckProps.getPerfectoUser();
-	 static String password = HealthcheckProps.getPerfectoPassword();
-
 
 	public static void startApp(String property,String name, RemoteWebDriver d )
 	{
@@ -251,14 +247,14 @@ public class Utils {
 		}
 	}
 
-	public static void openGeneralSettingsiOS(AppiumDriver driver)throws Exception{
+	public static void openGeneralSettingsiOS(AppiumDriver driver,String mcmHost,String mcmUser,String mcmPassword)throws Exception{
 		try {
 				openSettingsiOS(driver);
 			try{
 				driver.findElementByXPath("//UIATableCell[@label=\"General\"]|//XCUIElementTypeCell[@label=\"General\"]").click();
 			}catch (NoSuchElementException e){
 				URL url = new URL("https://s3-eu-west-1.amazonaws.com/perfecto-beat-regression/beatMedia/Images/GeneralSettingsiOS.png");
-				uploadMedia(host, username, password, url, "PRIVATE:GeneralSettingsiOS.png");
+				uploadMedia(mcmHost, mcmUser, mcmPassword, url, "PRIVATE:GeneralSettingsiOS.png");
 				Map<String, Object> params1 = new HashMap<>();
 				params1.put("content", "PRIVATE:GeneralSettingsiOS.png");
 				params1.put("source", "camera");

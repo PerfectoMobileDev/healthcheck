@@ -2,6 +2,7 @@ package com.perfecto.healthcheck.actors;
 
 import akka.actor.AbstractLoggingActor;
 import com.perfecto.healthcheck.infra.DeviceDriver;
+import com.perfecto.healthcheck.infra.McmDataCarrier;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -18,9 +19,9 @@ public class DriverCreator extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(DeviceProvider.DeviceList.class, dr->{
+                .match(DeviceProvider.DeviceList.class, msg->{
                     log().info("Instantiating drivers for devices");
-                    List<DeviceDriver> deviceDrivers = dr.getDevices()
+                    List<DeviceDriver> deviceDrivers = msg.getDevices()
                                                         .stream()
                                                         .parallel()
                                                         .map(device->{
@@ -67,9 +68,9 @@ public class DriverCreator extends AbstractLoggingActor {
                                                         .collect(Collectors.toList());
                     if (deviceDrivers.size() == 0){
                         //if no drivers were received - terminate
-                        sender().tell(new Controller.NoDrivers(),self());
+                        sender().tell(new Controller.NoDrivers(msg.getMcmData()),self());
                     } else {
-                        sender().tell(new OpenedDrivers(deviceDrivers),self());
+                        sender().tell(new OpenedDrivers(deviceDrivers,msg.getMcmData()),self());
 //                        if (HealthcheckProps.isRebootAllDevices()){
 //                            HealthcheckAkka.deviceRebooter.tell(new TestRunner.RunDrivers(deviceDrivers),self());
 //                        }else {
@@ -83,10 +84,11 @@ public class DriverCreator extends AbstractLoggingActor {
                 .build();
     }
 
-    public static class OpenedDrivers{
+    public static class OpenedDrivers extends McmDataCarrier {
         List<DeviceDriver> deviceDriverList;
 
-        public OpenedDrivers(List<DeviceDriver> deviceDriverList) {
+        public OpenedDrivers(List<DeviceDriver> deviceDriverList, Controller.McmData mcmData) {
+            super(mcmData);
             this.deviceDriverList = deviceDriverList;
         }
 

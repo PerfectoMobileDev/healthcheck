@@ -4,6 +4,7 @@ import akka.actor.AbstractActor;
 import akka.actor.AbstractLoggingActor;
 import com.perfecto.healthcheck.HealthcheckAkka;
 import com.perfecto.healthcheck.infra.DeviceDriver;
+import com.perfecto.healthcheck.infra.McmDataCarrier;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +14,9 @@ public class DeviceRebooter extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(RebootDevices.class, dr-> {
+                .match(RebootDevices.class, msg-> {
                     log().info("Rebooting devices");
-                    List<DeviceDriver> deviceDrivers = dr.getDeviceDriverList();
+                    List<DeviceDriver> deviceDrivers = msg.getDeviceDriverList();
                     deviceDrivers
                             .parallelStream()
                             .forEach(driver->{
@@ -29,16 +30,17 @@ public class DeviceRebooter extends AbstractLoggingActor {
                     log().info("Sleeping 1 minute");
                     TimeUnit.MINUTES.sleep(1);
 
-                    sender().tell(new Controller.DriversAfterReboot(deviceDrivers),self());
+                    sender().tell(new Controller.DriversAfterReboot(deviceDrivers,msg.getMcmData()),self());
                 })
                 .build();
 
     }
 
-    public static class RebootDevices{
+    public static class RebootDevices extends McmDataCarrier {
         List<DeviceDriver> deviceDriverList;
 
-        public RebootDevices(List<DeviceDriver> deviceDriverList) {
+        public RebootDevices(List<DeviceDriver> deviceDriverList, Controller.McmData mcmData) {
+            super(mcmData);
             this.deviceDriverList = deviceDriverList;
         }
 

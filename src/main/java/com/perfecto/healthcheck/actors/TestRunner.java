@@ -3,16 +3,14 @@ package com.perfecto.healthcheck.actors;
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ReceiveTimeout;
 import com.perfecto.healthcheck.HealthcheckAkka;
-import com.perfecto.healthcheck.infra.DeviceDriver;
-import com.perfecto.healthcheck.infra.DeviceStatus;
-import com.perfecto.healthcheck.infra.HealthcheckProps;
-import com.perfecto.healthcheck.infra.Utils;
+import com.perfecto.healthcheck.infra.*;
 import com.perfecto.healthcheck.infra.testsets.AndroidTestSet;
 import com.perfecto.healthcheck.infra.testsets.IOSTestSet;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class TestRunner extends AbstractLoggingActor {
@@ -23,8 +21,8 @@ public class TestRunner extends AbstractLoggingActor {
                 .match(ReceiveTimeout.class, r ->
                     HealthcheckAkka.controller.tell(new Controller.TestRunnerTimeout(),self())
                 )
-                .match(RunDrivers.class, dr-> {
-                    List<DeviceDriver> deviceDrivers = dr.getDeviceDrivers();
+                .match(RunDrivers.class, msg-> {
+                    List<DeviceDriver> deviceDrivers = msg.getDeviceDrivers();
                     //running the tests
                     List<DeviceStatus> deviceStatusList =
                             deviceDrivers
@@ -42,7 +40,18 @@ public class TestRunner extends AbstractLoggingActor {
                                                         String newcap= cap1[0];
                                                         Integer OS = Integer.parseInt(newcap);
                                                         if (OS > 8){
-                                                            deviceStatus = new IOSTestSet(deviceDriver.getDriver(), deviceDriver.getDevice(), HealthcheckProps.getUUID()).runTests();
+                                                            deviceStatus = new IOSTestSet
+                                                                    (
+                                                                        deviceDriver.getDriver(),
+                                                                        deviceDriver.getDevice(),
+                                                                        UUID.randomUUID().toString(),
+                                                                            msg.getMcmData().getMcm(),
+                                                                            msg.getMcmData().getUser(),
+                                                                            msg.getMcmData().getPassword(),
+                                                                            msg.getMcmData().getWifiName(),
+                                                                            msg.getMcmData().getWifiIdentity(),
+                                                                            msg.getMcmData().getWifiPassword()
+                                                                    ).runTests();
                                                         }
                                                         else{
                                                             deviceStatus = new DeviceStatus(true,false," iOS OS under 9",new ArrayList<String>(),new ArrayList<String>(), deviceDriver.getDevice());
@@ -59,7 +68,18 @@ public class TestRunner extends AbstractLoggingActor {
                                                             OS=10;
                                                         }
                                                         if(OS > 4) {
-                                                            deviceStatus = new AndroidTestSet(deviceDriver.getDriver(), deviceDriver.getDevice(), HealthcheckProps.getUUID()).runTests();
+                                                            deviceStatus = new AndroidTestSet
+                                                                (
+                                                                    deviceDriver.getDriver(),
+                                                                    deviceDriver.getDevice(),
+                                                                    UUID.randomUUID().toString(),
+                                                                        msg.getMcmData().getMcm(),
+                                                                        msg.getMcmData().getUser(),
+                                                                        msg.getMcmData().getPassword(),
+                                                                        msg.getMcmData().getWifiName(),
+                                                                        msg.getMcmData().getWifiIdentity(),
+                                                                        msg.getMcmData().getWifiPassword()
+                                                                ).runTests();
                                                         }else{
                                                             deviceStatus = new DeviceStatus(true,false,"android OS under 5",new ArrayList<String>(),new ArrayList<String>(),deviceDriver.getDevice());
                                                             log().info("Device " + deviceDriver.getDevice() + " android OS under 5");
@@ -74,15 +94,16 @@ public class TestRunner extends AbstractLoggingActor {
                                     )
                                     .filter(Objects::nonNull)
                                     .collect(Collectors.toList());
-                   sender().tell(new Controller.PostRunDeviceData(dr.getDeviceDrivers(),deviceStatusList),self());
+                   sender().tell(new Controller.PostRunDeviceData(msg.getDeviceDrivers(),deviceStatusList,msg.getMcmData()),self());
                 })
         .build();
     }
 
-    public static class RunDrivers{
+    public static class RunDrivers extends McmDataCarrier {
         private List<DeviceDriver> deviceDrivers;
 
-        public RunDrivers(List<DeviceDriver> deviceDrivers) {
+        public RunDrivers(List<DeviceDriver> deviceDrivers, Controller.McmData mcmData) {
+            super(mcmData);
             this.deviceDrivers = deviceDrivers;
         }
 

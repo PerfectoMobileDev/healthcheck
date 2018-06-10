@@ -64,7 +64,7 @@ public class HealthcheckAkka {
 
                 String singleDevice = "null";
 
-                if (credentialLine.length()>6){
+                if (credentialLine.split(",").length>6){
                     singleDevice = credentialLine.split(",")[6].trim();
                 }
 

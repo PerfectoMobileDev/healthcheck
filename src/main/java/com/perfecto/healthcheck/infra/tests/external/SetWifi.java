@@ -39,12 +39,39 @@ public class SetWifi {
 
         boolean isWiFiValidBefore = false;
         boolean isWiFiValidAfter = false;
+        Map<String, Object> params = new HashMap<>();
+
 
         try {
-            Map<String, Object> params1 = new HashMap<>();
-            params1.put("package", "com.android.settings");
-            params1.put("activity", ".wifi.WifiSettings");
-            driver.executeScript("mobile:activity:open", params1);
+//            Map<String, Object> params1 = new HashMap<>();
+//            params1.put("package", "com.android.settings");
+//            params1.put("activity", ".wifi.WifiSettings");
+//            driver.executeScript("mobile:activity:open", params1);
+
+            Map<String, Object> appName = new HashMap<>();
+            appName.put("name", "Settings");
+            driver.executeScript("mobile:application:open", appName);
+            driver.executeScript("mobile:application:close", appName);
+            driver.executeScript("mobile:application:open", appName);
+
+            Utils.switchToContext((AppiumDriver) driver, "NATIVE_APP");
+
+            try {
+                driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
+           }
+            catch (Exception e) {
+            }
+
+
+           driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
+
+            //pop-up
+            try {
+                driver.findElementByXPath("//*[@resourceid=\"android:id/button2\"]").click();
+            }
+            catch (Exception e) {
+            }
+
             Utils.switchToContext((AppiumDriver) driver, "NATIVE");
             //first set the new wifi Perefcto
            String wifiname = "//*[@text=\"" + wifi + "\"]";
@@ -96,9 +123,9 @@ public class SetWifi {
 
             try {
             driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(username);
-            params1.clear();
-            params1.put("mode", "off");
-            driver.executeScript("mobile:keyboard:display", params1);
+            params.clear();
+            params.put("mode", "off");
+            driver.executeScript("mobile:keyboard:display", params);
             Thread.sleep(2000);
             }catch (Exception e) {
             }
@@ -109,12 +136,27 @@ public class SetWifi {
             }catch (Exception e) {
             }
 
-            driver.findElementByXPath("//android.widget.Button[@text=\"CONNECT\"]|//android.widget.Button[@text=\"connect\"]").click();
             Thread.sleep(2000);
-            params1.clear();
-            params1.put("package", "com.android.settings");
-            params1.put("activity", ".wifi.WifiSettings");
-            driver.executeScript("mobile:activity:open", params1);
+            try {
+            driver.findElementByXPath("//android.widget.Button[@text=\"CONNECT\"]|//android.widget.Button[@text=\"connect\"]|//android.widget.Button[@text=\"Connect\"]").click();
+            }catch (Exception e) {
+            }
+
+
+            Thread.sleep(2000);
+            params.clear();
+//            params.put("package", "com.android.settings");
+//            params.put("activity", ".wifi.WifiSettings");
+//            driver.executeScript("mobile:activity:open", params);
+
+            appName.put("name", "Settings");
+            driver.executeScript("mobile:application:open", appName);
+            Utils.switchToContext((AppiumDriver) driver, "NATIVE");
+            driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
+
+
+
+
             Utils.switchToContext(driver, "NATIVE");
 //            String wificonnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text");
 //            if (wificonnected.toLowerCase().trim().equalsIgnoreCase(wifiName.toLowerCase())) isWiFiValidAfter=true;

@@ -77,7 +77,7 @@ public class SetWifi {
 
            try {
                // isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").isDisplayed();
-               isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifi);
+               isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifiName);
                isWiFiValidBefore = isConnected;
 
            }
@@ -104,7 +104,7 @@ public class SetWifi {
             Thread.sleep(10000);
  //           isConnected = false;
             try {
-                isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifi);
+                isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifiName);
                 if (isConnected) {
                     isWiFiValidAfter = isConnected;
                     return;
@@ -165,7 +165,7 @@ public class SetWifi {
 //            }
 
             try {
-                isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifi);
+                isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifiName);
                 if (isConnected) {
                     isWiFiValidAfter = isConnected;
                     return;

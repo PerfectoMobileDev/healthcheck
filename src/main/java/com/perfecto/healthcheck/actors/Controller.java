@@ -38,14 +38,14 @@ public class Controller extends AbstractLoggingActor {
                 .match(DriverCreator.OpenedDrivers.class,msg->
                     {
                         if (HealthcheckProps.isRebootAllDevices()){
-                            deviceRebooter.tell(new DeviceRebooter.RebootDevices(msg.getDeviceDriverList()),self());
+                            deviceRebooter.tell(new DeviceRebooter.RebootDevices(msg.getDeviceDriverList(),msg.getMcmData()),self());
                         } else {
-                            testRunner.tell(new TestRunner.RunDrivers(msg.getDeviceDriverList()),self());
+                            testRunner.tell(new TestRunner.RunDrivers(msg.getDeviceDriverList(),msg.getMcmData()),self());
                         }
                     }
                 )
                 .match(DriversAfterReboot.class, msg->
-                    testRunner.tell(new TestRunner.RunDrivers(msg.getDeviceDriverList()),self())
+                    testRunner.tell(new TestRunner.RunDrivers(msg.getDeviceDriverList(),msg.getMcmData()),self())
                 )
                 .match(PostRunDeviceData.class, msg->
                     {
@@ -123,14 +123,18 @@ public class Controller extends AbstractLoggingActor {
 
     }
 
-    public static class NoDrivers {
+    public static class NoDrivers extends McmDataCarrier{
 
+        public NoDrivers(McmData mcmData) {
+            super(mcmData);
+        }
     }
 
-    public static class DriversAfterReboot{
+    public static class DriversAfterReboot extends McmDataCarrier{
         List<DeviceDriver> deviceDriverList;
 
-        public DriversAfterReboot(List<DeviceDriver> deviceDriverList) {
+        public DriversAfterReboot(List<DeviceDriver> deviceDriverList,McmData mcmData) {
+            super(mcmData);
             this.deviceDriverList = deviceDriverList;
         }
 
@@ -139,11 +143,12 @@ public class Controller extends AbstractLoggingActor {
         }
     }
 
-    public static class PostRunDeviceData {
+    public static class PostRunDeviceData extends McmDataCarrier{
         List<DeviceDriver> deviceDriverList;
         List<DeviceStatus> deviceStatusList;
 
-        public PostRunDeviceData(List<DeviceDriver> deviceDriverList, List<DeviceStatus> deviceStatusList) {
+        public PostRunDeviceData(List<DeviceDriver> deviceDriverList, List<DeviceStatus> deviceStatusList,McmData mcmData) {
+            super(mcmData);
             this.deviceDriverList = deviceDriverList;
             this.deviceStatusList = deviceStatusList;
         }

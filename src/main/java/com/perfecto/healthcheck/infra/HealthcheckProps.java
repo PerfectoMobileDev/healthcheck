@@ -14,12 +14,6 @@ import java.util.Optional;
  */
 public class HealthcheckProps {
 
-    private static String PERFECTO_HOST = System.getProperty("cloudUrl");
-    private static String PERFECTO_USER = System.getProperty("username");
-    private static String PERFECTO_PASSWORD = System.getProperty("password");
-    private static String WIFI_NAME = System.getProperty("wifi");
-    private static String WIFI_PASSWORD = System.getProperty("np.password");
-    private static String WIFI_IDENTIFY = System.getProperty("np.username");
     private static boolean REBOOT_ALL_DEVICES = Boolean.getBoolean("rebootAllDevices");
     private static Logger logger = LogManager.getLogger("Automation Ready Logger");
     private static String chrome_Acount_Name = System.getProperty("chromeAcountName");
@@ -29,12 +23,15 @@ public class HealthcheckProps {
     private static String deviceId = System.getProperty("deviceId");
     private static final String UUID = java.util.UUID.randomUUID().toString();
 
+    //multiline string variable that contains MCM and Wifi credentials in the following format:
+    //mcmName,mcmUser,msmPass (can be "null", then will be retrieved from DB),wifiName (can be "null", then "Perfecto" is used),
+    //wifiIdentity (can be "null", then same as mcmName),wifiPassword
+    //last parameter - optional, deviceId
+    //-DmcmCredentials=branchtest,null,null,null,null,null
+    private final static String mcmCredentials = System.getProperty("mcmCredentials");
+
     static {
         setAmountOfThreads(40);
-
-        if (WIFI_PASSWORD == null || WIFI_PASSWORD.trim().isEmpty()) {
-            WIFI_PASSWORD = "0UTS9P"; //branchtest wifi password for Perfecto
-        }
 
         if (deviceId == null || deviceId.trim().isEmpty()) {
             deviceId = "";
@@ -48,6 +45,10 @@ public class HealthcheckProps {
         if (chrome_Acount_Name == null || chrome_Acount_Name.trim().isEmpty()) {
             chrome_Acount_Name = "";
         }
+    }
+
+    public static String getMcmCredentials() {
+        return mcmCredentials;
     }
 
     public static String getUUID() {

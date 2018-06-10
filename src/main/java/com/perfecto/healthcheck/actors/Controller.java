@@ -18,18 +18,19 @@ public class Controller extends AbstractLoggingActor {
     public final ActorRef deviceFinalizer = getContext().actorOf(Props.create(DeviceFinalizer.class), DeviceFinalizer.class.getName());
     public final ActorRef deviceRebooter = getContext().actorOf(Props.create(DeviceRebooter.class), DeviceRebooter.class.getName());
 
-    private int mcmsInWorkCounter= 0;
+    private int ordersInWorkCounter = 0;
 
     @Override
     public Receive createReceive() {
         return receiveBuilder()
                 .match(McmData.class,msg->
                         {
-                            mcmsInWorkCounter += 1;
+                            ordersInWorkCounter += 1;
                             deviceProvider.tell(msg, self());
                         }
                 )
                 .match(TestSingleDevice.class,msg->{
+                    ordersInWorkCounter += 1;
                     deviceProvider.tell(new DeviceProvider.GetSingleDevice(msg.getMcmData(),msg.deviceId),self());
                 })
                 .match(DeviceProvider.DeviceList.class,msg->
@@ -96,8 +97,8 @@ public class Controller extends AbstractLoggingActor {
 
                 )
                 .match(DeviceFinalizer.FinalizedDevices.class, msg-> {
-                    mcmsInWorkCounter -=1;
-                    if (mcmsInWorkCounter == 0)
+                    ordersInWorkCounter -=1;
+                    if (ordersInWorkCounter == 0)
                     {
                         log().info("Finished, exiting");
                         HealthcheckAkka.system.terminate();

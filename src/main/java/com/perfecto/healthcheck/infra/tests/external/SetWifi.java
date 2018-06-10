@@ -203,17 +203,12 @@ public class SetWifi {
                 throw t;
         } finally {
 
+            Utils.home(driver);
             currentWIFI = getCurentWiFiName(driver);
-
             Utils.home(driver);
 
             boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifi);
-           /* if (isWifiValidAfter) {
-                System.out.println("CONNECTED TO PERFECTO WI-FI: ");
-            }
-            else {
-                System.out.println("NOT CONNECTED TO PERFECTO WI-FI");
-            }*/
+
             WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore,isWifiValidAfter);
             throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
         }
@@ -227,8 +222,6 @@ public class SetWifi {
             String model = Utils.handsetInfo(driver, "property", "model");
 
             Utils.switchToContext(driver, "NATIVE_APP");
-
-            //driver.findElementByXPath("//*[@value=\"Wi-Fi\"]/following-sibling::UIAStaticText").click();
             driver.findElementByXPath("//*[@value=\"Wi-Fi\"]").click();
             Utils.sleep(3000);
 
@@ -239,7 +232,7 @@ public class SetWifi {
                 Utils.sleep(5000);
                 if (isPMD) tryToClickOnElementByXPATH(driver, "//XCUIElementTypeButton[@label='Settings']");
                 else tryToClickOnElementByXPATH(driver, "//*[@label='Settings']");
-                //throw new SpecialMessageException("switch wifi on");
+
             } else {
                 driver.findElementByXPath("//UIASwitch[@label=\"Wi-Fi\"]").click();
                 Utils.sleep(5000);
@@ -247,7 +240,7 @@ public class SetWifi {
             }
         } catch (Exception t) {
             System.out.println("Failed to enable WIFI");
-            //ExceptionAnalyzer.analyzeException(t, "Failed to click on element with XPATH: " + xPath);
+            ExceptionAnalyzer.analyzeException(t, "Failed to enable WIFI");
         }
     }
 
@@ -260,6 +253,48 @@ public class SetWifi {
         return currentWiFiName;
 
     }
+
+    private static boolean isConnectedToValidWiFiOnNetworkListIphone(AppiumDriver driver, boolean isPMD) {
+
+        Boolean result = false;
+
+        try {
+            WebElement element;
+            if (isPMD) {
+                element = driver.findElementByXPath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::XCUIElementTypeCell[1]");
+                result = element.getText().contains(wifi);
+            } else {
+                element = driver.findElementByXPath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::UIATableCell[1]");
+                result = element.getAttribute("label").contains(wifi);
+            }
+
+        } catch (Exception t) {
+            System.out.println("Failed to find element of current network in network list");
+        }
+
+        return result;
+    }
+
+    private static boolean isConnectedToValidWiFiOnNetworkListIpad(WebElement rightTable, boolean isPMD) {
+
+        Boolean result = false;
+
+        try {
+            WebElement element;
+            if (isPMD) {
+                element = rightTable.findElement(By.xpath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::XCUIElementTypeCell[1]"));
+                result = element.getText().contains(wifi);
+            } else {
+                element = rightTable.findElement(By.xpath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::UIATableCell[1]"));
+                result = element.getAttribute("label").contains(wifi);
+            }
+        } catch (Exception t) {
+            System.out.println("Failed to find element of current network in network list");
+        }
+
+        return result;
+    }
+
 
     public static void SetPerfectoWifiiPhone(AppiumDriver driver, Boolean isPMD, String username, String password) throws Exception {
 
@@ -277,11 +312,19 @@ public class SetWifi {
             Utils.sleep(5000);
 
             driver.findElementByXPath("//*[@label='"+wifi+"']").click();
+            Utils.sleep(5000);
 
             if (isPMD) {
+                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD)) return;
+
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
             } else {
+                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD)) {
+                    tryToPressOnSettingsOnNetworkList(driver,isPMD);
+                    return;
+                }
+
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
                 tryToEnterTextByKeyboard(driver, username);
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
@@ -316,6 +359,10 @@ public class SetWifi {
 
             if (isPMD) {
                 rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifi + "']")).click();
+                Utils.sleep(5000);
+
+                if(isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD)) return;
+
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
@@ -384,6 +431,23 @@ public class SetWifi {
             System.out.println("Failed to enter text to element by keyboard");
             ExceptionAnalyzer.analyzeException(t, "Failed to enter text to element by keyboard");
         }
+    }
+
+    protected static void tryToPressOnSettingsOnNetworkList(AppiumDriver driver, boolean isPMD) {
+
+        try {
+            if (isPMD){
+                driver.findElementByXPath("//XCUIElementTypeButton[@label='Settings']").click();
+            } else {
+                driver.findElementByXPath("//*[@label='Settings']").click();
+            }
+
+        } catch (Exception t) {
+            System.out.println("Failed to press on Settings from newtowrk list screen");
+            ExceptionAnalyzer.analyzeException(t, "Failed to press on Settings from newtowrk list screen");
+        }
+
+
     }
 
 

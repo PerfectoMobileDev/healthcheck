@@ -18,11 +18,16 @@ public class Controller extends AbstractLoggingActor {
     public final ActorRef deviceFinalizer = getContext().actorOf(Props.create(DeviceFinalizer.class), DeviceFinalizer.class.getName());
     public final ActorRef deviceRebooter = getContext().actorOf(Props.create(DeviceRebooter.class), DeviceRebooter.class.getName());
 
+    private int mcmsInWorkCounter= 0;
+
     @Override
     public Receive createReceive() {
         return receiveBuilder()
                 .match(McmData.class,msg->
-                        deviceProvider.tell(msg,self())
+                        {
+                            mcmsInWorkCounter += 1;
+                            deviceProvider.tell(msg, self());
+                        }
                 )
                 .match(TestSingleDevice.class,msg->{
                     deviceProvider.tell(new DeviceProvider.GetSingleDevice(msg.getMcmData(),msg.deviceId),self());
@@ -90,9 +95,14 @@ public class Controller extends AbstractLoggingActor {
                     }
 
                 )
-                .match(FinishedTests.class, msg-> {
-                    log().info("Finished, exiting");
-                    HealthcheckAkka.system.terminate();
+                .match(DeviceFinalizer.FinalizedDevices.class, msg-> {
+                    mcmsInWorkCounter -=1;
+                    if (mcmsInWorkCounter == 0)
+                    {
+                        log().info("Finished, exiting");
+                        HealthcheckAkka.system.terminate();
+                    }
+
                 })
                 .match(NoDevices.class, msg-> {
                     log().error("No devices were retrieved by DeviceProvider from MCM " + msg.getMcmData().mcm +", exiting....");
@@ -180,8 +190,6 @@ public class Controller extends AbstractLoggingActor {
             this.wifiName = wifiName;
             this.wifiIdentity = wifiIdentity;
             this.wifiPassword = wifiPassword;
-
-
         }
 
         public String getMcm() {

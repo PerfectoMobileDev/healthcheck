@@ -29,7 +29,7 @@ public class DeviceFinalizer extends AbstractLoggingActor {
                                     log().error("Unable to close  driver '" + deviceDriver.getDevice().getDeviceID() + "' with message " + t.getMessage());
                                 }
                             });
-                    HealthcheckAkka.controller.tell(new Controller.FinishedTests(),self());
+                    HealthcheckAkka.controller.tell(new FinalizedDevices(msg.getDeviceDriverList()),self());
                 })
                 .build();
     }
@@ -43,6 +43,18 @@ public class DeviceFinalizer extends AbstractLoggingActor {
 
         public List<DeviceDriver> getDeviceDriverList() {
             return deviceDriverList;
+        }
+    }
+
+    public static class FinalizedDevices{
+        private List<DeviceDriver> deviceDrivers;
+
+        public FinalizedDevices(List<DeviceDriver> deviceDrivers) {
+            this.deviceDrivers = deviceDrivers;
+        }
+
+        public List<DeviceDriver> getDeviceDrivers() {
+            return deviceDrivers;
         }
     }
 }

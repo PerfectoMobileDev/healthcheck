@@ -62,6 +62,12 @@ public class HealthcheckAkka {
                 String wifiIdentity = credentialLine.split(",")[4].trim();
                 String wifiPassword = credentialLine.split(",")[5].trim();
 
+                String singleDevice = "null";
+
+                if (credentialLine.length()>6){
+                    singleDevice = credentialLine.split(",")[6].trim();
+                }
+
                 if (mcmUser.equalsIgnoreCase("null")){
                     mcmUser = getMcmUser(mcmName);
                 }
@@ -83,16 +89,16 @@ public class HealthcheckAkka {
                 }
 
                 Controller.McmData mcmData = new Controller.McmData(mcmName,mcmUser,mcmPass,wifiName,wifiIdentity,wifiPassword);
-                controller.tell(mcmData,ActorRef.noSender());
+                if (singleDevice.equalsIgnoreCase("null")){
+                    controller.tell(mcmData,ActorRef.noSender());
+                } else {
+                    controller.tell(new Controller.TestSingleDevice(mcmData,singleDevice),ActorRef.noSender());
+                }
+
+
+
             }
         }
-
-//        if(!HealthcheckProps.getDeviceId().trim().isEmpty()){
-//            controller.tell(new Controller.TestSingleDevice(mcmData,HealthcheckProps.getDeviceId()),ActorRef.noSender());
-//        }else{
-//            controller.tell(mcmData,ActorRef.noSender());
-//        }
-
 
     }
 

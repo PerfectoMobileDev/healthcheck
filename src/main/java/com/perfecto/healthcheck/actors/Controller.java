@@ -222,17 +222,12 @@ public class Controller extends AbstractLoggingActor {
         }
     }
 
-    public static class TestSingleDevice{
-        private McmData mcmData;
+    public static class TestSingleDevice extends McmDataCarrier{
         private String deviceId;
 
         public TestSingleDevice(McmData mcmData, String deviceId) {
-            this.mcmData = mcmData;
+            super(mcmData);
             this.deviceId = deviceId;
-        }
-
-        public McmData getMcmData() {
-            return mcmData;
         }
 
         public String getDeviceId() {

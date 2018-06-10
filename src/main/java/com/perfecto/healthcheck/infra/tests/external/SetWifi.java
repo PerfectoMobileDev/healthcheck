@@ -218,23 +218,23 @@ public class SetWifi {
 
         if (isWiFiON) currentWIFI = getCurentWiFiName(driver);
 
-        if (isWiFiON && currentWIFI.equalsIgnoreCase(wifi)) isWiFiValidBefore = true;
+        if (isWiFiON && currentWIFI.equalsIgnoreCase(wifiName)) isWiFiValidBefore = true;
 
         try {
 
-            if (isWiFiON && currentWIFI.equalsIgnoreCase(wifi)) {
+            if (isWiFiON && currentWIFI.equalsIgnoreCase(wifiName)) {
 
                 return;
 
-            } else if (isWiFiON && !currentWIFI.equalsIgnoreCase(wifi)) {
-                if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
-                else SetPerfectoWifiiPad(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
+            } else if (isWiFiON && !currentWIFI.equalsIgnoreCase(wifiName)) {
+                if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
+                else SetPerfectoWifiiPad(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
             } else if (!isWiFiON) {
                 enableWIFI(driver, isPMD);
                 currentWIFI = getCurentWiFiName(driver);
-                if (!currentWIFI.equalsIgnoreCase(wifi)) {
-                    if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
-                    else SetPerfectoWifiiPad(driver, isPMD, HealthcheckProps.getWifiIdentify(), HealthcheckProps.getWifiPassword());
+                if (!currentWIFI.equalsIgnoreCase(wifiName)) {
+                    if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
+                    else SetPerfectoWifiiPad(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
                 }
             }
         } catch(Exception t){
@@ -243,11 +243,11 @@ public class SetWifi {
                 throw t;
         } finally {
 
-            Utils.home(driver);
+            //Utils.home(driver);
             currentWIFI = getCurentWiFiName(driver);
             Utils.home(driver);
 
-            boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifi);
+            boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifiName);
 
             WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore,isWifiValidAfter);
             throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
@@ -294,7 +294,7 @@ public class SetWifi {
 
     }
 
-    private static boolean isConnectedToValidWiFiOnNetworkListIphone(AppiumDriver driver, boolean isPMD) {
+    private static boolean isConnectedToValidWiFiOnNetworkListIphone(AppiumDriver driver, boolean isPMD, String validWiFiName) {
 
         Boolean result = false;
 
@@ -302,10 +302,10 @@ public class SetWifi {
             WebElement element;
             if (isPMD) {
                 element = driver.findElementByXPath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::XCUIElementTypeCell[1]");
-                result = element.getText().contains(wifi);
+                result = element.getText().contains(validWiFiName);
             } else {
                 element = driver.findElementByXPath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::UIATableCell[1]");
-                result = element.getAttribute("label").contains(wifi);
+                result = element.getAttribute("label").contains(validWiFiName);
             }
 
         } catch (Exception t) {
@@ -315,7 +315,7 @@ public class SetWifi {
         return result;
     }
 
-    private static boolean isConnectedToValidWiFiOnNetworkListIpad(WebElement rightTable, boolean isPMD) {
+    private static boolean isConnectedToValidWiFiOnNetworkListIpad(WebElement rightTable, boolean isPMD, String validWiFiName) {
 
         Boolean result = false;
 
@@ -323,10 +323,10 @@ public class SetWifi {
             WebElement element;
             if (isPMD) {
                 element = rightTable.findElement(By.xpath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::XCUIElementTypeCell[1]"));
-                result = element.getText().contains(wifi);
+                result = element.getText().contains(validWiFiName);
             } else {
                 element = rightTable.findElement(By.xpath("//*[contains(@name,'CHOOSE A NETWORK')]/preceding-sibling::UIATableCell[1]"));
-                result = element.getAttribute("label").contains(wifi);
+                result = element.getAttribute("label").contains(validWiFiName);
             }
         } catch (Exception t) {
             System.out.println("Failed to find element of current network in network list");
@@ -336,7 +336,7 @@ public class SetWifi {
     }
 
 
-    public static void SetPerfectoWifiiPhone(AppiumDriver driver, Boolean isPMD, String username, String password) throws Exception {
+    public static void SetPerfectoWifiiPhone(AppiumDriver driver, Boolean isPMD, String wifiName,  String username, String password) throws Exception {
 
         Utils.openSettingsiOS(driver);
 
@@ -348,19 +348,19 @@ public class SetWifi {
 
         try {
             params1.clear();
-            Utils.scrollTo(driver,"//*[@label='"+wifi+"']");
+            Utils.scrollTo(driver,"//*[@label='"+wifiName+"']");
             Utils.sleep(5000);
 
-            driver.findElementByXPath("//*[@label='"+wifi+"']").click();
+            driver.findElementByXPath("//*[@label='"+wifiName+"']").click();
             Utils.sleep(5000);
 
             if (isPMD) {
-                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD)) return;
+                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD,wifiName)) return;
 
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
             } else {
-                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD)) {
+                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD, wifiName)) {
                     tryToPressOnSettingsOnNetworkList(driver,isPMD);
                     return;
                 }
@@ -377,13 +377,13 @@ public class SetWifi {
             tryToClickOnElementByXPATH(driver,"//*[@label=\"Back\"]");
 
         } catch (Exception t) {
-            System.out.println("Failed to set "+wifi+" Wifi on iPhone!");
-            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifi+" wifi on iPhone");
+            System.out.println("Failed to set "+wifiName+" Wifi on iPhone!");
+            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifiName+" wifi on iPhone");
         }
 
     }
 
-    public static void SetPerfectoWifiiPad(AppiumDriver driver, Boolean isPMD, String username, String password)throws Exception {
+    public static void SetPerfectoWifiiPad(AppiumDriver driver, Boolean isPMD, String wifiName, String username, String password)throws Exception {
 
         Utils.openSettingsiOS(driver);
 
@@ -393,22 +393,22 @@ public class SetWifi {
 
         try {
             WebElement rightTBL = driver.findElementByXPath("//UIATableView[2]|//XCUIElementTypeOther[3]//XCUIElementTypeTable[1]");
-            Utils.scrolliPadTable(driver, wifi, rightTBL);
+            Utils.scrolliPadTable(driver, wifiName, rightTBL);
             Utils.sleep(5000);
 
 
             if (isPMD) {
-                rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifi + "']")).click();
+                rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifiName + "']")).click();
                 Utils.sleep(5000);
 
-                if(isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD)) return;
+                if(isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD, wifiName)) return;
 
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
             } else {
-                rightTBL.findElement(By.xpath("//UIATableCell//UIAStaticText[@label='" + wifi + "']/following-sibling::UIAButton")).click();
+                rightTBL.findElement(By.xpath("//UIATableCell//UIAStaticText[@label='" + wifiName + "']/following-sibling::UIAButton")).click();
 
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Join Network\"]");
 
@@ -424,8 +424,8 @@ public class SetWifi {
             tryToClickOnElementByXPATH(driver,"//*[@label=\"Accept\" or @label=\"Trust\"]");
 
         } catch (Exception t) {
-            System.out.println("Failed to set "+wifi+" Wifi on iPad!");
-            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifi+" wifi on iPad");
+            System.out.println("Failed to set "+wifiName+" Wifi on iPad!");
+            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifiName+" wifi on iPad");
         }
     }
 

@@ -180,27 +180,33 @@ public class SetWifi {
 //            params.put("activity", ".wifi.WifiSettings");
 //            driver.executeScript("mobile:activity:open", params);
 
-            appName.put("name", "Settings");
-            driver.executeScript("mobile:application:open", appName);
-            Utils.switchToContext((AppiumDriver) driver, "NATIVE");
-
-            try {
-                driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
-            }
-            catch (Exception e) {
-            }
-
-            try {
-                driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
-            }
-            catch (Exception e) {
-            }
-
-            try {
-                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
-            }
-            catch (Exception e) {
-            }
+//            appName.put("name", "Settings");
+//            driver.executeScript("mobile:application:open", appName);
+//            Utils.switchToContext((AppiumDriver) driver, "NATIVE");
+//
+//            try {
+//                driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
+//            }
+//            catch (Exception e) {
+//            }
+//
+//            try {
+//                driver.findElementByXPath("//*[@text=\"Connections\"]").click();
+//            }
+//            catch (Exception e) {
+//            }
+//
+//            try {
+//                driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
+//            }
+//            catch (Exception e) {
+//            }
+//
+//            try {
+//                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
+//            }
+//            catch (Exception e) {
+//            }
 
 
 //            String wificonnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text");

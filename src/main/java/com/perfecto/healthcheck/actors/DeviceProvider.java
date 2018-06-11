@@ -36,7 +36,7 @@ public class DeviceProvider extends AbstractLoggingActor {
                 })
 
                 .match(GetSingleDevice.class, msg ->{
-                    log().info("Retrieving device "+ msg.getDeviceId()+ "from MCM" + msg.getMcmData().getMcm());
+                    log().info("Retrieving device "+ msg.getDeviceId()+ " from MCM" + msg.getMcmData().getMcm());
 
                     Optional<List<Device>> devices = extractDevices(msg.getMcmData().getMcm(),msg.getMcmData().getUser(),msg.getMcmData().getPassword(),msg.getDeviceId());
                     if (devices.isPresent()){

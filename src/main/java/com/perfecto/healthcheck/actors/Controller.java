@@ -3,11 +3,15 @@ package com.perfecto.healthcheck.actors;
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import com.opencsv.CSVWriter;
 import com.perfecto.healthcheck.HealthcheckAkka;
 import com.perfecto.healthcheck.infra.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+
 public class Controller extends AbstractLoggingActor {
 
 
@@ -18,7 +22,23 @@ public class Controller extends AbstractLoggingActor {
     public final ActorRef deviceFinalizer = getContext().actorOf(Props.create(DeviceFinalizer.class), DeviceFinalizer.class.getName());
     public final ActorRef deviceRebooter = getContext().actorOf(Props.create(DeviceRebooter.class), DeviceRebooter.class.getName());
 
+    private Map<McmData,List<DeviceStatus>> totalDeviceStatusList = new HashMap<>();
+    private File resultCsvFile = new File("results.csv");
+    private File badMcmCsvFile = new File("badMcms.csv");
+
+    private CSVWriter badMcmCsvWriter;
+
     private int ordersInWorkCounter = 0;
+
+    public Controller() {
+        try {
+            badMcmCsvWriter = new CSVWriter(new FileWriter(badMcmCsvFile));
+        } catch (IOException e) {
+            log().error("Unable to open bad MCMs csv file "+  badMcmCsvFile +"for writing, see exception below");
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 
     @Override
     public Receive createReceive() {
@@ -50,75 +70,106 @@ public class Controller extends AbstractLoggingActor {
                 )
                 .match(PostRunDeviceData.class, msg->
                     {
-                        int beforeWifiOnCounter = 0;
-                        int afterWifiOnCounter = 0;
-                        List<String> disconnectedDeviceIds = new ArrayList<>();
-
-                        for (DeviceStatus status:msg.getDeviceStatusList()){
-                            List<AbstractDeviceMetadata> metadataList = status.getMetadataList();
-                            for (AbstractDeviceMetadata metadata:metadataList){
-                                if (metadata instanceof WifiDeviceMetadata)
-                                {
-                                    WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
-                                    if (wifiMetadata.isWifiSwitchedOnBefore())
-                                    {
-                                        beforeWifiOnCounter +=1;
-                                    }
-
-                                    if (wifiMetadata.isWifiSwitchedOnAfter())
-                                    {
-                                        afterWifiOnCounter +=1;
-                                    } else {
-                                        disconnectedDeviceIds.add(status.getDeviceId());
-                                    }
-                                }
-                            }
-
+                        //only start processing of data if
+                        //this is the last order in work
+                        totalDeviceStatusList.put(msg.getMcmData(),msg.getDeviceStatusList());
+                        if (ordersInWorkCounter == 1){
+                            processMetadata(totalDeviceStatusList);
                         }
-                        System.out.println("***********************RESULT STATISTICS*****************************");
-                        System.out.println("CLOUD: " + msg.getMcmData().mcm);
-                        System.out.println("TOTAL DEVICES TO RUN ON: " + msg.getDeviceStatusList().size());
-                        System.out.println("CONNECTED TO VALID WIFI ON START TOTAL: " + beforeWifiOnCounter);
-                        System.out.println("CONNECTED TO VALID WIFI ON END TOTAL: " + afterWifiOnCounter);
-                        System.out.println("TOTAL NUMBER OF FIXED DEVICES: " + (afterWifiOnCounter - beforeWifiOnCounter));
-
-                        if (disconnectedDeviceIds.size() > 0)
-                        {
-                            System.out.println("DISCONNECTED FROM VALID WIFI IDs:");
-                            disconnectedDeviceIds.forEach(
-                                    id->
-                                            System.out.println(id)
-                            );
-                        }
-
-                        System.out.println("*********************************************************************");
-
                         deviceFinalizer.tell(new DeviceFinalizer.FinalizeDevices(msg.getDeviceDriverList()),self());
                     }
 
                 )
                 .match(DeviceFinalizer.FinalizedDevices.class, msg-> {
                     ordersInWorkCounter -=1;
-                    if (ordersInWorkCounter == 0)
-                    {
-                        log().info("Finished, exiting");
-                        HealthcheckAkka.system.terminate();
-                    }
+                    checkExit();
 
                 })
                 .match(NoDevices.class, msg-> {
-                    log().error("No devices were retrieved by DeviceProvider from MCM " + msg.getMcmData().mcm +", exiting....");
-                    System.exit(1);
+                    String message = "No devices were retrieved by DeviceProvider from MCM " + msg.getMcmData().getMcm() +", exiting....";
+                    log().error(message);
+                    badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
+                    ordersInWorkCounter -=1;
+                    checkExit();
                 })
                 .match(NoDrivers.class, msg-> {
-                    log().error("No drivers were retrieved by Driver Creator, exiting....");
-                    System.exit(1);
+                    ordersInWorkCounter -=1;
+                    String message = "No drivers were retrieved by Driver Creator, from MCM " + msg.getMcmData().getMcm()+  "exiting....";
+                    log().error(message);
+                    badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
+                    checkExit();
                 })
                 .match(TestRunnerTimeout.class, msg-> {
                     log().info("Timeout on test runner, exiting");
                     System.exit(1);
                 })
                 .build();
+    }
+
+    private void checkExit() {
+        if (ordersInWorkCounter == 0)
+        {
+            log().info("Finished, exiting");
+            HealthcheckAkka.system.terminate();
+            try {
+                badMcmCsvWriter.close();
+            } catch (IOException e) {
+                log().error("Unable to close file " + badMcmCsvWriter + ", see exception below");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void processMetadata(Map<McmData,List<DeviceStatus>> totalDeviceStatusList) {
+        CSVWriter writer = null;
+        try {
+            writer = new CSVWriter(new FileWriter(resultCsvFile));
+
+
+            for (Map.Entry<McmData,List<DeviceStatus>> entry : totalDeviceStatusList.entrySet()){
+                String mcmName = entry.getKey().getMcm();
+                List<DeviceStatus> deviceStatusList = entry.getValue();
+                for (DeviceStatus deviceStatus:deviceStatusList){
+                    List<AbstractDeviceMetadata> metadataList = deviceStatus.getMetadataList();
+                    for (AbstractDeviceMetadata metadata:metadataList){
+                        if (metadata instanceof WifiDeviceMetadata)
+                        {
+                            WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
+                            String deviceId = deviceStatus.getDeviceId();
+                            String status = "UNKNOWN";
+
+                            boolean isOnBefore = wifiMetadata.isWifiSwitchedOnBefore();
+                            boolean isOnAfter = wifiMetadata.isWifiSwitchedOnAfter();
+
+                            if (isOnBefore){
+                                status = "VALID";
+                            } else if (!isOnBefore && isOnAfter) {
+                                status = "RECONNECTED";
+                            } else if (!isOnBefore && !isOnAfter){
+                                status = "FAILED TO RECONNECT";
+                            }
+
+                            writer.writeNext(new String[]{mcmName,deviceId,status});
+
+                        }
+                    }
+                }
+
+            }
+
+        } catch (IOException e) {
+            log().error("Unable to write results with exception below");
+            e.printStackTrace();
+        } finally{
+            try {
+                if (writer != null){
+                    writer.close();
+                }
+            } catch (IOException e) {
+                log().error("Unable to close writer with exception below");
+                e.printStackTrace();
+            }
+        }
     }
 
     public static class FinishedTests {
@@ -190,7 +241,21 @@ public class Controller extends AbstractLoggingActor {
         private final String wifiIdentity;
         private final String wifiPassword;
 
-        public McmData(String mcm, String user, String password,String wifiName,String wifiIdentity,String wifiPassword) {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            McmData mcmData = (McmData) o;
+            return Objects.equals(mcm, mcmData.mcm);
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(mcm);
+        }
+
+        public McmData(String mcm, String user, String password, String wifiName, String wifiIdentity, String wifiPassword) {
             this.mcm = mcm;
             this.user = user;
             this.password = password;

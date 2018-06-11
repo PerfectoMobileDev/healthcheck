@@ -76,6 +76,7 @@ public class Controller extends AbstractLoggingActor {
 
                         }
                         System.out.println("***********************RESULT STATISTICS*****************************");
+                        System.out.println("CLOUD: " + msg.getMcmData().mcm);
                         System.out.println("TOTAL DEVICES TO RUN ON: " + msg.getDeviceStatusList().size());
                         System.out.println("CONNECTED TO VALID WIFI ON START TOTAL: " + beforeWifiOnCounter);
                         System.out.println("CONNECTED TO VALID WIFI ON END TOTAL: " + afterWifiOnCounter);

@@ -60,6 +60,13 @@ public class SetWifi {
             }
 
             try {
+                driver.findElementByXPath("//*[@text=\"Connections\"]").click();
+            }
+            catch (Exception e) {
+            }
+
+
+            try {
                 driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
             }
              catch (Exception e) {

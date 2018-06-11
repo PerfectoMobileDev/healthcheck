@@ -197,7 +197,7 @@ public class SetWifi {
             }
 
             try {
-                driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
+                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
             }
             catch (Exception e) {
             }

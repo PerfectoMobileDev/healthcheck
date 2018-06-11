@@ -301,8 +301,7 @@ public class SetWifi {
 
                 driver.findElementByXPath("//UIASwitch").click();
                 Utils.sleep(5000);
-                if (isPMD) tryToClickOnElementByXPATH(driver, "//XCUIElementTypeButton[@label='Settings']");
-                else tryToClickOnElementByXPATH(driver, "//*[@label='Settings']");
+                tryToPressOnSettingsOnNetworkList(driver, isPMD);
 
             } else {
                 driver.findElementByXPath("//UIASwitch[@label=\"Wi-Fi\"]").click();
@@ -383,10 +382,13 @@ public class SetWifi {
             Utils.sleep(5000);
 
             driver.findElementByXPath("//*[@label='"+wifiName+"']").click();
-            Utils.sleep(5000);
+            Utils.sleep(10000);
 
             if (isPMD) {
-                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD,wifiName)) return;
+                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD,wifiName)) {
+                    tryToPressOnSettingsOnNetworkList(driver,isPMD);
+                    return;
+                }
 
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
@@ -430,16 +432,21 @@ public class SetWifi {
 
             if (isPMD) {
                 rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifiName + "']")).click();
-                Utils.sleep(5000);
+                Utils.sleep(10000);
 
                 if(isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD, wifiName)) return;
 
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
+
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Password\"]");
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
+
             } else {
                 rightTBL.findElement(By.xpath("//UIATableCell//UIAStaticText[@label='" + wifiName + "']/following-sibling::UIAButton")).click();
+                Utils.sleep(10000);
+
+                if(isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD, wifiName)) return;
 
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Join Network\"]");
 
@@ -509,8 +516,10 @@ public class SetWifi {
         try {
             if (isPMD){
                 driver.findElementByXPath("//XCUIElementTypeButton[@label='Settings']").click();
+                Utils.sleep(1000);
             } else {
                 driver.findElementByXPath("//*[@label='Settings']").click();
+                Utils.sleep(1000);
             }
 
         } catch (Exception t) {

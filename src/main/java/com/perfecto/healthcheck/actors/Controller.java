@@ -24,21 +24,9 @@ public class Controller extends AbstractLoggingActor {
 
     private Map<McmData,List<DeviceStatus>> totalDeviceStatusList = new HashMap<>();
     private File resultCsvFile = new File("results.csv");
-    private File badMcmCsvFile = new File("badMcms.csv");
 
-    private CSVWriter badMcmCsvWriter;
 
     private int ordersInWorkCounter = 0;
-
-    public Controller() {
-        try {
-            badMcmCsvWriter = new CSVWriter(new FileWriter(badMcmCsvFile));
-        } catch (IOException e) {
-            log().error("Unable to open bad MCMs csv file "+  badMcmCsvFile +"for writing, see exception below");
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
 
     @Override
     public Receive createReceive() {
@@ -88,7 +76,7 @@ public class Controller extends AbstractLoggingActor {
                 .match(NoDevices.class, msg-> {
                     String message = "No devices were retrieved by DeviceProvider from MCM " + msg.getMcmData().getMcm() +", exiting....";
                     log().error(message);
-                    badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
+                    HealthcheckAkka.badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
                     ordersInWorkCounter -=1;
                     checkExit();
                 })
@@ -96,7 +84,7 @@ public class Controller extends AbstractLoggingActor {
                     ordersInWorkCounter -=1;
                     String message = "No drivers were retrieved by Driver Creator, from MCM " + msg.getMcmData().getMcm()+  ", exiting....";
                     log().error(message);
-                    badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
+                    HealthcheckAkka.badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
                     checkExit();
                 })
                 .match(TestRunnerTimeout.class, msg-> {
@@ -112,9 +100,9 @@ public class Controller extends AbstractLoggingActor {
             log().info("Finished, exiting");
             HealthcheckAkka.system.terminate();
             try {
-                badMcmCsvWriter.close();
+                HealthcheckAkka.badMcmCsvWriter.close();
             } catch (IOException e) {
-                log().error("Unable to close file " + badMcmCsvWriter + ", see exception below");
+                log().error("Unable to close file " + HealthcheckAkka.badMcmCsvFile + ", see exception below");
                 e.printStackTrace();
             }
         }

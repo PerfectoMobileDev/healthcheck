@@ -10,8 +10,6 @@ public class IOSTestSet extends AbstractTestSet{
     public IOSTestSet(AppiumDriver driver, Device device, String UUID,String mcmName,String mcmUser,String mcmPassword,String wifiName,String wifiIdentity,String wifiPassword) {
         super(driver, device, UUID,mcmName,mcmUser,mcmPassword,wifiName,wifiIdentity,wifiPassword);
     }
-    public static String language = HealthcheckProps.getDefaultLanguage();
-    public static Boolean unlock = HealthcheckProps.isUnlock();
     @Override
     public DeviceStatus runTests() {
         TestsRunner tr = new TestsRunner(device);

@@ -5,8 +5,10 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.perfecto.healthcheck.actors.Controller;
 import com.perfecto.healthcheck.infra.HealthcheckProps;
+import com.perfecto.healthcheck.infra.ResultsWriter;
 
 import java.io.*;
 import java.util.*;
@@ -22,7 +24,18 @@ public class HealthcheckAkka {
     private static List<String[]> mcmCredentials = new ArrayList<String[]>();
     private static Map<String,Map<String,ArrayList<Map<String,String>>>> wifiCredentialsMap;
 
+    public static File badMcmCsvFile = new File("badMcms.csv");
+    public static CSVWriter badMcmCsvWriter;
+
     public static void main(String[] args) {
+        ResultsWriter.init();
+        try {
+            badMcmCsvWriter = new CSVWriter(new FileWriter(badMcmCsvFile));
+        } catch (IOException e) {
+            System.out.println("Unable to open bad MCMs csv file "+  badMcmCsvFile +"for writing, see exception below");
+            e.printStackTrace();
+            System.exit(1);
+        }
         System.out.println("Loading passwords DB...");
         try {
             CSVReader reader = new CSVReader(new FileReader(mcmCredentialsDbFile));
@@ -68,10 +81,16 @@ public class HealthcheckAkka {
 
                 if (mcmUser.equalsIgnoreCase("null")){
                     mcmUser = getMcmUser(mcmName);
+                    if (mcmUser == null){
+                        System.out.println("Unable to retrieve user from MCM db");
+                    }
                 }
 
                 if (mcmPass.equalsIgnoreCase("null")){
                     mcmPass = getMcmPass(mcmName);
+                    if (mcmPass == null){
+                        System.out.println("Unable to retrieve password from MCM db");
+                    }
                 }
 
                 if (wifiName.equalsIgnoreCase("null")){
@@ -84,15 +103,21 @@ public class HealthcheckAkka {
 
                 if (wifiPassword.equalsIgnoreCase("null")){
                     wifiPassword = getWifiPassword(mcmName);
+                    if (wifiPassword == null){
+                        System.out.println("Unable to retrieve wifi password from MCM db");
+                    }
                 }
 
-                Controller.McmData mcmData = new Controller.McmData(mcmName,mcmUser,mcmPass,wifiName,wifiIdentity,wifiPassword);
-                if (singleDevice.equalsIgnoreCase("null")){
-                    controller.tell(mcmData,ActorRef.noSender());
+                if (mcmUser == null || mcmPass == null || wifiPassword == null){
+                    badMcmCsvWriter.writeNext(new String[]{mcmName,"One or more required parameters were not retrieved from DB: mcmUser=" + mcmUser + ", mcmPass=" + mcmPass + ",wifiPass=" + wifiPassword});
                 } else {
-                    controller.tell(new Controller.TestSingleDevice(mcmData,singleDevice),ActorRef.noSender());
+                    Controller.McmData mcmData = new Controller.McmData(mcmName,mcmUser,mcmPass,wifiName,wifiIdentity,wifiPassword);
+                    if (singleDevice.equalsIgnoreCase("null")){
+                        controller.tell(mcmData,ActorRef.noSender());
+                    } else {
+                        controller.tell(new Controller.TestSingleDevice(mcmData,singleDevice),ActorRef.noSender());
+                    }
                 }
-
 
 
             }

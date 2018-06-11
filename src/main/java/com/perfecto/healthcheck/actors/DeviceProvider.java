@@ -1,14 +1,18 @@
 package com.perfecto.healthcheck.actors;
 
 import akka.actor.AbstractLoggingActor;
+import com.opencsv.CSVWriter;
 import com.perfecto.healthcheck.infra.Device;
+import com.perfecto.healthcheck.infra.HealthcheckProps;
 import com.perfecto.healthcheck.infra.McmDataCarrier;
+import com.perfecto.healthcheck.infra.ResultsWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -112,6 +116,7 @@ public class DeviceProvider extends AbstractLoggingActor {
                 String os = null;
                 String osVersion = null;
                 String model = null;
+                String cradleId = null;
 
                 for (int data = 0; data < handsetData.getLength(); data++) {
 
@@ -120,6 +125,10 @@ public class DeviceProvider extends AbstractLoggingActor {
                     if (d.getNodeName().equals("deviceId")) {
                         id = d.getTextContent();
 
+                    }
+
+                    if (d.getNodeName().equalsIgnoreCase("cradleId")) {
+                        cradleId = d.getTextContent();
                     }
 
                     if (d.getNodeName().equals("os")) {
@@ -134,17 +143,21 @@ public class DeviceProvider extends AbstractLoggingActor {
 
                 }
 
-                if (os.equals("iOS")) {
-                    Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
-                    System.out.println(d);
-                    listDevices.add(d);
-                } else if ((os.equals("Android"))) {
-                    Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
-                    System.out.println(d);
-                    listDevices.add(d);
+
+                if (HealthcheckProps.getDeviceBlackList().contains(id.trim())){
+                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,deviceId,"SKIPPED (BLACKLIST)");
                 } else {
-                    // does not support ios, wp and BB
+                    if (os.equals("iOS")) {
+                        Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);
+                        listDevices.add(d);
+                    } else if ((os.equals("Android"))) {
+                        Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);
+                        listDevices.add(d);
+                    } else {
+                        // does not support ios, wp and BB
+                    }
                 }
+
             }
 
         } catch (Exception e) {

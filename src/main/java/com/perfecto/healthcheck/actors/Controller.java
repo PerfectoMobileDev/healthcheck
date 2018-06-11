@@ -23,22 +23,10 @@ public class Controller extends AbstractLoggingActor {
     public final ActorRef deviceRebooter = getContext().actorOf(Props.create(DeviceRebooter.class), DeviceRebooter.class.getName());
 
     private Map<McmData,List<DeviceStatus>> totalDeviceStatusList = new HashMap<>();
-    private File resultCsvFile = new File("results.csv");
-    private File badMcmCsvFile = new File("badMcms.csv");
 
-    private CSVWriter badMcmCsvWriter;
+
 
     private int ordersInWorkCounter = 0;
-
-    public Controller() {
-        try {
-            badMcmCsvWriter = new CSVWriter(new FileWriter(badMcmCsvFile));
-        } catch (IOException e) {
-            log().error("Unable to open bad MCMs csv file "+  badMcmCsvFile +"for writing, see exception below");
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
 
     @Override
     public Receive createReceive() {
@@ -88,15 +76,15 @@ public class Controller extends AbstractLoggingActor {
                 .match(NoDevices.class, msg-> {
                     String message = "No devices were retrieved by DeviceProvider from MCM " + msg.getMcmData().getMcm() +", exiting....";
                     log().error(message);
-                    badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
+                    HealthcheckAkka.badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
                     ordersInWorkCounter -=1;
                     checkExit();
                 })
                 .match(NoDrivers.class, msg-> {
                     ordersInWorkCounter -=1;
-                    String message = "No drivers were retrieved by Driver Creator, from MCM " + msg.getMcmData().getMcm()+  "exiting....";
+                    String message = "No drivers were retrieved by Driver Creator, from MCM " + msg.getMcmData().getMcm()+  ", exiting....";
                     log().error(message);
-                    badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
+                    HealthcheckAkka.badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
                     checkExit();
                 })
                 .match(TestRunnerTimeout.class, msg-> {
@@ -112,64 +100,54 @@ public class Controller extends AbstractLoggingActor {
             log().info("Finished, exiting");
             HealthcheckAkka.system.terminate();
             try {
-                badMcmCsvWriter.close();
+                HealthcheckAkka.badMcmCsvWriter.close();
             } catch (IOException e) {
-                log().error("Unable to close file " + badMcmCsvWriter + ", see exception below");
+                log().error("Unable to close file " + HealthcheckAkka.badMcmCsvFile + ", see exception below");
                 e.printStackTrace();
             }
         }
+        ResultsWriter.flush();
     }
 
     private void processMetadata(Map<McmData,List<DeviceStatus>> totalDeviceStatusList) {
-        CSVWriter writer = null;
-        try {
-            writer = new CSVWriter(new FileWriter(resultCsvFile));
-
-
             for (Map.Entry<McmData,List<DeviceStatus>> entry : totalDeviceStatusList.entrySet()){
                 String mcmName = entry.getKey().getMcm();
                 List<DeviceStatus> deviceStatusList = entry.getValue();
                 for (DeviceStatus deviceStatus:deviceStatusList){
                     List<AbstractDeviceMetadata> metadataList = deviceStatus.getMetadataList();
-                    for (AbstractDeviceMetadata metadata:metadataList){
-                        if (metadata instanceof WifiDeviceMetadata)
-                        {
-                            WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
-                            String deviceId = deviceStatus.getDeviceId();
-                            String status = "UNKNOWN";
+                    String deviceId = deviceStatus.getDeviceId();
+                    String cradleId = deviceStatus.getDevice().getCradleId();
+                    String status = "UNKNOWN";
 
-                            boolean isOnBefore = wifiMetadata.isWifiSwitchedOnBefore();
-                            boolean isOnAfter = wifiMetadata.isWifiSwitchedOnAfter();
+                    if  (HealthcheckProps.getDeviceBlackList().contains(deviceId.trim())){
+                        status = "SKIPPED (BLACKLIST)";
+                    } else{
+                        for (AbstractDeviceMetadata metadata:metadataList){
+                            if (metadata instanceof WifiDeviceMetadata)
+                            {
+                                WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
 
-                            if (isOnBefore){
-                                status = "VALID";
-                            } else if (!isOnBefore && isOnAfter) {
-                                status = "RECONNECTED";
-                            } else if (!isOnBefore && !isOnAfter){
-                                status = "FAILED TO RECONNECT";
+
+                                boolean isOnBefore = wifiMetadata.isWifiSwitchedOnBefore();
+                                boolean isOnAfter = wifiMetadata.isWifiSwitchedOnAfter();
+
+                                if (isOnBefore){
+                                    status = "VALID";
+                                } else if (!isOnBefore && isOnAfter) {
+                                    status = "RECONNECTED";
+                                } else if (!isOnBefore && !isOnAfter){
+                                    status = "FAILED TO RECONNECT";
+                                }
+
                             }
-
-                            writer.writeNext(new String[]{mcmName,deviceId,status});
-
                         }
                     }
+
+                    ResultsWriter.addLine(mcmName,cradleId,deviceId,status);
                 }
 
             }
 
-        } catch (IOException e) {
-            log().error("Unable to write results with exception below");
-            e.printStackTrace();
-        } finally{
-            try {
-                if (writer != null){
-                    writer.close();
-                }
-            } catch (IOException e) {
-                log().error("Unable to close writer with exception below");
-                e.printStackTrace();
-            }
-        }
     }
 
     public static class FinishedTests {

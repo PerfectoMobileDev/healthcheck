@@ -72,10 +72,9 @@ public class Controller extends AbstractLoggingActor {
                     {
                         //only start processing of data if
                         //this is the last order in work
+                        totalDeviceStatusList.put(msg.getMcmData(),msg.getDeviceStatusList());
                         if (ordersInWorkCounter == 1){
                             processMetadata(totalDeviceStatusList);
-                        } else {
-                            totalDeviceStatusList.put(msg.getMcmData(),msg.getDeviceStatusList());
                         }
                         deviceFinalizer.tell(new DeviceFinalizer.FinalizeDevices(msg.getDeviceDriverList()),self());
                     }
@@ -163,7 +162,9 @@ public class Controller extends AbstractLoggingActor {
             e.printStackTrace();
         } finally{
             try {
-                writer.close();
+                if (writer != null){
+                    writer.close();
+                }
             } catch (IOException e) {
                 log().error("Unable to close writer with exception below");
                 e.printStackTrace();

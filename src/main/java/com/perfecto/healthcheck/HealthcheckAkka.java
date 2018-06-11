@@ -23,8 +23,6 @@ public class HealthcheckAkka {
     private static Map<String,Map<String,ArrayList<Map<String,String>>>> wifiCredentialsMap;
 
     public static void main(String[] args) {
-//        Controller.McmData mcmData = new Controller.McmData(HealthcheckProps.getPerfectoHost(),HealthcheckProps.getPerfectoUser(),HealthcheckProps.getPerfectoPassword());
-
         System.out.println("Loading passwords DB...");
         try {
             CSVReader reader = new CSVReader(new FileReader(mcmCredentialsDbFile));

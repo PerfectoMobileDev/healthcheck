@@ -27,7 +27,6 @@ public abstract class AbstractTestSet {
     String mcmPassword;
 
     String wifiName;
-    private final String wifiUser;
     String wifiIdentity;
     String wifiPassword;
 
@@ -38,8 +37,8 @@ public abstract class AbstractTestSet {
                            String mcmName,
                            String mcmUser,
                            String mcmPassword,
+                           String wifiName,
                            String wifiIdentity,
-                           String wifiUser,
                            String wifiPassword)
     {
         this.driver = driver;
@@ -49,8 +48,8 @@ public abstract class AbstractTestSet {
         this.mcmUser = mcmUser;
         this.mcmPassword = mcmPassword;
 
-        this.wifiName = wifiIdentity;
-        this.wifiUser = wifiUser;
+        this.wifiName = wifiName;
+        this.wifiIdentity = wifiIdentity;
         this.wifiPassword = wifiPassword;
 
         reportiumClient = new ReportiumClientFactory().createPerfectoReportiumClient(

@@ -66,10 +66,20 @@ public class SetWifi {
              }
 
             try {
-                 driver.findElementByXPath("//*[contains(@text, 'Wi')]").click();
+                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
+   //              driver.findElementByXPath("//*[contains(@text, 'Wi')]").click();
             }
             catch (Exception e) {
             }
+
+//            try {
+//                Map<String, Object> params1 = new HashMap<>();
+//                params1.put("package", "com.android.settings");
+//                params1.put("activity", ".wifi.WifiSettings");
+//                driver.executeScript("mobile:activity:open", params1);
+//            }
+//            catch (Exception e) {
+//                }
 
             //pop-up
             try {

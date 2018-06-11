@@ -105,8 +105,9 @@ public class Controller extends AbstractLoggingActor {
                 log().error("Unable to close file " + HealthcheckAkka.badMcmCsvFile + ", see exception below");
                 e.printStackTrace();
             }
+            ResultsWriter.flush();
         }
-        ResultsWriter.flush();
+
     }
 
     private void processMetadata(Map<McmData,List<DeviceStatus>> totalDeviceStatusList) {

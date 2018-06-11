@@ -23,7 +23,7 @@ public class Controller extends AbstractLoggingActor {
     public final ActorRef deviceRebooter = getContext().actorOf(Props.create(DeviceRebooter.class), DeviceRebooter.class.getName());
 
     private Map<McmData,List<DeviceStatus>> totalDeviceStatusList = new HashMap<>();
-    private File resultCsvFile = new File("results.csv");
+
 
 
     private int ordersInWorkCounter = 0;
@@ -106,59 +106,48 @@ public class Controller extends AbstractLoggingActor {
                 e.printStackTrace();
             }
         }
+        ResultsWriter.flush();
     }
 
     private void processMetadata(Map<McmData,List<DeviceStatus>> totalDeviceStatusList) {
-        CSVWriter writer = null;
-        try {
-            writer = new CSVWriter(new FileWriter(resultCsvFile));
-
-
             for (Map.Entry<McmData,List<DeviceStatus>> entry : totalDeviceStatusList.entrySet()){
                 String mcmName = entry.getKey().getMcm();
                 List<DeviceStatus> deviceStatusList = entry.getValue();
                 for (DeviceStatus deviceStatus:deviceStatusList){
                     List<AbstractDeviceMetadata> metadataList = deviceStatus.getMetadataList();
-                    for (AbstractDeviceMetadata metadata:metadataList){
-                        if (metadata instanceof WifiDeviceMetadata)
-                        {
-                            WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
-                            String deviceId = deviceStatus.getDeviceId();
-                            String cradleId = deviceStatus.getDevice().getCradleId();
-                            String status = "UNKNOWN";
+                    String deviceId = deviceStatus.getDeviceId();
+                    String cradleId = deviceStatus.getDevice().getCradleId();
+                    String status = "UNKNOWN";
 
-                            boolean isOnBefore = wifiMetadata.isWifiSwitchedOnBefore();
-                            boolean isOnAfter = wifiMetadata.isWifiSwitchedOnAfter();
+                    if  (HealthcheckProps.getDeviceBlackList().contains(deviceId.trim())){
+                        status = "SKIPPED (BLACKLIST)";
+                    } else{
+                        for (AbstractDeviceMetadata metadata:metadataList){
+                            if (metadata instanceof WifiDeviceMetadata)
+                            {
+                                WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
 
-                            if (isOnBefore){
-                                status = "VALID";
-                            } else if (!isOnBefore && isOnAfter) {
-                                status = "RECONNECTED";
-                            } else if (!isOnBefore && !isOnAfter){
-                                status = "FAILED TO RECONNECT";
+
+                                boolean isOnBefore = wifiMetadata.isWifiSwitchedOnBefore();
+                                boolean isOnAfter = wifiMetadata.isWifiSwitchedOnAfter();
+
+                                if (isOnBefore){
+                                    status = "VALID";
+                                } else if (!isOnBefore && isOnAfter) {
+                                    status = "RECONNECTED";
+                                } else if (!isOnBefore && !isOnAfter){
+                                    status = "FAILED TO RECONNECT";
+                                }
+
                             }
-
-                            writer.writeNext(new String[]{mcmName,cradleId,deviceId,status});
-
                         }
                     }
+
+                    ResultsWriter.addLine(mcmName,cradleId,deviceId,status);
                 }
 
             }
 
-        } catch (IOException e) {
-            log().error("Unable to write results with exception below");
-            e.printStackTrace();
-        } finally{
-            try {
-                if (writer != null){
-                    writer.close();
-                }
-            } catch (IOException e) {
-                log().error("Unable to close writer with exception below");
-                e.printStackTrace();
-            }
-        }
     }
 
     public static class FinishedTests {

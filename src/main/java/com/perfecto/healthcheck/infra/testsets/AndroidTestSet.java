@@ -10,9 +10,6 @@ public class AndroidTestSet extends AbstractTestSet {
         super(driver, device, UUID,mcmName,mcmUser,mcmPassword,wifiName,wifiIdentity,wifiPassword);
     }
 
-    public static String language = HealthcheckProps.getDefaultLanguage();
-    public static Boolean unlock = HealthcheckProps.isUnlock();
-
     @Override
     public DeviceStatus runTests() {
 

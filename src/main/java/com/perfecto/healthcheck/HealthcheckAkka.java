@@ -8,6 +8,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.perfecto.healthcheck.actors.Controller;
 import com.perfecto.healthcheck.infra.HealthcheckProps;
+import com.perfecto.healthcheck.infra.ResultsWriter;
 
 import java.io.*;
 import java.util.*;
@@ -27,6 +28,7 @@ public class HealthcheckAkka {
     public static CSVWriter badMcmCsvWriter;
 
     public static void main(String[] args) {
+        ResultsWriter.init();
         try {
             badMcmCsvWriter = new CSVWriter(new FileWriter(badMcmCsvFile));
         } catch (IOException e) {

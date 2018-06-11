@@ -7,6 +7,9 @@ import org.json.XML;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,11 +19,9 @@ public class HealthcheckProps {
 
     private static boolean REBOOT_ALL_DEVICES = Boolean.getBoolean("rebootAllDevices");
     private static Logger logger = LogManager.getLogger("Automation Ready Logger");
-    private static String chrome_Acount_Name = System.getProperty("chromeAcountName");
-    private static String default_Language = System.getProperty("defaultLanguage");
-    private static boolean Unlock_status = Boolean.getBoolean("unlockStatus");
-    private static String chrome_Acount_Pass = System.getProperty("chromeAcountPass");
     private static final String UUID = java.util.UUID.randomUUID().toString();
+
+    private static final String deviceBlackList = System.getProperty("deviceBlacklist");
 
     //multiline string variable that contains MCM and Wifi credentials in the following format:
     //mcmName,mcmUser,msmPass (can be "null", then will be retrieved from DB),wifiName (can be "null", then "Perfecto" is used),
@@ -31,20 +32,17 @@ public class HealthcheckProps {
 
     static {
         setAmountOfThreads(40);
-
-        if (default_Language == null || default_Language.trim().isEmpty()) {
-            default_Language = "";
-        }
-//        if (Unlock_status == null || Unlock_status.trim().isEmpty()) {
-//            Unlock_status = "";
-//        }
-        if (chrome_Acount_Name == null || chrome_Acount_Name.trim().isEmpty()) {
-            chrome_Acount_Name = "";
-        }
     }
 
     public static String getMcmCredentials() {
         return mcmCredentials;
+    }
+
+    public static List<String> getDeviceBlackList() {
+        if (deviceBlackList != null){
+            return Arrays.asList(deviceBlackList.split("\\r?\\n"));
+        }
+        return new ArrayList<>();
     }
 
     public static String getUUID() {
@@ -79,20 +77,5 @@ public class HealthcheckProps {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", String.valueOf(threads));
     }
 
-
-    public static String getChromeAcountName() {
-        return chrome_Acount_Name;
-    }
-    public static String getChromeAcountPass() {
-        return chrome_Acount_Pass;
-    }
-
-    public static String getDefaultLanguage() {
-        return default_Language;
-    }
-
-    public static boolean isUnlock() {
-        return Unlock_status;
-    }
 
 }

@@ -112,6 +112,7 @@ public class DeviceProvider extends AbstractLoggingActor {
                 String os = null;
                 String osVersion = null;
                 String model = null;
+                String cradleId = null;
 
                 for (int data = 0; data < handsetData.getLength(); data++) {
 
@@ -120,6 +121,10 @@ public class DeviceProvider extends AbstractLoggingActor {
                     if (d.getNodeName().equals("deviceId")) {
                         id = d.getTextContent();
 
+                    }
+
+                    if (d.getNodeName().equalsIgnoreCase("cradleId")) {
+                        cradleId = d.getTextContent();
                     }
 
                     if (d.getNodeName().equals("os")) {
@@ -135,11 +140,11 @@ public class DeviceProvider extends AbstractLoggingActor {
                 }
 
                 if (os.equals("iOS")) {
-                    Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
+                    Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);
                     System.out.println(d);
                     listDevices.add(d);
                 } else if ((os.equals("Android"))) {
-                    Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
+                    Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);
                     System.out.println(d);
                     listDevices.add(d);
                 } else {

@@ -4,6 +4,7 @@ public class Device {
 	private String platform;
 	private String app;
 	private String deviceID;
+	private String cradleId;
 	private String model;
 	private String osVersion;
 	private String mcm="";
@@ -21,7 +22,7 @@ public class Device {
 		this.deviceID = deviceID;
 	}
 
-	public Device(String platform, String app, String deviceID,String model, String osVersion,String mcm,String mcmUser,String mcmPassword) {
+	public Device(String platform, String app, String deviceID,String model, String osVersion,String mcm,String mcmUser,String mcmPassword,String cradleId) {
 		super();
 		this.platform = platform;
 		this.app = app;
@@ -31,13 +32,18 @@ public class Device {
 		this.mcmUser=mcmUser;
 		this.mcmPassword=mcmPassword;
 		this.deviceID = deviceID;
+		this.cradleId = cradleId;
 	}
 	
 	@Override public String toString() {
 				
 		return "{" + platform + "," + app +","+ deviceID +","+osVersion +","+model +"}";
 	};
-	
+
+	public String getCradleId() {
+		return cradleId;
+	}
+
 	public String getPlatform() {
 		return platform;
 	}

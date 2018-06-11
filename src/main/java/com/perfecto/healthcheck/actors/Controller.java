@@ -94,7 +94,7 @@ public class Controller extends AbstractLoggingActor {
                 })
                 .match(NoDrivers.class, msg-> {
                     ordersInWorkCounter -=1;
-                    String message = "No drivers were retrieved by Driver Creator, from MCM " + msg.getMcmData().getMcm()+  "exiting....";
+                    String message = "No drivers were retrieved by Driver Creator, from MCM " + msg.getMcmData().getMcm()+  ", exiting....";
                     log().error(message);
                     badMcmCsvWriter.writeNext(new String[]{msg.getMcmData().getMcm(),message});
                     checkExit();
@@ -136,6 +136,7 @@ public class Controller extends AbstractLoggingActor {
                         {
                             WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
                             String deviceId = deviceStatus.getDeviceId();
+                            String cradleId = deviceStatus.getDevice().getCradleId();
                             String status = "UNKNOWN";
 
                             boolean isOnBefore = wifiMetadata.isWifiSwitchedOnBefore();
@@ -149,7 +150,7 @@ public class Controller extends AbstractLoggingActor {
                                 status = "FAILED TO RECONNECT";
                             }
 
-                            writer.writeNext(new String[]{mcmName,deviceId,status});
+                            writer.writeNext(new String[]{mcmName,cradleId,deviceId,status});
 
                         }
                     }

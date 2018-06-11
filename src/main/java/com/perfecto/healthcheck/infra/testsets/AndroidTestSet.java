@@ -22,7 +22,7 @@ public class AndroidTestSet extends AbstractTestSet {
 
 
         if (!wifiName.isEmpty()){
-            tr.registerTest(()-> SetWifi.defineWifiAndroid(driver, wifiName, wifiPassword, wifiIdentity),"define wifi on Android");
+            tr.registerTest(()-> SetWifi.defineWifiAndroid(driver, wifiName, wifiIdentity, wifiPassword),"define wifi on Android");
         }
 
         return processResult(tr);

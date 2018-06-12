@@ -36,6 +36,8 @@ public class SetWifi {
 
         boolean isWiFiValidBefore = false;
         boolean isWiFiValidAfter = false;
+    //    boolean isFirstWayConnected = false;
+
         Map<String, Object> params = new HashMap<>();
 
         try {
@@ -45,10 +47,9 @@ public class SetWifi {
 //            driver.executeScript("mobile:activity:open", params1);
 
 
+
             Map<String, Object> appName = new HashMap<>();
             appName.put("name", "Settings");
-            driver.executeScript("mobile:application:open", appName);
-            driver.executeScript("mobile:application:close", appName);
             driver.executeScript("mobile:application:open", appName);
 
             Utils.switchToContext((AppiumDriver) driver, "NATIVE_APP");
@@ -73,20 +74,14 @@ public class SetWifi {
              }
 
             try {
-                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
+                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi') and  not (contains(@resourse-id='action_bar_title'))]").click();
+
+
    //              driver.findElementByXPath("//*[contains(@text, 'Wi')]").click();
             }
             catch (Exception e) {
             }
 
-//            try {
-//                Map<String, Object> params1 = new HashMap<>();
-//                params1.put("package", "com.android.settings");
-//                params1.put("activity", ".wifi.WifiSettings");
-//                driver.executeScript("mobile:activity:open", params1);
-//            }
-//            catch (Exception e) {
-//                }
 
             //pop-up
             try {

@@ -19,7 +19,7 @@ def RunJob = {cloud ->
     try {
         stage(cloud) {
 
-            def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: false,
+            def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: true,
                     parameters:
                             [text(name: 'mcmParams', value: params."$cloud"),
                              text(name: 'deviceBlackList', value: "${params.deviceBlackList}"),
@@ -52,13 +52,13 @@ def RunJob = {cloud ->
 
 node('generic-slaves') {
     timeout(time: 2, unit: 'HOURS') {
-           // parallel {
+            parallel {
 
                 RunJob('branchtest')
                 RunJob('borgias')
                 RunJob('testing')
 
-         //   }
+            }
     }
 
 

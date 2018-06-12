@@ -12,15 +12,13 @@ properties([
 
 
 def RunJob = {cloud ->
-    try {
+
         stage(cloud) {
 
             build(job: deviceHealthCheckWIFI, propagate: false, wait: false, parameters: [string(name: 'mcmParams', value: "${params.branchtest}")])
 
         }
-    } catch (e) {
-        echo e.toString()
-    }
+
 }
 
 
@@ -40,12 +38,14 @@ def RunJob = {cloud ->
 
 node('generic-slaves') {
     timeout(time: 2, unit: 'HOURS'){
-            parallel {
+           // parallel {
 
                 RunJob('branchtest')
                 //RunJob('borgias')
                 //RunJob('testing')
 
-            }
+         //   }
     }
+
+
 }

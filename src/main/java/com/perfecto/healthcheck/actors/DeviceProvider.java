@@ -160,6 +160,8 @@ public class DeviceProvider extends AbstractLoggingActor {
                     }
                 }
 
+                //leaving up to 50 devices
+                listDevices = listDevices.subList(0,HealthcheckProps.getMaxDevicesToRun());
             }
 
         } catch (Exception e) {

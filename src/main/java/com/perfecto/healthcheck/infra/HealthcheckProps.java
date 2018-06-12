@@ -7,10 +7,7 @@ import org.json.XML;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +21,8 @@ public class HealthcheckProps {
 
     private static final String deviceBlackList = System.getProperty("deviceBlacklist");
     private static final String siteWhiteList = System.getProperty("siteWhitelist");
+
+    private static final int MAX_DEVICES_TO_RUN = 50;
 
     //multiline string variable that contains MCM and Wifi credentials in the following format:
     //mcmName,mcmUser,msmPass (can be "null", then will be retrieved from DB),wifiName (can be "null", then "Perfecto" is used),
@@ -47,11 +46,15 @@ public class HealthcheckProps {
         return new ArrayList<>();
     }
 
+    public static int getMaxDevicesToRun() {
+        return MAX_DEVICES_TO_RUN;
+    }
+
     public static List<String> getSiteWhiteList() {
         if (siteWhiteList != null){
             return Arrays.stream(siteWhiteList.split("\\r?\\n")).map(v->v.toUpperCase().trim()).collect(Collectors.toList());
         }
-        return new ArrayList<>();
+        return new ArrayList<>(Collections.singletonList("BOS"));
     }
 
     public static String getUUID() {

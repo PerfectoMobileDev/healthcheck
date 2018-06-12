@@ -15,7 +15,7 @@ def RunJob = {cloud ->
     try {
         stage(cloud) {
 
-            build(job: deviceHealthCheckWIFI, propagate: false, wait: false, parameters: [string(name: 'mcmParams', value: "${cloud}")])
+            build(job: deviceHealthCheckWIFI, propagate: false, wait: false, parameters: [string(name: 'mcmParams', value: cloud)])
 
         }
     } catch (e) {

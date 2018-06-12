@@ -48,39 +48,38 @@ public class SetWifi {
 
 
 
-            Map<String, Object> appName = new HashMap<>();
-            appName.put("name", "Settings");
-            driver.executeScript("mobile:application:open", appName);
-
-            Utils.switchToContext((AppiumDriver) driver, "NATIVE_APP");
-
-            try {
-                driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
-           }
-            catch (Exception e) {
-            }
-
-            try {
-                driver.findElementByXPath("//*[@text=\"Connections\"]").click();
-            }
-            catch (Exception e) {
-            }
-
-
-            try {
-                driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
-            }
-             catch (Exception e) {
-             }
-
-            try {
-                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi') and  not (contains(@resourse-id='action_bar_title'))]").click();
-
-
-   //              driver.findElementByXPath("//*[contains(@text, 'Wi')]").click();
-            }
-            catch (Exception e) {
-            }
+//            Map<String, Object> appName = new HashMap<>();
+//            appName.put("name", "Settings");
+//            driver.executeScript("mobile:application:open", appName);
+//
+//            Utils.switchToContext((AppiumDriver) driver, "NATIVE_APP");
+//
+//            try {
+//                driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
+//           }
+//            catch (Exception e) {
+//            }
+//
+//            try {
+//                driver.findElementByXPath("//*[@text=\"Connections\"]").click();
+//            }
+//            catch (Exception e) {
+//            }
+//
+//
+//            try {
+//                driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
+//            }
+//             catch (Exception e) {
+//             }
+//
+//
+//            try {
+//             //   driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi') and  not (contains(@resourse-id, 'action_bar_title'))]").click();
+//                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
+//            }
+//            catch (Exception e) {
+//            }
 
 
             //pop-up

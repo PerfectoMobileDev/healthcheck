@@ -17,11 +17,12 @@ def RunJob = {cloud ->
 
             def job = build(job: deviceHealthCheckWIFI, propagate: false, wait: false,
                     parameters:
-                            [string(name: 'mcmParams', value: "${params.branchtest}")])
+                            [text(name: 'mcmParams', value: "${params.branchtest}")])
 
         }
     } catch (e) {
         currentBuild.result = 'FAILURE'
+        echo e.toString()
 
     }
 }

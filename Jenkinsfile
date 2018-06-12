@@ -12,13 +12,18 @@ properties([
 
 
 def RunJob = {cloud ->
-
+    try {
         stage(cloud) {
 
-            build(job: deviceHealthCheckWIFI, propagate: false, wait: false, parameters: [string(name: 'mcmParams', value: "${params.branchtest}")])
+            def job = build(job: deviceHealthCheckWIFI, propagate: false, wait: false,
+                    parameters:
+                            [string(name: 'mcmParams', value: "${params.branchtest}")])
 
         }
+    } catch (e) {
+        currentBuild.result = 'FAILURE'
 
+    }
 }
 
 
@@ -37,7 +42,7 @@ def RunJob = {cloud ->
 
 
 node('generic-slaves') {
-    timeout(time: 2, unit: 'HOURS'){
+    timeout(time: 2, unit: 'HOURS') {
            // parallel {
 
                 RunJob('branchtest')

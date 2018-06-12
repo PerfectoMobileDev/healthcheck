@@ -3,12 +3,9 @@ package com.perfecto.healthcheck.actors;
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import com.opencsv.CSVWriter;
 import com.perfecto.healthcheck.HealthcheckAkka;
 import com.perfecto.healthcheck.infra.*;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -144,7 +141,8 @@ public class Controller extends AbstractLoggingActor {
                         }
                     }
 
-                    ResultsWriter.addLine(mcmName,cradleId,deviceId,status);
+                    ResultsWriter.addLineToDevicesUsedCsv(deviceId);
+                    ResultsWriter.addLineToResultsCsv(mcmName,cradleId,deviceId,status);
                 }
 
             }

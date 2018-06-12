@@ -22,7 +22,7 @@ public class HealthcheckProps {
     private static final String deviceBlackList = System.getProperty("deviceBlacklist");
     private static final String siteWhiteList = System.getProperty("siteWhitelist");
 
-    private static final int MAX_DEVICES_TO_RUN = 50;
+    private static final String MAX_PARALLEL_DEVICES_TO_RUN_ON_CLOUD = System.getProperty("maxParallelDevicesToRunOnCloud");
 
     //multiline string variable that contains MCM and Wifi credentials in the following format:
     //mcmName,mcmUser,msmPass (can be "null", then will be retrieved from DB),wifiName (can be "null", then "Perfecto" is used),
@@ -46,8 +46,14 @@ public class HealthcheckProps {
         return new ArrayList<>();
     }
 
-    public static int getMaxDevicesToRun() {
-        return MAX_DEVICES_TO_RUN;
+    public static int getMaxParallelDevicesToRunOnCloud() {
+        int defaultValue = 50;
+
+        try{
+            return Integer.parseInt(MAX_PARALLEL_DEVICES_TO_RUN_ON_CLOUD);
+        } catch (Exception ignored){}
+
+        return defaultValue;
     }
 
     public static List<String> getSiteWhiteList() {

@@ -1,7 +1,6 @@
 package com.perfecto.healthcheck.actors;
 
 import akka.actor.AbstractLoggingActor;
-import com.opencsv.CSVWriter;
 import com.perfecto.healthcheck.infra.Device;
 import com.perfecto.healthcheck.infra.HealthcheckProps;
 import com.perfecto.healthcheck.infra.McmDataCarrier;
@@ -12,7 +11,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -145,9 +143,9 @@ public class DeviceProvider extends AbstractLoggingActor {
 
 
                 if (HealthcheckProps.getDeviceBlackList().contains(id.trim())){
-                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (ID BLACKLISTED)");
+                    ResultsWriter.addLineToResultsCsv(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (ID BLACKLISTED)");
                 } else if (!HealthcheckProps.getSiteWhiteList().contains(cradleId.substring(0,3).trim().toUpperCase())){
-                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (SITE BLACKLISTED)");
+                    ResultsWriter.addLineToResultsCsv(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (SITE BLACKLISTED)");
                 } else {
                     if (os.equals("iOS")) {
                         Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);
@@ -160,8 +158,7 @@ public class DeviceProvider extends AbstractLoggingActor {
                     }
                 }
 
-                //leaving up to 50 devices
-                listDevices = listDevices.subList(0,HealthcheckProps.getMaxDevicesToRun());
+
             }
 
         } catch (Exception e) {
@@ -169,6 +166,12 @@ public class DeviceProvider extends AbstractLoggingActor {
             e.printStackTrace();
             return Optional.empty();
         }
+
+        //leaving up to 50 devices
+        if (listDevices.size() > HealthcheckProps.getMaxParallelDevicesToRunOnCloud()){
+            listDevices = listDevices.subList(0, HealthcheckProps.getMaxParallelDevicesToRunOnCloud());
+        }
+
         if (!deviceId.trim().isEmpty()){
             List<Device> filteredDevices = listDevices
                     .stream()

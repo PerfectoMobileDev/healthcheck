@@ -17,7 +17,7 @@ def RunJob = {cloud ->
 
             def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: false,
                     parameters:
-                            [text(name: 'mcmParams', value: "${cloud}")])
+                            [text(name: 'mcmParams', value: params."$cloud")])
 
         }
     } catch (e) {

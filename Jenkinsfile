@@ -7,7 +7,7 @@ properties([
                 string(defaultValue: 'testing,null,null,null,null,null', description: '', name: 'testing'),
                 text(defaultValue: '', description: '', name: 'deviceBlackList'),
                 text(defaultValue: 'BOS', description: '', name: 'siteWhitelist'),
-                string(defaultValue: '50', description: '', name: 'siteWhitelist')
+                string(defaultValue: '50', description: '', name: 'maxParallelDevicesToRunOnCloud')
 
         ])
 ])

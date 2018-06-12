@@ -145,7 +145,7 @@ public class DeviceProvider extends AbstractLoggingActor {
 
 
                 if (HealthcheckProps.getDeviceBlackList().contains(id.trim())){
-                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,deviceId,"SKIPPED (BLACKLIST)");
+                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (BLACKLIST)");
                 } else {
                     if (os.equals("iOS")) {
                         Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);

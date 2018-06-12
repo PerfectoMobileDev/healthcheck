@@ -145,7 +145,9 @@ public class DeviceProvider extends AbstractLoggingActor {
 
 
                 if (HealthcheckProps.getDeviceBlackList().contains(id.trim())){
-                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (BLACKLIST)");
+                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (ID BLACKLISTED)");
+                } else if (!HealthcheckProps.getSiteWhiteList().contains(cradleId.substring(0,3).trim().toUpperCase())){
+                    ResultsWriter.addLine(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (SITE BLACKLISTED)");
                 } else {
                     if (os.equals("iOS")) {
                         Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);

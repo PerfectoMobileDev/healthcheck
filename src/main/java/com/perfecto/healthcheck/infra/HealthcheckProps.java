@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by tall on 3/2/2017.
@@ -22,6 +23,7 @@ public class HealthcheckProps {
     private static final String UUID = java.util.UUID.randomUUID().toString();
 
     private static final String deviceBlackList = System.getProperty("deviceBlacklist");
+    private static final String siteWhiteList = System.getProperty("siteWhitelist");
 
     //multiline string variable that contains MCM and Wifi credentials in the following format:
     //mcmName,mcmUser,msmPass (can be "null", then will be retrieved from DB),wifiName (can be "null", then "Perfecto" is used),
@@ -41,6 +43,13 @@ public class HealthcheckProps {
     public static List<String> getDeviceBlackList() {
         if (deviceBlackList != null){
             return Arrays.asList(deviceBlackList.split("\\r?\\n"));
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<String> getSiteWhiteList() {
+        if (siteWhiteList != null){
+            return Arrays.stream(siteWhiteList.split("\\r?\\n")).map(v->v.toUpperCase().trim()).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }

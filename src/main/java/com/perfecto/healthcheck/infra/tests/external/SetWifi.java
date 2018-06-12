@@ -41,10 +41,10 @@ public class SetWifi {
         Map<String, Object> params = new HashMap<>();
 
         try {
-//            Map<String, Object> params1 = new HashMap<>();
-//            params1.put("package", "com.android.settings");
-//            params1.put("activity", ".wifi.WifiSettings");
-//            driver.executeScript("mobile:activity:open", params1);
+            Map<String, Object> params1 = new HashMap<>();
+            params1.put("package", "com.android.settings");
+            params1.put("activity", ".wifi.WifiSettings");
+            driver.executeScript("mobile:activity:open", params1);
 
 
 

@@ -1,6 +1,6 @@
 properties([
         parameters([
-                choice(name: 'Invoke_Parameters', choices:"No\nYes", description: "Do you wish to do a dry run to grab parameters?" ),
+                choice(name: 'Invoke_Parameters', choices:"Yes\nNo", description: "Do you wish to do a dry run to grab parameters?" ),
                 string(defaultValue: 'branchtest,null,null,null,null,null', description: '', name: 'branchtest'),
                 string(defaultValue: 'borgias,null,null,null,null,null', description: '', name: 'borgias'),
                 string(defaultValue: 'testing,null,null,null,null,null', description: '', name: 'testing')

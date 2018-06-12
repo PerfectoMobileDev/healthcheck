@@ -15,7 +15,7 @@ def RunJob = {cloud ->
     try {
         stage(cloud) {
 
-            def job = build(job: deviceHealthCheckWIFI, propagate: false, wait: false,
+            def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: false,
                     parameters:
                             [text(name: 'mcmParams', value: "${params.branchtest}")])
 

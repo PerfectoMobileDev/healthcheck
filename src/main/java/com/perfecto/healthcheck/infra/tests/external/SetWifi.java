@@ -36,71 +36,64 @@ public class SetWifi {
 
         boolean isWiFiValidBefore = false;
         boolean isWiFiValidAfter = false;
-    //    boolean isFirstWayConnected = false;
 
+        String deviceCap = Utils.handsetInfo(driver, "property", "manufacturer");
         Map<String, Object> params = new HashMap<>();
 
         try {
-            Map<String, Object> params1 = new HashMap<>();
-            params1.put("package", "com.android.settings");
-            params1.put("activity", ".wifi.WifiSettings");
-            driver.executeScript("mobile:activity:open", params1);
 
+            if (!(deviceCap.contains("LG"))) {
+                Map<String, Object> params1 = new HashMap<>();
+                params1.put("package", "com.android.settings");
+                params1.put("activity", ".wifi.WifiSettings");
+                driver.executeScript("mobile:activity:open", params1);
 
+            } else {
 
-//            Map<String, Object> appName = new HashMap<>();
-//            appName.put("name", "Settings");
-//            driver.executeScript("mobile:application:open", appName);
-//
-//            Utils.switchToContext((AppiumDriver) driver, "NATIVE_APP");
-//
-//            try {
-//                driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
-//           }
-//            catch (Exception e) {
-//            }
-//
-//            try {
-//                driver.findElementByXPath("//*[@text=\"Connections\"]").click();
-//            }
-//            catch (Exception e) {
-//            }
-//
-//
-//            try {
-//                driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
-//            }
-//             catch (Exception e) {
-//             }
-//
-//
-//            try {
-//             //   driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi') and  not (contains(@resourse-id, 'action_bar_title'))]").click();
-//                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
-//            }
-//            catch (Exception e) {
-//            }
+                Map<String, Object> appName = new HashMap<>();
+                appName.put("name", "Settings");
+                driver.executeScript("mobile:application:open", appName);
 
+                Utils.switchToContext((AppiumDriver) driver, "NATIVE_APP");
+
+                try {
+                    driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
+                } catch (Exception e) {
+                }
+
+                try {
+                    driver.findElementByXPath("//*[@text=\"Connections\"]").click();
+                } catch (Exception e) {
+                }
+
+                try {
+                    driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
+                } catch (Exception e) {
+                }
+
+                try {
+                    //   driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi') and  not (contains(@resourse-id, 'action_bar_title'))]").click();
+                    driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
+                } catch (Exception e) {
+                }
+
+            }
 
             //pop-up
             try {
                 driver.findElementByXPath("//*[@resourceid=\"android:id/button2\"]").click();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
             }
 
             Utils.switchToContext((AppiumDriver) driver, "NATIVE");
             String wifiname = "//*[@text=\"" + wifiName + "\"]";
             boolean isConnected = false;
 
-           try {
-               // isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").isDisplayed();
-               isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifiName);
-               isWiFiValidBefore = isConnected;
-           }
-           catch (Exception e) {
+            try {
+                isConnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text").equalsIgnoreCase(wifiName);
+                isWiFiValidBefore = isConnected;
+            } catch (Exception e) {
             }
-
 
             if (isConnected) {
                 isWiFiValidAfter = isConnected;
@@ -108,7 +101,7 @@ public class SetWifi {
             }
 
             if (driver.findElementByXPath(wifiname).isDisplayed()) {
-                    driver.findElementByXPath("//*[@text=\"" + wifiName + "\"]").click();
+                driver.findElementByXPath("//*[@text=\"" + wifiName + "\"]").click();
             } else {
                 Utils.scrollToAndroid(driver, "element", wifiname);
                 try {
@@ -129,87 +122,44 @@ public class SetWifi {
                     isWiFiValidAfter = isConnected;
                     return;
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
             }
 
             try {
                 driver.findElementByXPath("//*[@text=\"Please select\"]").click();
                 driver.findElementByXPath("//*[@text=\"Do not validate\"]").click();
+            } catch (Exception e) {
             }
-            catch (Exception e) {
-                }
 
             try {
-            driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(wifiIdentity);
-            params.clear();
-            params.put("mode", "off");
-            driver.executeScript("mobile:keyboard:display", params);
-            Thread.sleep(2000);
-            }catch (Exception e) {
+                driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/identity\"]").sendKeys(wifiIdentity);
+                params.clear();
+                params.put("mode", "off");
+                driver.executeScript("mobile:keyboard:display", params);
+                Thread.sleep(2000);
+            } catch (Exception e) {
             }
 
             try {
                 driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/password\"]").click();
                 driver.findElementByXPath("//*[@resource-id=\"com.android.settings:id/password\"]").sendKeys(wifiPassword);
-            }catch (Exception e) {
+            } catch (Exception e) {
             }
 
             try {
                 driver.findElementByXPath("//*[@resource-id=\"com.lge.wifisettings:id/password\"]").click();
                 driver.findElementByXPath("//*[@resource-id=\"com.lge.wifisettings:id/password\"]").sendKeys(wifiPassword);
-            }catch (Exception e) {
+            } catch (Exception e) {
             }
 
 
             Thread.sleep(2000);
             try {
-            driver.findElementByXPath("//android.widget.Button[@text=\"CONNECT\"]|//android.widget.Button[@text=\"connect\"]|//android.widget.Button[@text=\"Connect\"]").click();
-            }catch (Exception e) {
+                driver.findElementByXPath("//android.widget.Button[@text=\"CONNECT\"]|//android.widget.Button[@text=\"connect\"]|//android.widget.Button[@text=\"Connect\"]").click();
+            } catch (Exception e) {
             }
 
             Thread.sleep(2000);
-//            params.clear();
-//            params.put("package", "com.android.settings");
-//            params.put("activity", ".wifi.WifiSettings");
-//            driver.executeScript("mobile:activity:open", params);
-
-//            appName.put("name", "Settings");
-//            driver.executeScript("mobile:application:open", appName);
-//            Utils.switchToContext((AppiumDriver) driver, "NATIVE");
-//
-//            try {
-//                driver.findElementByXPath("//*[@text=\"Network & Internet\"]").click();
-//            }
-//            catch (Exception e) {
-//            }
-//
-//            try {
-//                driver.findElementByXPath("//*[@text=\"Connections\"]").click();
-//            }
-//            catch (Exception e) {
-//            }
-//
-//            try {
-//                driver.findElementByXPath("//*[@text=\"Wi-Fi\"]").click();
-//            }
-//            catch (Exception e) {
-//            }
-//
-//            try {
-//                driver.findElementByXPath("//*[contains(@text, 'Wi') and contains(@text, 'Fi')]").click();
-//            }
-//            catch (Exception e) {
-//            }
-
-
-//            String wificonnected = driver.findElementByXPath("//android.widget.RelativeLayout/*[@text=\"Connected\"]/preceding-sibling::android.widget.TextView").getAttribute("text");
-//            if (wificonnected.toLowerCase().trim().equalsIgnoreCase(wifiName.toLowerCase())) isWiFiValidAfter=true;
-//            try {
-//                Assert.assertEquals(wificonnected.toLowerCase().trim(), wifiName.toLowerCase());
-//            } catch (Exception t) {
-//                ExceptionAnalyzer.analyzeException(t, "connected wifi is not the wifi defined");
-//            }
 
             Utils.switchToContext(driver, "NATIVE");
             try {
@@ -222,9 +172,9 @@ public class SetWifi {
                 ExceptionAnalyzer.analyzeException(t, "connected wifi is not the wifi defined");
             }
 
-        }catch (Exception t) {
+        } catch (Exception t) {
 
-            ExceptionAnalyzer.analyzeException(t,"failed to define wifiName on device");
+            ExceptionAnalyzer.analyzeException(t, "failed to define wifiName on device");
 
         } finally {
 
@@ -241,22 +191,22 @@ public class SetWifi {
             if (getDeviceNetworkSettings(driver, "wifi").contains("wifi=true")) {
                 Utils.home(driver);
 
-            }else{
+            } else {
                 setWifiAndroid(driver, "enabled");
                 throw new SpecialMessageException("wifi was set on device");
             }
         } catch (Exception t) {
             t.printStackTrace();
-            ExceptionAnalyzer.analyzeException(t,"Error enabling WiFi for android device");
+            ExceptionAnalyzer.analyzeException(t, "Error enabling WiFi for android device");
             throw t;
         }
     }
 
-    public static void setDeviceWifiSettingsiOS(AppiumDriver driver,String wifiName,String wifiIdentity,String wifiPassword) throws Exception {
+    public static void setDeviceWifiSettingsiOS(AppiumDriver driver, String wifiName, String wifiIdentity, String wifiPassword) throws Exception {
 
         Boolean isWiFiValidBefore = false;
 
-        String model = Utils.handsetInfo(driver,"property", "model");
+        String model = Utils.handsetInfo(driver, "property", "model");
 
         Boolean isPMD = Utils.isDeviceUsingXCUITest(driver);
 
@@ -275,20 +225,22 @@ public class SetWifi {
                 return;
 
             } else if (isWiFiON && !currentWIFI.equalsIgnoreCase(wifiName)) {
-                if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
+                if (model.contains("iPhone"))
+                    SetPerfectoWifiiPhone(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
                 else SetPerfectoWifiiPad(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
             } else if (!isWiFiON) {
                 enableWIFI(driver, isPMD);
                 currentWIFI = getCurentWiFiName(driver);
                 if (!currentWIFI.equalsIgnoreCase(wifiName)) {
-                    if (model.contains("iPhone")) SetPerfectoWifiiPhone(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
+                    if (model.contains("iPhone"))
+                        SetPerfectoWifiiPhone(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
                     else SetPerfectoWifiiPad(driver, isPMD, wifiName, wifiIdentity, wifiPassword);
                 }
             }
-        } catch(Exception t){
-                t.printStackTrace();
-                ExceptionAnalyzer.analyzeException(t, "Error enabling WiFi for ios device");
-                throw t;
+        } catch (Exception t) {
+            t.printStackTrace();
+            ExceptionAnalyzer.analyzeException(t, "Error enabling WiFi for ios device");
+            throw t;
         } finally {
 
             //Utils.home(driver);
@@ -297,13 +249,13 @@ public class SetWifi {
 
             boolean isWifiValidAfter = currentWIFI.equalsIgnoreCase(wifiName);
 
-            WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore,isWifiValidAfter);
+            WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore, isWifiValidAfter);
             throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
         }
 
     }
 
-    public static void enableWIFI(AppiumDriver driver, Boolean isPMD)throws Exception {
+    public static void enableWIFI(AppiumDriver driver, Boolean isPMD) throws Exception {
 
         try {
             Utils.openSettingsiOS(driver);
@@ -383,7 +335,7 @@ public class SetWifi {
     }
 
 
-    public static void SetPerfectoWifiiPhone(AppiumDriver driver, Boolean isPMD, String wifiName,  String username, String password) throws Exception {
+    public static void SetPerfectoWifiiPhone(AppiumDriver driver, Boolean isPMD, String wifiName, String username, String password) throws Exception {
 
         Utils.openSettingsiOS(driver);
 
@@ -395,23 +347,23 @@ public class SetWifi {
 
         try {
             params1.clear();
-            Utils.scrollTo(driver,"//*[@label='"+wifiName+"']");
+            Utils.scrollTo(driver, "//*[@label='" + wifiName + "']");
             Utils.sleep(5000);
 
-            driver.findElementByXPath("//*[@label='"+wifiName+"']").click();
+            driver.findElementByXPath("//*[@label='" + wifiName + "']").click();
             Utils.sleep(10000);
 
             if (isPMD) {
-                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD,wifiName)) {
-                    tryToPressOnSettingsOnNetworkList(driver,isPMD);
+                if (isConnectedToValidWiFiOnNetworkListIphone(driver, isPMD, wifiName)) {
+                    tryToPressOnSettingsOnNetworkList(driver, isPMD);
                     return;
                 }
 
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Password\"]", password);
             } else {
-                if (isConnectedToValidWiFiOnNetworkListIphone(driver,isPMD, wifiName)) {
-                    tryToPressOnSettingsOnNetworkList(driver,isPMD);
+                if (isConnectedToValidWiFiOnNetworkListIphone(driver, isPMD, wifiName)) {
+                    tryToPressOnSettingsOnNetworkList(driver, isPMD);
                     return;
                 }
 
@@ -422,18 +374,18 @@ public class SetWifi {
 
             }
 
-            tryToClickOnElementByXPATH(driver,"//*[@label=\"Join\"]");
-            tryToClickOnElementByXPATH(driver,"//*[@label=\"Trust\"]");
-            tryToClickOnElementByXPATH(driver,"//*[@label=\"Back\"]");
+            tryToClickOnElementByXPATH(driver, "//*[@label=\"Join\"]");
+            tryToClickOnElementByXPATH(driver, "//*[@label=\"Trust\"]");
+            tryToClickOnElementByXPATH(driver, "//*[@label=\"Back\"]");
 
         } catch (Exception t) {
-            System.out.println("Failed to set "+wifiName+" Wifi on iPhone!");
-            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifiName+" wifi on iPhone");
+            System.out.println("Failed to set " + wifiName + " Wifi on iPhone!");
+            ExceptionAnalyzer.analyzeException(t, "Failed to set " + wifiName + " wifi on iPhone");
         }
 
     }
 
-    public static void SetPerfectoWifiiPad(AppiumDriver driver, Boolean isPMD, String wifiName, String username, String password)throws Exception {
+    public static void SetPerfectoWifiiPad(AppiumDriver driver, Boolean isPMD, String wifiName, String username, String password) throws Exception {
 
         Utils.openSettingsiOS(driver);
 
@@ -451,7 +403,7 @@ public class SetWifi {
                 rightTBL.findElement(By.xpath("//XCUIElementTypeCell//*[@label='" + wifiName + "']")).click();
                 Utils.sleep(10000);
 
-                if(isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD, wifiName)) return;
+                if (isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD, wifiName)) return;
 
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Username\"]");
                 tryToEnterTextToElementByXPATH(driver, "//*[@label=\"Username\"]", username);
@@ -463,7 +415,7 @@ public class SetWifi {
                 rightTBL.findElement(By.xpath("//UIATableCell//UIAStaticText[@label='" + wifiName + "']/following-sibling::UIAButton")).click();
                 Utils.sleep(10000);
 
-                if(isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD, wifiName)) return;
+                if (isConnectedToValidWiFiOnNetworkListIpad(rightTBL, isPMD, wifiName)) return;
 
                 tryToClickOnElementByXPATH(driver, "//*[@label=\"Join Network\"]");
 
@@ -475,12 +427,12 @@ public class SetWifi {
 
             }
 
-            tryToClickOnElementByXPATH(driver,"//*[@label=\"Join\"]");
-            tryToClickOnElementByXPATH(driver,"//*[@label=\"Accept\" or @label=\"Trust\"]");
+            tryToClickOnElementByXPATH(driver, "//*[@label=\"Join\"]");
+            tryToClickOnElementByXPATH(driver, "//*[@label=\"Accept\" or @label=\"Trust\"]");
 
         } catch (Exception t) {
-            System.out.println("Failed to set "+wifiName+" Wifi on iPad!");
-            ExceptionAnalyzer.analyzeException(t, "Failed to set "+wifiName+" wifi on iPad");
+            System.out.println("Failed to set " + wifiName + " Wifi on iPad!");
+            ExceptionAnalyzer.analyzeException(t, "Failed to set " + wifiName + " wifi on iPad");
         }
     }
 
@@ -496,17 +448,17 @@ public class SetWifi {
         }
     }
 
-    public static void tryToClickOnElementByXPATH(AppiumDriver driver, String xPath)throws Exception {
+    public static void tryToClickOnElementByXPATH(AppiumDriver driver, String xPath) throws Exception {
 
         try {
-           driver.findElementByXPath(xPath).click();
+            driver.findElementByXPath(xPath).click();
         } catch (Exception t) {
             System.out.println("Failed to click on element with XPATH: " + xPath);
             //ExceptionAnalyzer.analyzeException(t, "Failed to click on element with XPATH: " + xPath);
         }
     }
 
-    public static void tryToEnterTextToElementByXPATH(AppiumDriver driver, String xPath, String text)throws Exception {
+    public static void tryToEnterTextToElementByXPATH(AppiumDriver driver, String xPath, String text) throws Exception {
 
         try {
             driver.findElementByXPath(xPath).sendKeys(text);
@@ -516,7 +468,7 @@ public class SetWifi {
         }
     }
 
-    public static void tryToEnterTextByKeyboard(AppiumDriver driver, String text)throws Exception {
+    public static void tryToEnterTextByKeyboard(AppiumDriver driver, String text) throws Exception {
 
         try {
             //driver.findElementByXPath(xPath).clear();
@@ -531,7 +483,7 @@ public class SetWifi {
     protected static void tryToPressOnSettingsOnNetworkList(AppiumDriver driver, boolean isPMD) {
 
         try {
-            if (isPMD){
+            if (isPMD) {
                 driver.findElementByXPath("//XCUIElementTypeButton[@label='Settings']").click();
                 Utils.sleep(1000);
             } else {

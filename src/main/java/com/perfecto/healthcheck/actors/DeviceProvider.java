@@ -191,7 +191,7 @@ public class DeviceProvider extends AbstractLoggingActor {
     public boolean checkInSiteWhiteList(String cradleId){
         List<String> allowedSites = HealthcheckProps.getSiteWhiteList();
 
-        allowedSites = allowedSites.stream().filter(cradleId.trim().toUpperCase()::startsWith).collect(Collectors.toList());
+        allowedSites = allowedSites.stream().filter(site->cradleId.trim().toUpperCase().startsWith(site.trim().toUpperCase())).collect(Collectors.toList());
         return allowedSites.size()>0;
 
     }

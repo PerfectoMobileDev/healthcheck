@@ -25,7 +25,7 @@ def RunJob = {cloud ->
 
 
     stage("Parameterizing") {
-        steps {
+
             script {
                 if ("${params.Invoke_Parameters}" == "Yes") {
                     currentBuild.result = 'ABORTED'
@@ -33,7 +33,7 @@ def RunJob = {cloud ->
                 }
 
             }
-        }
+
     }
 
 

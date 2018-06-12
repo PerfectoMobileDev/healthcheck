@@ -19,7 +19,7 @@ def RunJob = {cloud ->
     try {
         stage(cloud) {
 
-            def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: true,
+            def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: false,
                     parameters:
                             [text(name: 'mcmParams', value: params."$cloud"),
                              text(name: 'deviceBlackList', value: "${params.deviceBlackList}"),

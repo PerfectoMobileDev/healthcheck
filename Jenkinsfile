@@ -1,8 +1,9 @@
+
 properties([
         parameters([
                 choice(name: 'Invoke_Parameters', choices:"Yes\nNo", description: "Do you wish to do a dry run to grab parameters?" ),
                 string(defaultValue: 'branchtest,null,null,null,null,null', description: '', name: 'branchtest'),
-                string(defaultValue: 'borgias,null,null,null,null,null', description: '', name: 'borgias'),
+                string(defaultValue: 'borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123', description: '', name: 'borgias'),
                 string(defaultValue: 'testing,null,null,null,null,null', description: '', name: 'testing')
 
         ])
@@ -48,7 +49,7 @@ node('generic-slaves') {
 
                 RunJob('branchtest')
                 RunJob('borgias')
-                //RunJob('testing')
+                RunJob('testing')
 
          //   }
     }

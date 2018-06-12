@@ -53,13 +53,9 @@ def RunJob = {cloud ->
 node('generic-slaves') {
     timeout(time: 2, unit: 'HOURS') {
 
-            parallel (
-
-                RunJob('branchtest'),
-                RunJob('borgias'),
+                RunJob('branchtest')
+                RunJob('borgias')
                 RunJob('testing')
-
-            )
 
     }
 

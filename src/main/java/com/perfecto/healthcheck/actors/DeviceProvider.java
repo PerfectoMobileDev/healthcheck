@@ -144,7 +144,7 @@ public class DeviceProvider extends AbstractLoggingActor {
 
                 if (HealthcheckProps.getDeviceBlackList().contains(id.trim())){
                     ResultsWriter.addLineToResultsCsv(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (ID BLACKLISTED)");
-                } else if (!HealthcheckProps.getSiteWhiteList().contains(cradleId.substring(0,3).trim().toUpperCase())){
+                } else if (!checkInSiteWhiteList(cradleId)){
                     ResultsWriter.addLineToResultsCsv(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (SITE BLACKLISTED)");
                 } else {
                     if (os.equals("iOS")) {
@@ -186,6 +186,14 @@ public class DeviceProvider extends AbstractLoggingActor {
             } else {
             return Optional.of(listDevices);
         }
+    }
+
+    public boolean checkInSiteWhiteList(String cradleId){
+        List<String> allowedSites = HealthcheckProps.getSiteWhiteList();
+
+        allowedSites = allowedSites.stream().filter(cradleId.trim().toUpperCase()::startsWith).collect(Collectors.toList());
+        return allowedSites.size()>0;
+
     }
 
     public InputStream getData(String url) {

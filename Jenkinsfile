@@ -208,7 +208,7 @@ node('generic-slaves') {
             RunJob('nycsca,null,null,null,null,null')
             RunJob('panera,null,null,null,null,null')
             RunJob('gett-us,null,null,null,null,null')
-            RunJob('devry,null,null,null,null,null')
+            RunJob('adtalem,null,null,null,null,null')
             RunJob('adp,null,null,null,null,null')
             RunJob('bofa-staging,null,null,null,null,null')
             RunJob('directv,null,null,null,null,null')

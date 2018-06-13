@@ -157,7 +157,7 @@ public class DeviceProvider extends AbstractLoggingActor {
 
                 }
 
-
+                System.out.println("Processing device " + id);
                 if (HealthcheckProps.getDeviceBlackList().contains(id.trim())){
                     ResultsWriter.addLineToResultsCsv(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (ID BLACKLISTED)");
                     System.out.println("Device blacklisted by id: " + id);

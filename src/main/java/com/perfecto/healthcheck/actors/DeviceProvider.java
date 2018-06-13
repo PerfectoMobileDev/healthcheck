@@ -108,13 +108,13 @@ public class DeviceProvider extends AbstractLoggingActor {
             Document doc = dBuilder.parse(getData(URL));
 
 
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource(doc), new StreamResult(writer));
-            String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
-            System.out.println("Response content: " + output);
+//            TransformerFactory tf = TransformerFactory.newInstance();
+//            Transformer transformer = tf.newTransformer();
+//            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+//            StringWriter writer = new StringWriter();
+//            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+//            String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
+//            System.out.println("Response content: " + output);
 
             NodeList handsets = doc.getElementsByTagName("handset");
             log().info("Parsing results");
@@ -160,8 +160,10 @@ public class DeviceProvider extends AbstractLoggingActor {
 
                 if (HealthcheckProps.getDeviceBlackList().contains(id.trim())){
                     ResultsWriter.addLineToResultsCsv(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (ID BLACKLISTED)");
+                    System.out.println("Device blacklisted by id: " + id);
                 } else if (!checkInSiteWhiteList(cradleId)){
                     ResultsWriter.addLineToResultsCsv(mcmUrl.replace(".perfectomobile.com",""),cradleId,id,"SKIPPED (SITE BLACKLISTED)");
+                    System.out.println("Device blacklisted by site: " + id);
                 } else {
                     if (os.equals("iOS")) {
                         Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);

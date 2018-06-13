@@ -11,7 +11,13 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -101,12 +107,22 @@ public class DeviceProvider extends AbstractLoggingActor {
             log().info("Sending request to URL " + URL);
             Document doc = dBuilder.parse(getData(URL));
 
+
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+            String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
+            System.out.println("Response content: " + output);
+
             NodeList handsets = doc.getElementsByTagName("handset");
             log().info("Parsing results");
 
 
+            System.out.println(handsets.getLength() + " number of connected devices");
             for (int temp = 0; temp < handsets.getLength(); temp++) {
-                System.out.println(handsets.getLength() + " number of connected com.perfecto.automationready.infra.devices");
+
                 Node handset = handsets.item(temp);
 
                 NodeList handsetData = handset.getChildNodes();

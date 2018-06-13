@@ -45,9 +45,9 @@ node('generic-slaves') {
 
         if ("${params.Production_Mode}" == "No") {
 
-            RunJob('branchtest,null,null,null,null,null,B7284D9E402EECA516D2504EB95FBF75911CD71D')
+            //RunJob('branchtest,null,null,null,null,null,B7284D9E402EECA516D2504EB95FBF75911CD71D')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,CEBA9DC67218B41C163F3AE101A21E5F53F162BE')
-            /*RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,HT69B0203223')
+            RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,HT69B0203223')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,B2A7C73ED7AE890150560E2AC947CA4D9BAE0413')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,D663BD4DF256142B79A55E7CF9A38EF77AFD32DF')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,6665F74F9B1E523667D29CDE0DEAA69A008E5BCA')
@@ -65,7 +65,7 @@ node('generic-slaves') {
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,42573FE38C81CE5D3D6A51A3CBAC5363E5E89E03')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,661D1DDA0B34FDE60A7929F6489F198B2006A7B0')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,B05B6A232F8448C91D982C3D46B632BCD818BB62')
-            RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,ENU7N15A28000918')*/
+            RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,ENU7N15A28000918')
 
         } else if ("${params.Production_Mode}" == "Yes") {
 

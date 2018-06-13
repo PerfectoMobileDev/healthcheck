@@ -27,17 +27,15 @@ public class TestsRunner {
     private List<AbstractDeviceMetadata> deviceMetadata = new ArrayList<>();
 
 
-    public DeviceStatus runTests(ReportiumClient reportiumClient) {
+    public DeviceStatus runTests() {
         boolean errorFlag=false;
         for (Pair<CheckedRunnable,String> test:tests) {
-            reportiumClient.stepStart(test.getValue1());
             try {
                 test.getValue0().run();
             } catch (Throwable t) {
                 if (!(t instanceof SpecialMessageException) && !(t instanceof SpecialMetadataMessageException)) {
                     errorMessages.add(t.getMessage());
                     if (ExceptionAnalyzer.isCriticalException(t) || t instanceof CriticalDeviceException) {
-                        reportiumClient.reportiumAssert("[CRITICAL] " + t.getMessage(),false);
                         return new DeviceStatus(true, true, t.getMessage(), errorMessages, specialMessages, device);
                     } else {
                         System.out.println("Non-critical device exception encountered " + t.getMessage());
@@ -45,14 +43,10 @@ public class TestsRunner {
                     }
                 } else if (t instanceof SpecialMessageException){
                     specialMessages.add(t.getMessage());
-                    reportiumClient.reportiumAssert(t.getMessage(),true);
                 } else if (t instanceof SpecialMetadataMessageException) {
                     deviceMetadata.addAll(((SpecialMetadataMessageException)t).getDeviceMetadata());
                 }
-            } finally{
-                reportiumClient.stepEnd(test.getValue1());
             }
-
         }
         String message = "All the tests passed on device";
         if (errorFlag){

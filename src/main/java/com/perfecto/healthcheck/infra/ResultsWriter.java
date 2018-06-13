@@ -12,27 +12,26 @@ public class ResultsWriter {
 
 
     private static List<String[]> resultsCsvLines = new ArrayList<>();
-    private static File resultCsvFile = new File("results.csv");
     private static CSVWriter resultsCsvWriter;
 
     private static List<String[]> devicesUsedCsvLines = new ArrayList<>();
-    private static File devicesUsedCsvFile = new File("devices_used.csv");
     private static CSVWriter devicesUsedCsvWriter;
 
 
+    public static void init(String mcmName){
 
-    static{
+
         try {
+            File resultCsvFile = new File("results_" + mcmName+ ".csv");
             resultsCsvWriter = new CSVWriter(new FileWriter(resultCsvFile));
+
+            File devicesUsedCsvFile = new File("devices_used_" + mcmName + ".csv");
             devicesUsedCsvWriter = new CSVWriter(new FileWriter(devicesUsedCsvFile));
         } catch (IOException e) {
-            System.out.println("Unable to open results file " + resultCsvFile + " for writing, aborting...");
+            System.out.println("Unable to open some or all results files for writing, aborting. See exception below");
             e.printStackTrace();
             System.exit(1);
         }
-    }
-
-    public static void init(){
 
     }
 
@@ -53,7 +52,7 @@ public class ResultsWriter {
             resultsCsvWriter.close();
             resultsCsvWriter = null;
         } catch (IOException e) {
-            System.out.println("Unable to close results file " + resultCsvFile + " for writing, aborting...");
+            System.out.println("Unable to close results file  for writing, aborting...");
             e.printStackTrace();
             System.exit(1);
         }
@@ -63,7 +62,7 @@ public class ResultsWriter {
             devicesUsedCsvWriter.close();
             devicesUsedCsvWriter = null;
         } catch (IOException e) {
-            System.out.println("Unable to close devices used csv file " + devicesUsedCsvFile + " for writing, aborting...");
+            System.out.println("Unable to close devices used csv file for writing, aborting...");
             e.printStackTrace();
             System.exit(1);
         }

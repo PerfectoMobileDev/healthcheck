@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public abstract class AbstractTestSet {
     protected final AppiumDriver driver;
     protected final Device device;
-    protected ReportiumClient reportiumClient;
     protected String UUID;
     protected Logger logger = HealthcheckProps.getLogger();
 
@@ -52,27 +51,13 @@ public abstract class AbstractTestSet {
         this.wifiIdentity = wifiIdentity;
         this.wifiPassword = wifiPassword;
 
-        reportiumClient = new ReportiumClientFactory().createPerfectoReportiumClient(
-                new PerfectoExecutionContext.PerfectoExecutionContextBuilder()
-                        .withProject(new Project("Healthcheck", HealthcheckProps.getMCMVersion(mcmName,mcmUser,mcmPassword)))
-                        .withWebDriver(driver)
-                        .withContextTags(new String[]{"Healthcheck", "MCM " + HealthcheckProps.getMCMVersion(mcmName,mcmUser,mcmPassword), "UUID " + UUID})
-                        .build());
-        reportiumClient.testStart("Healthcheck for device " + device.getDeviceID(),new TestContext());
-        logger.info("Opened Reportium client for device " + device.getDeviceID());
     }
 
     public DeviceStatus processResult(TestsRunner tr){
         DeviceStatus result;
         try{
-            result = tr.runTests(reportiumClient);
-            if (result.isError()){
-                reportiumClient.testStop(TestResultFactory.createFailure("There were errors running the tests"));
-            } else {
-                reportiumClient.testStop(TestResultFactory.createSuccess());
-            }
+            result = tr.runTests();
         } catch (Throwable t){
-            reportiumClient.testStop(TestResultFactory.createFailure("There was unexpected exception running the tests: " + t.getMessage()));
             result = new DeviceStatus(true,false,"Unexpected exception encountered: " + t.getMessage(),new ArrayList<String>(),new ArrayList<String>(),device);
         }
         return result;

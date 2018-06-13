@@ -28,7 +28,6 @@ public class HealthcheckAkka {
     public static CSVWriter badMcmCsvWriter;
 
     public static void main(String[] args) {
-        ResultsWriter.init();
         try {
             badMcmCsvWriter = new CSVWriter(new FileWriter(badMcmCsvFile));
         } catch (IOException e) {

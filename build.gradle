@@ -57,6 +57,7 @@ dependencies {
         exclude(module: 'testng')
     }
     compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.160'
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.8'
 }
 
     task wrapper(type: Wrapper) {

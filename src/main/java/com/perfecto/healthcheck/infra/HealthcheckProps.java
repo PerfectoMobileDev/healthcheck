@@ -58,7 +58,7 @@ public class HealthcheckProps {
 
     public static List<String> getSiteWhiteList() {
         if (siteWhiteList != null){
-            return Arrays.stream(siteWhiteList.split("\\r?\\n")).map(v->v.toUpperCase().trim()).collect(Collectors.toList());
+            return Arrays.stream(siteWhiteList.split(",")).map(v->v.toUpperCase().trim()).collect(Collectors.toList());
         }
         return new ArrayList<>(Collections.singletonList("ALL"));
     }

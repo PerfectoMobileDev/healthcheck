@@ -42,7 +42,10 @@ public class Controller extends AbstractLoggingActor {
                     deviceProvider.tell(new DeviceProvider.GetSingleDevice(msg.getMcmData(),msg.deviceId),self());
                 })
                 .match(DeviceProvider.DeviceList.class,msg->
-                        driverCreator.tell(msg,self())
+                        {
+                            ResultsWriter.init(msg.getMcmData().getMcm());
+                            driverCreator.tell(msg, self());
+                        }
                 )
                 .match(DriverCreator.OpenedDrivers.class,msg->
                     {

@@ -17,7 +17,7 @@ properties([
 
 def RunJob = {cloudParams ->
     try {
-        stage(cloudParams.split(',').get(0)) {
+        stage(cloudParams.split(',')[0]) {
 
             def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: false,
                     parameters:

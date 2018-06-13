@@ -119,8 +119,8 @@ public class HealthcheckAkka {
                     }
                 }
 
-
             }
+            controller.tell(new Controller.BatchFinished(),ActorRef.noSender());
         }
 
     }

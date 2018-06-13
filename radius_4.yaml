@@ -475,7 +475,7 @@ Datacenter:
   - name: gett-us
     password: js2s0KKA
     vlan: 422
-  - name: devry
+  - name: adtalem
     password: AOJC3N
     vlan: 282
   - name: adp

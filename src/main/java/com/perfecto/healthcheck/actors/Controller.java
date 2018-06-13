@@ -28,6 +28,9 @@ public class Controller extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
+                .match(BatchFinished.class,msg->
+                    checkExit()
+                )
                 .match(McmData.class,msg->
                         {
                             ordersInWorkCounter += 1;
@@ -277,6 +280,10 @@ public class Controller extends AbstractLoggingActor {
         public String getDeviceId() {
             return deviceId;
         }
+    }
+
+    public static class BatchFinished{
+
     }
 
 

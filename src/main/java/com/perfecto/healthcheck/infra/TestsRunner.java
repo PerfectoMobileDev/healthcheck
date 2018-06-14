@@ -1,6 +1,6 @@
 package com.perfecto.healthcheck.infra;
 
-import com.perfecto.reportium.client.ReportiumClient;
+import com.perfecto.healthcheck.infra.devicemetadata.AbstractDeviceMetadata;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;

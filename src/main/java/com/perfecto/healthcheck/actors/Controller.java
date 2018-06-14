@@ -5,6 +5,9 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import com.perfecto.healthcheck.HealthcheckAkka;
 import com.perfecto.healthcheck.infra.*;
+import com.perfecto.healthcheck.infra.devicemetadata.AbstractDeviceMetadata;
+import com.perfecto.healthcheck.infra.devicemetadata.UnsupportedOSVersionMetadata;
+import com.perfecto.healthcheck.infra.devicemetadata.WifiDeviceMetadata;
 
 import java.io.IOException;
 import java.util.*;
@@ -127,8 +130,7 @@ public class Controller extends AbstractLoggingActor {
                         status = "SKIPPED (BLACKLIST)";
                     } else{
                         for (AbstractDeviceMetadata metadata:metadataList){
-                            if (metadata instanceof WifiDeviceMetadata)
-                            {
+                            if (metadata instanceof WifiDeviceMetadata){
                                 WifiDeviceMetadata wifiMetadata = (WifiDeviceMetadata) metadata;
 
 
@@ -143,6 +145,12 @@ public class Controller extends AbstractLoggingActor {
                                     status = "FAILED TO RECONNECT";
                                 }
 
+                            }
+
+
+                            if (metadata instanceof UnsupportedOSVersionMetadata){
+                                UnsupportedOSVersionMetadata osVersionMetadata = (UnsupportedOSVersionMetadata) metadata;
+                                status = "SKIPPED (UNSUPPORTED OS VERSION ("+ osVersionMetadata.getOsVersion()+ ")";
                             }
                         }
                     }

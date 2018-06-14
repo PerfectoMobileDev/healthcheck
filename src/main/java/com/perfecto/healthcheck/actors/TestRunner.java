@@ -4,6 +4,7 @@ import akka.actor.AbstractLoggingActor;
 import akka.actor.ReceiveTimeout;
 import com.perfecto.healthcheck.HealthcheckAkka;
 import com.perfecto.healthcheck.infra.*;
+import com.perfecto.healthcheck.infra.devicemetadata.UnsupportedOSVersionMetadata;
 import com.perfecto.healthcheck.infra.testsets.AndroidTestSet;
 import com.perfecto.healthcheck.infra.testsets.IOSTestSet;
 
@@ -55,6 +56,7 @@ public class TestRunner extends AbstractLoggingActor {
                                                         }
                                                         else{
                                                             deviceStatus = new DeviceStatus(true,false," iOS OS under 9",new ArrayList<String>(),new ArrayList<String>(), deviceDriver.getDevice());
+                                                            deviceStatus.getMetadataList().add(new UnsupportedOSVersionMetadata(String.valueOf(OS)));
                                                             log().info("Device " + deviceDriver.getDevice() + " iOS OS under 9");
                                                         }
                                                     } else {
@@ -82,6 +84,7 @@ public class TestRunner extends AbstractLoggingActor {
                                                                 ).runTests();
                                                         }else{
                                                             deviceStatus = new DeviceStatus(true,false,"android OS under 5",new ArrayList<String>(),new ArrayList<String>(),deviceDriver.getDevice());
+                                                            deviceStatus.getMetadataList().add(new UnsupportedOSVersionMetadata(String.valueOf(OS)));
                                                             log().info("Device " + deviceDriver.getDevice() + " android OS under 5");
                                                         }
                                                     }

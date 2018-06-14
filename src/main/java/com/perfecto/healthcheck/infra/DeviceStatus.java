@@ -1,5 +1,7 @@
 package com.perfecto.healthcheck.infra;
 
+import com.perfecto.healthcheck.infra.devicemetadata.AbstractDeviceMetadata;
+
 import java.util.ArrayList;
 import java.util.List;
 

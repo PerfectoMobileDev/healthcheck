@@ -1,4 +1,4 @@
-package com.perfecto.healthcheck.infra;
+package com.perfecto.healthcheck.infra.devicemetadata;
 
 public class WifiDeviceMetadata extends AbstractDeviceMetadata{
 

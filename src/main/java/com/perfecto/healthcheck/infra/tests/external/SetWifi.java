@@ -1,15 +1,14 @@
 package com.perfecto.healthcheck.infra.tests.external;
 
 import com.perfecto.healthcheck.infra.*;
+import com.perfecto.healthcheck.infra.devicemetadata.WifiDeviceMetadata;
 import io.appium.java_client.AppiumDriver;
-import org.apache.xpath.SourceTree;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tall on 9/11/2017.

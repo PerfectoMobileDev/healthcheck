@@ -46,6 +46,7 @@ node('generic-slaves') {
         if ("${params.Production_Mode}" == "No") {
 
             RunJob('branchtest,null,null,null,null,null')
+            RunJob('testing,null,null,null,null,null')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123')
             /*RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,AF06623B1A87CDF3A757DCB5018D8B54A84D787D')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,HT69B0203223')

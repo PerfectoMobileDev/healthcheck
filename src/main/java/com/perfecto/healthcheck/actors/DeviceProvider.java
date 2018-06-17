@@ -33,20 +33,20 @@ public class DeviceProvider extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(Controller.McmData.class, dr -> {
-                    log().info("Retrieving devices for MCM " + dr.getMcm());
-                    Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getUser(),dr.getPassword(),"");
+                .match(Controller.McmData.class, msg -> {
+                    log().info("Retrieving devices for MCM " + msg.getMcm());
+                    Optional<List<Device>> devices = extractDevices(msg.getMcm(),msg.getToken(),"");
                     if (devices.isPresent()){
-                        sender().tell(new DeviceList(devices.get(),dr),self());
+                        sender().tell(new DeviceList(devices.get(),msg),self());
                     } else {
-                        sender().tell(new Controller.NoDevices(dr),self());
+                        sender().tell(new Controller.NoDevices(msg),self());
                     }
                 })
 
                 .match(GetSingleDevice.class, msg ->{
                     log().info("Retrieving device "+ msg.getDeviceId()+ " from MCM" + msg.getMcmData().getMcm());
 
-                    Optional<List<Device>> devices = extractDevices(msg.getMcmData().getMcm(),msg.getMcmData().getUser(),msg.getMcmData().getPassword(),msg.getDeviceId());
+                    Optional<List<Device>> devices = extractDevices(msg.getMcmData().getMcm(),msg.getMcmData().getToken(),msg.getDeviceId());
                     if (devices.isPresent()){
                         sender().tell(new DeviceList(devices.get(),msg.getMcmData()),self());
                     } else {
@@ -90,7 +90,7 @@ public class DeviceProvider extends AbstractLoggingActor {
         }
     }
 
-    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmUser, String mcmPassword, String deviceId) {
+    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmToken, String deviceId) {
         List<Device> listDevices = new ArrayList<Device>();
 
         //settings identifier
@@ -103,7 +103,7 @@ public class DeviceProvider extends AbstractLoggingActor {
             if (!mcmUrl.toLowerCase().trim().contains(".perfectomobile.com")){
                 mcmUrl+=".perfectomobile.com";
             }
-            String URL = "https://" + mcmUrl + "/services/handsets?operation=list&user=" + URLEncoder.encode(mcmUser,StandardCharsets.UTF_8.name()) + "&password=" + URLEncoder.encode(mcmPassword,StandardCharsets.UTF_8.name()) + "&status=connected";
+            String URL = "https://" + mcmUrl + "/services/handsets?operation=list&securityToken=" + URLEncoder.encode(mcmToken,StandardCharsets.UTF_8.name()) + "&status=connected";
             log().info("Sending request to URL " + URL);
             Document doc = dBuilder.parse(getData(URL));
 
@@ -166,10 +166,10 @@ public class DeviceProvider extends AbstractLoggingActor {
                     System.out.println("Device blacklisted by site: " + id);
                 } else {
                     if (os.equals("iOS")) {
-                        Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);
+                        Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmToken,cradleId);
                         listDevices.add(d);
                     } else if ((os.equals("Android"))) {
-                        Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword,cradleId);
+                        Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmToken,cradleId);
                         listDevices.add(d);
                     } else {
                         // does not support ios, wp and BB

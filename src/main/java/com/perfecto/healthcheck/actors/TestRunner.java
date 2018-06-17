@@ -47,8 +47,7 @@ public class TestRunner extends AbstractLoggingActor {
                                                                         deviceDriver.getDevice(),
                                                                         UUID.randomUUID().toString(),
                                                                             msg.getMcmData().getMcm(),
-                                                                            msg.getMcmData().getUser(),
-                                                                            msg.getMcmData().getPassword(),
+                                                                            msg.getMcmData().getToken(),
                                                                             msg.getMcmData().getWifiName(),
                                                                             msg.getMcmData().getWifiIdentity(),
                                                                             msg.getMcmData().getWifiPassword()
@@ -76,8 +75,7 @@ public class TestRunner extends AbstractLoggingActor {
                                                                     deviceDriver.getDevice(),
                                                                     UUID.randomUUID().toString(),
                                                                         msg.getMcmData().getMcm(),
-                                                                        msg.getMcmData().getUser(),
-                                                                        msg.getMcmData().getPassword(),
+                                                                        msg.getMcmData().getToken(),
                                                                         msg.getMcmData().getWifiName(),
                                                                         msg.getMcmData().getWifiIdentity(),
                                                                         msg.getMcmData().getWifiPassword()

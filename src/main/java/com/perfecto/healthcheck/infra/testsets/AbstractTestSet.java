@@ -22,8 +22,7 @@ public abstract class AbstractTestSet {
     protected Logger logger = HealthcheckProps.getLogger();
 
     String mcmName;
-    String mcmUser;
-    String mcmPassword;
+    String mcmToken;
 
     String wifiName;
     String wifiIdentity;
@@ -34,8 +33,7 @@ public abstract class AbstractTestSet {
                            Device device,
                            String UUID,
                            String mcmName,
-                           String mcmUser,
-                           String mcmPassword,
+                           String mcmToken,
                            String wifiName,
                            String wifiIdentity,
                            String wifiPassword)
@@ -44,8 +42,7 @@ public abstract class AbstractTestSet {
         this.device = device;
         this.UUID = UUID;
         this.mcmName = mcmName;
-        this.mcmUser = mcmUser;
-        this.mcmPassword = mcmPassword;
+        this.mcmToken = mcmToken;
 
         this.wifiName = wifiName;
         this.wifiIdentity = wifiIdentity;

@@ -8,29 +8,18 @@ public class Device {
 	private String model;
 	private String osVersion;
 	private String mcm="";
-	private String mcmUser="";
-	private String mcmPassword="";
+	private String mcmToken="";
 
 	
 	
-	public Device(String platform, String app, String deviceID,String model, String osVersion) {
-		super();
-		this.platform = platform;
-		this.app = app;
-		this.model = model;
-		this.osVersion = osVersion;
-		this.deviceID = deviceID;
-	}
-
-	public Device(String platform, String app, String deviceID,String model, String osVersion,String mcm,String mcmUser,String mcmPassword,String cradleId) {
+	public Device(String platform, String app, String deviceID,String model, String osVersion,String mcm,String mcmToken,String cradleId) {
 		super();
 		this.platform = platform;
 		this.app = app;
 		this.model = model;
 		this.osVersion = osVersion;
 		this.mcm=mcm;
-		this.mcmUser=mcmUser;
-		this.mcmPassword=mcmPassword;
+		this.mcmToken=mcmToken;
 		this.deviceID = deviceID;
 		this.cradleId = cradleId;
 	}
@@ -83,11 +72,7 @@ public class Device {
         return mcm;
     }
 
-    public String getMcmUser() {
-        return mcmUser;
-    }
-
-    public String getMcmPassword() {
-        return mcmPassword;
-    }
+	public String getMcmToken() {
+		return mcmToken;
+	}
 }

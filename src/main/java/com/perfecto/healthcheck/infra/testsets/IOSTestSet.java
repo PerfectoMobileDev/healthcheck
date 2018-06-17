@@ -7,8 +7,8 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 
 public class IOSTestSet extends AbstractTestSet{
-    public IOSTestSet(AppiumDriver driver, Device device, String UUID,String mcmName,String mcmUser,String mcmPassword,String wifiName,String wifiIdentity,String wifiPassword) {
-        super(driver, device, UUID,mcmName,mcmUser,mcmPassword,wifiName,wifiIdentity,wifiPassword);
+    public IOSTestSet(AppiumDriver driver, Device device, String UUID,String mcmName,String mcmToken,String wifiName,String wifiIdentity,String wifiPassword) {
+        super(driver, device, UUID,mcmName,mcmToken,wifiName,wifiIdentity,wifiPassword);
     }
     @Override
     public DeviceStatus runTests() {

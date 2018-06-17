@@ -66,30 +66,23 @@ public class HealthcheckAkka {
             for (String credentialLine:credentials)
             {
                 String mcmName = credentialLine.split(",")[0].trim();
-                String mcmUser = credentialLine.split(",")[1].trim();
-                String mcmPass = credentialLine.split(",")[2].trim();
-                String wifiName = credentialLine.split(",")[3].trim();
-                String wifiIdentity = credentialLine.split(",")[4].trim();
-                String wifiPassword = credentialLine.split(",")[5].trim();
+                String mcmToken = credentialLine.split(",")[1].trim();
+                String wifiName = credentialLine.split(",")[2].trim();
+                String wifiIdentity = credentialLine.split(",")[3].trim();
+                String wifiPassword = credentialLine.split(",")[4].trim();
 
                 String singleDevice = "null";
 
-                if (credentialLine.split(",").length>6){
-                    singleDevice = credentialLine.split(",")[6].trim();
-                }
 
-                if (mcmUser.equalsIgnoreCase("null")){
-                    mcmUser = getMcmUser(mcmName);
-                    if (mcmUser == null){
-                        System.out.println("Unable to retrieve user from MCM db");
+                if (mcmToken.equalsIgnoreCase("null")){
+                    mcmToken = getMcmToken(mcmName);
+                    if (mcmToken == null){
+                        System.out.println("Unable to retrieve token from MCM db");
                     }
                 }
 
-                if (mcmPass.equalsIgnoreCase("null")){
-                    mcmPass = getMcmPass(mcmName);
-                    if (mcmPass == null){
-                        System.out.println("Unable to retrieve password from MCM db");
-                    }
+                if (credentialLine.split(",").length>5){
+                    singleDevice = credentialLine.split(",")[5].trim();
                 }
 
                 if (wifiName.equalsIgnoreCase("null")){
@@ -107,10 +100,10 @@ public class HealthcheckAkka {
                     }
                 }
 
-                if (mcmUser == null || mcmPass == null || wifiPassword == null){
-                    badMcmCsvWriter.writeNext(new String[]{mcmName,"One or more required parameters were not retrieved from DB: mcmUser=" + mcmUser + ", mcmPass=" + mcmPass + ",wifiPass=" + wifiPassword});
+                if (mcmToken == null  || wifiPassword == null){
+                    badMcmCsvWriter.writeNext(new String[]{mcmName,"One or more required parameters were not retrieved from DB: mcmToken=" + mcmToken + ",wifiPass=" + wifiPassword});
                 } else {
-                    Controller.McmData mcmData = new Controller.McmData(mcmName,mcmUser,mcmPass,wifiName,wifiIdentity,wifiPassword);
+                    Controller.McmData mcmData = new Controller.McmData(mcmName,mcmToken,wifiName,wifiIdentity,wifiPassword);
                     if (singleDevice.equalsIgnoreCase("null")){
                         controller.tell(mcmData,ActorRef.noSender());
                     } else {
@@ -153,16 +146,7 @@ public class HealthcheckAkka {
         }
     }
 
-    private static String getMcmPass(String mcmName){
-        try{
-            return getMcmCredentialsLine(mcmName)[2];
-        } catch (Exception ignored){
-            return null;
-        }
-
-    }
-
-    private static String getMcmUser(String mcmName){
+    private static String getMcmToken(String mcmName){
         try{
             return getMcmCredentialsLine(mcmName)[1];
         } catch (Exception ignored){

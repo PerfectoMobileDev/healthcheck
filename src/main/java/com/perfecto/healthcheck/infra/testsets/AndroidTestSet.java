@@ -6,8 +6,8 @@ import io.appium.java_client.AppiumDriver;
 import org.testng.Assert;
 
 public class AndroidTestSet extends AbstractTestSet {
-    public AndroidTestSet(AppiumDriver driver, Device device, String UUID,String mcmName,String mcmUser,String mcmPassword,String wifiName,String wifiIdentity,String wifiPassword) {
-        super(driver, device, UUID,mcmName,mcmUser,mcmPassword,wifiName,wifiIdentity,wifiPassword);
+    public AndroidTestSet(AppiumDriver driver, Device device, String UUID,String mcmName,String mcmToken,String wifiName,String wifiIdentity,String wifiPassword) {
+        super(driver, device, UUID,mcmName,mcmToken,wifiName,wifiIdentity,wifiPassword);
     }
 
     @Override

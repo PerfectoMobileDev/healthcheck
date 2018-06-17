@@ -27,8 +27,7 @@ public class DriverCreator extends AbstractLoggingActor {
                                                         .map(device->{
                                                             log().info("Opening driver for device " + device.getDeviceID());
                                                             DesiredCapabilities capabilities = new DesiredCapabilities("mobileOS", "", Platform.ANY);
-                                                            capabilities.setCapability("user", device.getMcmUser());
-                                                            capabilities.setCapability("password", device.getMcmPassword());
+                                                            capabilities.setCapability("securityToken", device.getMcmToken());
                                                             capabilities.setCapability("deviceName", device.getDeviceID());
                                                             capabilities.setCapability("platformName", device.getPlatform());
                                                             capabilities.setCapability("browserName", "mobileOS");

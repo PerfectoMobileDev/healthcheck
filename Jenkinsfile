@@ -14,7 +14,15 @@ def RunJob = {cloudParams ->
     try {
         stage(cloudParams.split(',')[0]) {
 
-            def job = build(job: 'deviceHealthCheckWIFI', propagate: false, wait: false,
+            def jobName = 'deviceHealthCheckWIFI-QA'
+
+            if ("${params.Production_Mode}" == "Yes") {
+
+                jobName = 'deviceHealthCheckWIFI-Prod'
+
+            }
+
+            def job = build(job: jobName, propagate: false, wait: false,
                     parameters:
                             [text(name: 'mcmParams', value: cloudParams),
                              text(name: 'deviceBlackList', value: "${params.deviceBlackList}"),
@@ -46,8 +54,8 @@ node('generic-slaves') {
         if ("${params.Production_Mode}" == "No") {
 
             RunJob('branchtest,null,null,null,null,null')
-            RunJob('testing,null,null,null,null,null')
-            RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123')
+            //RunJob('testing,null,null,null,null,null')
+            //RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123')
             /*RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,AF06623B1A87CDF3A757DCB5018D8B54A84D787D')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,HT69B0203223')
             RunJob('borgias,e2e-auto@perfectomobile.com,Aa123456,pmR&Dlab,null,Rndlab123,B2A7C73ED7AE890150560E2AC947CA4D9BAE0413')
@@ -71,6 +79,15 @@ node('generic-slaves') {
 
         } else if ("${params.Production_Mode}" == "Yes") {
 
+            RunJob('tda,null,null,null,null,null')
+            RunJob('cigna,null,null,null,null,null')
+            RunJob('bofa,null,null,null,null,null')
+            RunJob('gm,null,null,null,null,null')
+            RunJob('allstate,null,null,null,null,null')
+            RunJob('statefarm,null,null,null,null,null')
+            RunJob('demo,null,null,null,null,null')
+            RunJob('gmfinancial,null,null,null,null,null')
+            RunJob('citi,null,null,null,null,null')
             RunJob('census,null,null,null,null,null')
             RunJob('qapm,null,null,null,null,null')
             //RunJob('devcloud,null,null,null,null,null')
@@ -100,13 +117,11 @@ node('generic-slaves') {
             RunJob('morganstanley,null,null,null,null,null')
             //RunJob('fda,null,null,null,null,null')
             RunJob('web-demo,null,null,null,null,null')
-            RunJob('tda,null,null,null,null,null')
             RunJob('forddirect,null,null,null,null,null')
             RunJob('intuitive,null,null,null,null,null')
             //RunJob('web-demo2,null,null,null,null,null')
             RunJob('statefarm,null,null,null,null,null')
             RunJob('ford,null,null,null,null,null')
-            RunJob('allstate,null,null,null,null,null')
             //RunJob('usaa,null,null,null,null,null')
             RunJob('ps,null,null,null,null,null')
             RunJob('nab,null,null,null,null,null')
@@ -119,13 +134,11 @@ node('generic-slaves') {
             RunJob('pge,null,null,null,null,null')
             RunJob('test-mastercard,null,null,null,null,null')
             RunJob('metlife,null,null,null,null,null')
-            RunJob('cigna,null,null,null,null,null')
             RunJob('perfectosso,null,null,null,null,null')
             RunJob('wellsfargodssg,null,null,null,null,null')
             RunJob('vzw-video,null,null,null,null,null')
             RunJob('pioneer,null,null,null,null,null')
             RunJob('ibm-cn,null,null,null,null,null')
-            RunJob('citi,null,null,null,null,null')
             RunJob('kp,null,null,null,null,null')
             RunJob('tmna,null,null,null,null,null')
             RunJob('scouter,null,null,null,null,null')
@@ -153,7 +166,6 @@ node('generic-slaves') {
             RunJob('citipoc,null,null,null,null,null')
             RunJob('partners,null,null,null,null,null')
             RunJob('universal,null,null,null,null,null')
-            RunJob('gm,null,null,null,null,null')
             RunJob('reporting-dev,null,null,null,null,null')
             //RunJob('bcbsm-mobile,null,null,null,null,null')
             RunJob('inner-active,null,null,null,null,null')
@@ -173,7 +185,6 @@ node('generic-slaves') {
             RunJob('siriusxm,null,null,null,null,null')
             RunJob('web-staging,null,null,null,null,null')
             RunJob('ultimate,null,null,null,null,null')
-            RunJob('gmfinancial,null,null,null,null,null')
             RunJob('toyota,null,null,null,null,null')
             //RunJob('vzw,null,null,null,null,null') // canceled
             RunJob('wyn,null,null,null,null,null')
@@ -201,14 +212,12 @@ node('generic-slaves') {
             RunJob('system-tests,null,null,null,null,null')
             RunJob('ebay,null,null,null,null,null')
             RunJob('roomstogo,null,null,null,null,null')
-            RunJob('demo,null,null,null,null,null')
             RunJob('citrix,null,null,null,null,null')
             RunJob('branchtest,null,null,null,null,null')
             RunJob('lfg,null,null,null,null,null')
             RunJob('citizens,null,null,null,null,null')
             RunJob('jcpenney,null,null,null,null,null')
             RunJob('ulta,null,null,null,null,null')
-            RunJob('bofa,null,null,null,null,null')
             RunJob('ibm-ca,null,null,null,null,null')
             RunJob('kohls,null,null,null,null,null')
             RunJob('prudential,null,null,null,null,null')
@@ -255,20 +264,20 @@ node('generic-slaves') {
             RunJob('tda,null,null,null,null,null')
             RunJob('gm,null,null,null,null,null')
             //RunJob('vzw,null,null,null,null,null') // canceled
-            RunJob('mobilecloud,null,null,null,null,null')
-            RunJob('nab,null,null,null,null,null')
+            //RunJob('mobilecloud,null,null,null,null,null')
+            //RunJob('nab,null,null,null,null,null')
             RunJob('demo,null,null,null,null,null')
-            RunJob('wf,null,null,null,null,null')
-            RunJob('mastercard,null,null,null,null,null')
+            //RunJob('wf,null,null,null,null,null')
+            //RunJob('mastercard,null,null,null,null,null')
             RunJob('cigna,null,null,null,null,null')
             RunJob('bofa,null,null,null,null,null')
             RunJob('allstate,null,null,null,null,null')
-            RunJob('kp,null,null,null,null,null')
+            //RunJob('kp,null,null,null,null,null')
             RunJob('citi,null,null,null,null,null')
             RunJob('statefarm,null,null,null,null,null')
             RunJob('gmfinancial,null,null,null,null,null')
-            RunJob('ford,null,null,null,null,null')
-            RunJob('citrix,null,null,null,null,null')
+            //RunJob('ford,null,null,null,null,null')
+            //RunJob('citrix,null,null,null,null,null')
 
 
         }

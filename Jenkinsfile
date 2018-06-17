@@ -16,7 +16,7 @@ def RunJob = {cloudParams ->
 
             def jobName = 'deviceHealthCheckWIFI-QA'
 
-            if ("${params.Production_Mode}" == "Yes") {
+            if ("${params.Production_Mode}" == "Yes" || "${params.Production_Mode}" == "Yes_Custom_List") {
 
                 jobName = 'deviceHealthCheckWIFI-Prod'
 

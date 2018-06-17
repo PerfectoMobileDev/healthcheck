@@ -264,20 +264,20 @@ node('generic-slaves') {
             RunJob('tda,null,null,null,null,null')
             RunJob('gm,null,null,null,null,null')
             //RunJob('vzw,null,null,null,null,null') // canceled
-            //RunJob('mobilecloud,null,null,null,null,null')
-            //RunJob('nab,null,null,null,null,null')
+            //RunJob('mobilecloud,null,null,null,null,null') // less then 50 devices
+            //RunJob('nab,null,null,null,null,null') // less then 50 devices
             RunJob('demo,null,null,null,null,null')
-            //RunJob('wf,null,null,null,null,null')
-            //RunJob('mastercard,null,null,null,null,null')
+            //RunJob('wf,null,null,null,null,null') // less then 50 devices
+            //RunJob('mastercard,null,null,null,null,null') // less then 50 devices
             RunJob('cigna,null,null,null,null,null')
             RunJob('bofa,null,null,null,null,null')
             RunJob('allstate,null,null,null,null,null')
-            //RunJob('kp,null,null,null,null,null')
+            //RunJob('kp,null,null,null,null,null') // less then 50 devices
             RunJob('citi,null,null,null,null,null')
             RunJob('statefarm,null,null,null,null,null')
             RunJob('gmfinancial,null,null,null,null,null')
-            //RunJob('ford,null,null,null,null,null')
-            //RunJob('citrix,null,null,null,null,null')
+            //RunJob('ford,null,null,null,null,null') // less then 50 devices
+            //RunJob('citrix,null,null,null,null,null') // less then 50 devices
 
 
         }

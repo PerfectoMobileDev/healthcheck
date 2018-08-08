@@ -6,19 +6,35 @@ import akka.actor.Props;
 import com.perfecto.healthcheck.actors.Controller;
 import com.perfecto.healthcheck.infra.HealthcheckProps;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class HealthcheckAkka {
     public static final ActorSystem system = ActorSystem.create("healthcheck");
     public static final ActorRef controller = system.actorOf(Props.create(Controller.class),Controller.class.getName());
 
     public static void main(String[] args) {
-        Controller.McmData mcmData = new Controller.McmData(HealthcheckProps.getPerfectoHost(),HealthcheckProps.getPerfectoUser(),HealthcheckProps.getPerfectoPassword());
-        if(!HealthcheckProps.getDeviceId().trim().isEmpty()){
-            controller.tell(new Controller.TestSingleDevice(mcmData,HealthcheckProps.getDeviceId()),ActorRef.noSender());
-        }else{
-            controller.tell(mcmData,ActorRef.noSender());
-        }
+        List<String> deviceIds=new ArrayList<>();
+        String platform = null;
+
+        try{
+            deviceIds = Arrays.asList(System.getProperty("deviceIds").split(","));
+        } catch (Exception ignored){}
+
+        try{
+            platform = System.getProperty("platform");
+            if (platform.isEmpty()){
+                platform = null;
+            }
+        } catch (Exception ignored){}
+
+
+        Controller.ProcessDevicesOrder processDevicesOrder = new Controller.ProcessDevicesOrder(HealthcheckProps.getPerfectoHost(),HealthcheckProps.getPerfectoUser(),HealthcheckProps.getPerfectoPassword(),deviceIds,platform);
+        controller.tell(processDevicesOrder,ActorRef.noSender());
+
     }
-
-
-
 }
+
+
+

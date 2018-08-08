@@ -11,9 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DeviceProvider extends AbstractLoggingActor {
@@ -21,26 +19,14 @@ public class DeviceProvider extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(Controller.McmData.class, dr -> {
+                .match(Controller.ProcessDevicesOrder.class, dr -> {
                     log().info("Retrieving devices for MCM " + dr.getMcm());
-                    Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getUser(),dr.getPassword(),"");
+                    Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getUser(),dr.getPassword(),dr.getDeviceIds(),dr.getPlatform());
                     if (devices.isPresent()){
                         sender().tell(new DeviceList(devices.get()),self());
                     } else {
                         sender().tell(new Controller.NoDevices(dr),self());
                     }
-                })
-
-                .match(GetSingleDevice.class, msg ->{
-                    log().info("Retrieving device "+ msg.getDeviceId()+ "from MCM" + msg.getMcmData().getMcm());
-
-                    Optional<List<Device>> devices = extractDevices(msg.getMcmData().getMcm(),msg.getMcmData().getUser(),msg.getMcmData().getPassword(),msg.getDeviceId());
-                    if (devices.isPresent()){
-                        sender().tell(new DeviceList(devices.get()),self());
-                    } else {
-                        sender().tell(new Controller.NoDevices(msg.getMcmData()),self());
-                    }
-
                 })
                 .build();
 
@@ -59,25 +45,7 @@ public class DeviceProvider extends AbstractLoggingActor {
         }
     }
 
-    public static class GetSingleDevice{
-        private Controller.McmData mcmData;
-        private String deviceId;
-
-        public GetSingleDevice(Controller.McmData mcmData, String deviceId) {
-            this.mcmData = mcmData;
-            this.deviceId = deviceId;
-        }
-
-        public Controller.McmData getMcmData() {
-            return mcmData;
-        }
-
-        public String getDeviceId() {
-            return deviceId;
-        }
-    }
-
-    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmUser, String mcmPassword, String deviceId) {
+    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmUser, String mcmPassword, List<String> deviceIds,String platform) {
         List<Device> listDevices = new ArrayList<Device>();
 
         //settings identifier
@@ -144,20 +112,27 @@ public class DeviceProvider extends AbstractLoggingActor {
             e.printStackTrace();
             return Optional.empty();
         }
-        if (!deviceId.trim().isEmpty()){
-            List<Device> filteredDevices = listDevices
-                    .stream()
-                    .filter(d->d.getDeviceID().equalsIgnoreCase(deviceId))
-                    .collect(Collectors.toList());
-            if (filteredDevices.size()==0){
-                return  Optional.empty();
-            } else {
-                return Optional.of(filteredDevices);
-            }
 
-            } else {
-            return Optional.of(listDevices);
+        List<Device> filteredDevices = listDevices
+                .stream()
+                .filter(d->deviceIds.contains(d.getDeviceID()))
+                .collect(Collectors.toList());
+
+        if (platform != null){
+            filteredDevices =
+                    filteredDevices
+                    .stream()
+                    .filter(d->d.getPlatform().trim().equalsIgnoreCase(platform.trim()))
+                    .collect(Collectors.toList());
         }
+
+
+        if (filteredDevices.size()==0){
+            return  Optional.empty();
+        } else {
+            return Optional.of(filteredDevices);
+        }
+
     }
 
     public InputStream getData(String url) {

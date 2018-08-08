@@ -8,6 +8,8 @@ import com.perfecto.healthcheck.infra.DeviceDriver;
 import com.perfecto.healthcheck.infra.HealthcheckProps;
 
 import java.util.List;
+import java.util.Optional;
+
 public class Controller extends AbstractLoggingActor {
 
 
@@ -21,12 +23,9 @@ public class Controller extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(McmData.class,msg->
+                .match(ProcessDevicesOrder.class, msg->
                         deviceProvider.tell(msg,self())
                 )
-                .match(TestSingleDevice.class,msg->{
-                    deviceProvider.tell(new DeviceProvider.GetSingleDevice(msg.getMcmData(),msg.deviceId),self());
-                })
                 .match(DeviceProvider.DeviceList.class,msg->
                         driverCreator.tell(msg,self())
                 )
@@ -50,7 +49,7 @@ public class Controller extends AbstractLoggingActor {
                     HealthcheckAkka.system.terminate();
                 })
                 .match(NoDevices.class, msg-> {
-                    log().error("No devices were retrieved by DeviceProvider from MCM " + msg.getMcmData().mcm +", exiting....");
+                    log().error("No devices were retrieved by DeviceProvider from MCM " + msg.getProcessDevicesOrder().mcm +", exiting....");
                     System.exit(1);
                 })
                 .match(NoDrivers.class, msg-> {
@@ -99,14 +98,14 @@ public class Controller extends AbstractLoggingActor {
 
 
     public static class NoDevices {
-        McmData mcmData;
+        ProcessDevicesOrder processDevicesOrder;
 
-        public NoDevices(McmData mcmData) {
-            this.mcmData = mcmData;
+        public NoDevices(ProcessDevicesOrder processDevicesOrder) {
+            this.processDevicesOrder = processDevicesOrder;
         }
 
-        public McmData getMcmData() {
-            return mcmData;
+        public ProcessDevicesOrder getProcessDevicesOrder() {
+            return processDevicesOrder;
         }
     }
 
@@ -114,15 +113,19 @@ public class Controller extends AbstractLoggingActor {
 
     }
 
-    public static class McmData {
+    public static class ProcessDevicesOrder {
         private String mcm;
         private String user;
         private String password;
+        private List<String> deviceIds;
+        private String platform;
 
-        public McmData(String mcm, String user, String password) {
+        public ProcessDevicesOrder(String mcm, String user, String password,List<String> deviceIds,String platform) {
             this.mcm = mcm;
             this.user = user;
             this.password = password;
+            this.deviceIds = deviceIds;
+            this.platform = platform;
         }
 
         public String getMcm() {
@@ -136,19 +139,27 @@ public class Controller extends AbstractLoggingActor {
         public String getPassword() {
             return password;
         }
+
+        public List<String> getDeviceIds() {
+            return deviceIds;
+        }
+
+        public String getPlatform() {
+            return platform;
+        }
     }
 
     public static class TestSingleDevice{
-        private McmData mcmData;
+        private ProcessDevicesOrder processDevicesOrder;
         private String deviceId;
 
-        public TestSingleDevice(McmData mcmData, String deviceId) {
-            this.mcmData = mcmData;
+        public TestSingleDevice(ProcessDevicesOrder processDevicesOrder, String deviceId) {
+            this.processDevicesOrder = processDevicesOrder;
             this.deviceId = deviceId;
         }
 
-        public McmData getMcmData() {
-            return mcmData;
+        public ProcessDevicesOrder getProcessDevicesOrder() {
+            return processDevicesOrder;
         }
 
         public String getDeviceId() {

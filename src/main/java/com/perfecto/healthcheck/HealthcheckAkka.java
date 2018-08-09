@@ -9,6 +9,7 @@ import com.perfecto.healthcheck.infra.HealthcheckProps;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HealthcheckAkka {
     public static final ActorSystem system = ActorSystem.create("healthcheck");
@@ -19,7 +20,7 @@ public class HealthcheckAkka {
         String platform = null;
 
         try{
-            deviceIds = Arrays.asList(System.getProperty("deviceIds").split(","));
+            deviceIds = Arrays.asList(System.getProperty("deviceIds").split(",")).stream().filter(id->!id.trim().equals("")).collect(Collectors.toList());
         } catch (Exception ignored){}
 
         try{

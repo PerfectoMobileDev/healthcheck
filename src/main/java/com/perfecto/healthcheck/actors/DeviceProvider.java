@@ -113,10 +113,15 @@ public class DeviceProvider extends AbstractLoggingActor {
             return Optional.empty();
         }
 
-        List<Device> filteredDevices = listDevices
-                .stream()
-                .filter(d->deviceIds.contains(d.getDeviceID()))
-                .collect(Collectors.toList());
+        List<Device> filteredDevices = listDevices;
+
+
+        if (deviceIds.size()>0) {
+            filteredDevices = listDevices
+                    .stream()
+                    .filter(d -> deviceIds.contains(d.getDeviceID()))
+                    .collect(Collectors.toList());
+        }
 
         if (platform != null){
             filteredDevices =

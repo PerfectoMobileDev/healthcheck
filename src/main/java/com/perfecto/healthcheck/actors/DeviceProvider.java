@@ -21,7 +21,7 @@ public class DeviceProvider extends AbstractLoggingActor {
         return receiveBuilder()
                 .match(Controller.ProcessDevicesOrder.class, dr -> {
                     log().info("Retrieving devices for MCM " + dr.getMcm());
-                    Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getUser(),dr.getPassword(),dr.getDeviceIds(),dr.getPlatform());
+                    Optional<List<Device>> devices = extractDevices(dr.getMcm(),dr.getToken(),dr.getDeviceIds(),dr.getPlatform());
                     if (devices.isPresent()){
                         sender().tell(new DeviceList(devices.get()),self());
                     } else {
@@ -45,7 +45,7 @@ public class DeviceProvider extends AbstractLoggingActor {
         }
     }
 
-    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmUser, String mcmPassword, List<String> deviceIds,String platform) {
+    public Optional<List<Device>> extractDevices(String mcmUrl, String mcmToken, List<String> deviceIds,String platform) {
         List<Device> listDevices = new ArrayList<Device>();
 
         //settings identifier
@@ -55,7 +55,7 @@ public class DeviceProvider extends AbstractLoggingActor {
         DocumentBuilder dBuilder;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
-            String URL = "https://" + mcmUrl + "/services/handsets?operation=list&user=" + mcmUser + "&password=" + mcmPassword + "&status=connected";
+            String URL = "https://" + mcmUrl + "/services/handsets?operation=list&securityToken=" + mcmToken + "&status=connected";
             log().info("Sending request to URL " + URL);
             Document doc = dBuilder.parse(getData(URL));
 
@@ -95,11 +95,11 @@ public class DeviceProvider extends AbstractLoggingActor {
                 }
 
                 if (os.equals("iOS")) {
-                    Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
+                    Device d = new Device("ios", iosApp, id, osVersion, model, mcmUrl, mcmToken);
                     System.out.println(d);
                     listDevices.add(d);
                 } else if ((os.equals("Android"))) {
-                    Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmUser, mcmPassword);
+                    Device d = new Device("Android", AndroidApp, id, osVersion, model, mcmUrl, mcmToken);
                     System.out.println(d);
                     listDevices.add(d);
                 } else {

@@ -7,8 +7,8 @@ public class Device {
 	private String model;
 	private String osVersion;
 	private String mcm="";
-	private String mcmUser="";
-	private String mcmPassword="";
+	private String mcmToken="";
+
 
 	
 	
@@ -21,16 +21,15 @@ public class Device {
 		this.deviceID = deviceID;
 	}
 
-	public Device(String platform, String app, String deviceID,String model, String osVersion,String mcm,String mcmUser,String mcmPassword) {
+	public Device(String platform, String app, String deviceID,String model, String osVersion,String mcm,String mcmToken) {
 		super();
 		this.platform = platform;
 		this.app = app;
 		this.model = model;
 		this.osVersion = osVersion;
 		this.mcm=mcm;
-		this.mcmUser=mcmUser;
-		this.mcmPassword=mcmPassword;
-		this.deviceID = deviceID;
+		this.mcmToken=mcmToken;
+		this.deviceID=deviceID;
 	}
 	
 	@Override public String toString() {
@@ -77,11 +76,8 @@ public class Device {
         return mcm;
     }
 
-    public String getMcmUser() {
-        return mcmUser;
+    public String getMcmToken() {
+        return mcmToken;
     }
 
-    public String getMcmPassword() {
-        return mcmPassword;
-    }
 }

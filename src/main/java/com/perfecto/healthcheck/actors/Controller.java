@@ -115,15 +115,13 @@ public class Controller extends AbstractLoggingActor {
 
     public static class ProcessDevicesOrder {
         private String mcm;
-        private String user;
-        private String password;
+        private String token;
         private List<String> deviceIds;
         private String platform;
 
-        public ProcessDevicesOrder(String mcm, String user, String password,List<String> deviceIds,String platform) {
+        public ProcessDevicesOrder(String mcm, String token, List<String> deviceIds,String platform) {
             this.mcm = mcm;
-            this.user = user;
-            this.password = password;
+            this.token = token;
             this.deviceIds = deviceIds;
             this.platform = platform;
         }
@@ -132,12 +130,8 @@ public class Controller extends AbstractLoggingActor {
             return mcm;
         }
 
-        public String getUser() {
-            return user;
-        }
-
-        public String getPassword() {
-            return password;
+        public String getToken() {
+            return token;
         }
 
         public List<String> getDeviceIds() {

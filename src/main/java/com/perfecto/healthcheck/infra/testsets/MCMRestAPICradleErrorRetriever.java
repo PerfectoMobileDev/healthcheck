@@ -27,7 +27,7 @@ public class MCMRestAPICradleErrorRetriever {
 
         try {
 
-            String URL = "https://" + HealthcheckProps.getPerfectoHost() + "/services/cradles?operation=list&user=" + HealthcheckProps.getPerfectoUser() + "&password=" + HealthcheckProps.getPerfectoPassword();
+            String URL = "https://" + HealthcheckProps.getPerfectoHost() + "/services/cradles?operation=list&securityToken=" + HealthcheckProps.getPerfectoToken();
             System.out.print(URL);
             JSONObject result1 = XML.toJSONObject(Unirest.get(URL).asString().getBody());
             for (int i = 0; i < result1.getJSONObject("cradles").getJSONArray("cradle").length(); i++) {

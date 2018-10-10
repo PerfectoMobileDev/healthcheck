@@ -31,7 +31,7 @@ public class HealthcheckAkka {
         } catch (Exception ignored){}
 
 
-        Controller.ProcessDevicesOrder processDevicesOrder = new Controller.ProcessDevicesOrder(HealthcheckProps.getPerfectoHost(),HealthcheckProps.getPerfectoUser(),HealthcheckProps.getPerfectoPassword(),deviceIds,platform);
+        Controller.ProcessDevicesOrder processDevicesOrder = new Controller.ProcessDevicesOrder(HealthcheckProps.getPerfectoHost(),HealthcheckProps.getPerfectoToken(),deviceIds,platform);
         controller.tell(processDevicesOrder,ActorRef.noSender());
 
     }

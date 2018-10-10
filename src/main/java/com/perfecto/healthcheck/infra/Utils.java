@@ -32,8 +32,8 @@ public class Utils {
 	private static final String MEDIA_REPOSITORY = "/services/repositories/media/";
 	private static final String UPLOAD_OPERATION = "operation=upload&overwrite=true";
 	 static String host = HealthcheckProps.getPerfectoHost();
-	 static String username = HealthcheckProps.getPerfectoUser();
-	 static String password = HealthcheckProps.getPerfectoPassword();
+	 static String token = HealthcheckProps.getPerfectoToken();
+
 
 
 	public static void startApp(String property,String name, RemoteWebDriver d )
@@ -138,15 +138,15 @@ public class Utils {
 		}
 
 	}
-	public static void uploadMedia(String host, String user, String password, URL mediaURL, String repositoryKey) throws IOException {
+	public static void uploadMedia(String host, String token, URL mediaURL, String repositoryKey) throws IOException {
 		byte[] content = readURL(mediaURL);
-		uploadMedia(host, user, password, content, repositoryKey);
+		uploadMedia(host, token, content, repositoryKey);
 	}
-	public static void uploadMedia(String host, String user, String password, byte[] content, String repositoryKey) throws UnsupportedEncodingException, MalformedURLException, IOException {
+	public static void uploadMedia(String host, String token, byte[] content, String repositoryKey) throws UnsupportedEncodingException, MalformedURLException, IOException {
 		if (content != null) {
-			String encodedUser = URLEncoder.encode(user, "UTF-8");
-			String encodedPassword = URLEncoder.encode(password, "UTF-8");
-			String urlStr = HTTPS + host + MEDIA_REPOSITORY + repositoryKey + "?" + UPLOAD_OPERATION + "&user=" + encodedUser + "&password=" + encodedPassword;
+			String encodedToken = URLEncoder.encode(token, "UTF-8");
+
+			String urlStr = HTTPS + host + MEDIA_REPOSITORY + repositoryKey + "?" + UPLOAD_OPERATION + "&securityToken=" + encodedToken;
 			URL url = new URL(urlStr);
 
 			sendRequest(content, url);
@@ -249,7 +249,7 @@ public class Utils {
 				driver.findElementByXPath("//UIATableCell[@label=\"General\"]|//XCUIElementTypeCell[@label=\"General\"]").click();
 			}catch (NoSuchElementException e){
 				URL url = new URL("https://s3-eu-west-1.amazonaws.com/perfecto-beat-regression/beatMedia/Images/GeneralSettingsiOS.png");
-				uploadMedia(host, username, password, url, "PRIVATE:GeneralSettingsiOS.png");
+				uploadMedia(host, token, url, "PRIVATE:GeneralSettingsiOS.png");
 				Map<String, Object> params1 = new HashMap<>();
 				params1.put("content", "PRIVATE:GeneralSettingsiOS.png");
 				params1.put("source", "camera");

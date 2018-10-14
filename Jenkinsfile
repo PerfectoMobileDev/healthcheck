@@ -79,7 +79,25 @@ node('generic-slaves') {
 
         } else if ("${params.Production_Mode}" == "Yes") {
 
-            RunJob('tda,null,null,null,null,null')
+            RunJob('vzw-gizmo,null,null,null,null,null')
+            RunJob('morganstanley,null,null,null,null,null')
+            RunJob('lfg,null,null,null,null,null')
+            RunJob('demo,null,null,null,null,null')
+            RunJob('citizens,null,null,null,null,null')
+            RunJob('citi,null,null,null,null,null')
+            RunJob('bofa-staging,null,null,null,null,null')
+            RunJob('avon,null,null,null,null,null')
+            RunJob('anthem,null,null,null,null,null')
+            RunJob('amica,null,null,null,null,null')
+            RunJob('ally,null,null,null,null,null')
+            RunJob('allstate,null,null,null,null,null')
+            RunJob('aig,null,null,null,null,null')
+            RunJob('adp,null,null,null,null,null')
+            RunJob('accenture,null,null,null,null,null')
+            RunJob('accenturecoe,null,null,null,null,null')
+
+
+            /*RunJob('tda,null,null,null,null,null')
             RunJob('cigna,null,null,null,null,null')
             RunJob('bofa,null,null,null,null,null')
             RunJob('gm,null,null,null,null,null')
@@ -148,13 +166,13 @@ node('generic-slaves') {
             RunJob('fmglobal,null,null,null,null,null')
             RunJob('deutschebank,null,null,null,null,null')
             RunJob('hcp,null,null,null,null,null')
-            RunJob('avon,null,null,null,null,null')
-            RunJob('anthem,null,null,null,null,null')
+
+
             RunJob('extendedstay,null,null,null,null,null')
-            RunJob('aig,null,null,null,null,null')
+
             //RunJob('citicfc,null,null,null,null,null')
             //RunJob('humana,null,null,null,null,null')
-            RunJob('accenture,null,null,null,null,null')
+
             RunJob('h2h-philips,null,null,null,null,null')
             RunJob('att-mobility,null,null,null,null,null')
             RunJob('ca,null,null,null,null,null')
@@ -176,7 +194,7 @@ node('generic-slaves') {
             RunJob('citighrt,null,null,null,null,null')
             RunJob('tdacc,null,null,null,null,null')
             RunJob('kpmonitoring,null,null,null,null,null')
-            RunJob('accenturecoe,null,null,null,null,null')
+
             RunJob('optum,null,null,null,null,null')
             RunJob('gwbto,null,null,null,null,null')
             //RunJob('linux-perfecto,null,null,null,null,null')
@@ -200,7 +218,7 @@ node('generic-slaves') {
             RunJob('security,null,null,null,null,null')
             RunJob('visa,null,null,null,null,null')
             //RunJob('vanguard,null,null,null,null,null')
-            RunJob('vzw-gizmo,null,null,null,null,null')
+
             RunJob('rbs,null,null,null,null,null')
             RunJob('comcast,null,null,null,null,null')
             RunJob('linux-stg,null,null,null,null,null')
@@ -257,7 +275,7 @@ node('generic-slaves') {
             RunJob('medtronictest,null,null,null,null,null')
             RunJob('murphyoil,null,null,null,null,null')
             RunJob('ing-aus,null,null,null,null,null')
-            RunJob('bellca,null,null,null,null,null')
+            RunJob('bellca,null,null,null,null,null')*/
 
         } else if ("${params.Production_Mode}" == "Yes_Custom_List") {
 

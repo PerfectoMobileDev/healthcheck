@@ -93,12 +93,12 @@ public class HealthcheckAkka {
                     wifiIdentity = mcmName;
                 }
 
-                if (wifiPassword.equalsIgnoreCase("null")){
+/*                if (wifiPassword.equalsIgnoreCase("null")){
                     wifiPassword = getWifiPassword(mcmName);
                     if (wifiPassword == null){
                         System.out.println("Unable to retrieve wifi password from MCM db");
                     }
-                }
+                }*/
 
                 if (mcmToken == null  || wifiPassword == null){
                     badMcmCsvWriter.writeNext(new String[]{mcmName,"One or more required parameters were not retrieved from DB: mcmToken=" + mcmToken + ",wifiPass=" + wifiPassword});

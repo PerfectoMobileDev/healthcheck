@@ -33,7 +33,10 @@ public class SetWifi {
 
     public static void defineWifiAndroid(AppiumDriver driver, String wifiName, String wifiIdentity, String wifiPassword) throws Exception {
 
-        boolean isWiFiValidBefore = false;
+
+        Utils.sleep(10000);
+
+        /*boolean isWiFiValidBefore = false;
         boolean isWiFiValidAfter = false;
 
         String deviceCap = Utils.handsetInfo(driver, "property", "manufacturer");
@@ -180,11 +183,14 @@ public class SetWifi {
 
             WifiDeviceMetadata metadata1 = new WifiDeviceMetadata(isWiFiValidBefore, isWiFiValidAfter);
             throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata1)));
-        }
+        }*/
     }
 
     public static void setDeviceWifiSettingsAndroid(AppiumDriver driver) throws Exception {
-        System.out.println("Turning the wifi on");
+
+        Utils.sleep(10000);
+
+        /*System.out.println("Turning the wifi on");
 
         try {
             if (getDeviceNetworkSettings(driver, "wifi").contains("wifi=true")) {
@@ -198,12 +204,15 @@ public class SetWifi {
             t.printStackTrace();
             ExceptionAnalyzer.analyzeException(t, "Error enabling WiFi for android device");
             throw t;
-        }
+        }*/
     }
 
     public static void setDeviceWifiSettingsiOS(AppiumDriver driver, String wifiName, String wifiIdentity, String wifiPassword) throws Exception {
 
-        Boolean isWiFiValidBefore = false;
+        Utils.sleep(10000);
+
+
+        /*Boolean isWiFiValidBefore = false;
 
         String model = Utils.handsetInfo(driver, "property", "model");
 
@@ -250,7 +259,7 @@ public class SetWifi {
 
             WifiDeviceMetadata metadata = new WifiDeviceMetadata(isWiFiValidBefore, isWifiValidAfter);
             throw new SpecialMetadataMessageException(new ArrayList<>(Arrays.asList(metadata)));
-        }
+        }*/
 
     }
 

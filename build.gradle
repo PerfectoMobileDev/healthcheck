@@ -14,7 +14,7 @@ targetCompatibility = 1.8
 repositories {
      maven { url "http://repo.maven.apache.org/maven2" }
      maven {
-       url "http://repository-perfectomobile.forge.cloudbees.com/public"
+       url "https://repo1.perfectomobile.com/public/repositories/maven"
      }
 }
 
